@@ -19,6 +19,22 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'FinSync',
+          style: TextStyle(
+            fontSize: 26,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+            letterSpacing: 1,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        surfaceTintColor: Colors.transparent,
+      ),
       extendBody: true,
       body: pages[currentIndex],
       backgroundColor: Colors.white,
@@ -35,6 +51,10 @@ class _MainPageState extends State<MainPage> {
             LiquidGlassBarItem(iconData: Icons.search, label: 'Search'),
             LiquidGlassBarItem(iconData: Icons.person, label: 'Profile'),
           ],
+          style: LiquidGlassBarStyle(
+            activeColor: Colors.blue,
+            inactiveColor: Colors.grey,
+          ),
         ),
       ),
     );
