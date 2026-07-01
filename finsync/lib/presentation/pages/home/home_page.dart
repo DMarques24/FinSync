@@ -1,3 +1,5 @@
+import 'package:finsync/presentation/pages/home/componente/card_cash_flow.dart';
+import 'package:finsync/presentation/pages/home/componente/expenses_list.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -11,10 +13,16 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Center(
-        child: Text(
-          'Home Page',
-          style: Theme.of(context).textTheme.headlineMedium,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          children: const [
+            CardCashFlow(cashIn: 1000, cashOut: 20),
+            SizedBox(height: 8),
+            const Text("Gastos:"),
+            SizedBox(height: 8),
+            ExpensesList(),
+          ],
         ),
       ),
     );

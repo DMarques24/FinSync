@@ -3,6 +3,7 @@ import 'package:finsync/presentation/pages/home/home_page.dart';
 import 'package:liquid_glass_bar/liquid_glass_bar.dart';
 import 'package:finsync/presentation/pages/profile/profile_page.dart';
 import 'package:finsync/presentation/pages/search/search_page.dart';
+import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -20,6 +21,11 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        surfaceTintColor: Colors.transparent,
         title: const Text(
           'FinSync',
           style: TextStyle(
@@ -29,11 +35,30 @@ class _MainPageState extends State<MainPage> {
             letterSpacing: 1,
           ),
         ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        surfaceTintColor: Colors.transparent,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: LiquidGlassLayer(
+              child: LiquidGlass(
+                shape: LiquidRoundedSuperellipse(borderRadius: 18),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(18),
+                    onTap: () {
+                      // ação do botão
+                    },
+                    child: const SizedBox(
+                      width: 44,
+                      height: 44,
+                      child: Icon(Icons.add, color: Colors.black87),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       extendBody: true,
       body: pages[currentIndex],
