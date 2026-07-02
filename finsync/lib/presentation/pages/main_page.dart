@@ -1,9 +1,9 @@
+import 'package:finsync/presentation/pages/home/componente/add_expenses.dart';
 import 'package:flutter/material.dart';
 import 'package:finsync/presentation/pages/home/home_page.dart';
 import 'package:liquid_glass_bar/liquid_glass_bar.dart';
 import 'package:finsync/presentation/pages/profile/profile_page.dart';
 import 'package:finsync/presentation/pages/search/search_page.dart';
-import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -35,30 +35,18 @@ class _MainPageState extends State<MainPage> {
             letterSpacing: 1,
           ),
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: LiquidGlassLayer(
-              child: LiquidGlass(
-                shape: LiquidRoundedSuperellipse(borderRadius: 18),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(18),
-                    onTap: () {
-                      // ação do botão
-                    },
-                    child: const SizedBox(
-                      width: 44,
-                      height: 44,
-                      child: Icon(Icons.add, color: Colors.black87),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            builder: (context) => const AddExpenses(),
+          );
+        },
+        child: const Icon(Icons.add),
+        foregroundColor: Colors.black,
+        backgroundColor: Colors.blue,
       ),
       extendBody: true,
       body: pages[currentIndex],
