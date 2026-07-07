@@ -37,6 +37,7 @@ dependencies:
   go_router: ^17.3.0
   liquid_glass_bar: ^0.1.1
   liquid_glass_renderer: ^0.2.0-dev.4
+  image_picker: ^1.2.3
 
 dev_dependencies:
   flutter_test:

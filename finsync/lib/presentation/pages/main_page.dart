@@ -1,9 +1,9 @@
+import 'package:finsync/presentation/pages/desire/desire_page.dart';
 import 'package:finsync/presentation/pages/home/componente/add_expenses.dart';
 import 'package:flutter/material.dart';
 import 'package:finsync/presentation/pages/home/home_page.dart';
 import 'package:liquid_glass_bar/liquid_glass_bar.dart';
 import 'package:finsync/presentation/pages/profile/profile_page.dart';
-import 'package:finsync/presentation/pages/search/search_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -15,7 +15,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int currentIndex = 0;
 
-  final pages = const [HomePage(), SearchPage(), ProfilePage()];
+  final pages = const [HomePage(), DesirePage(), ProfilePage()];
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +61,7 @@ class _MainPageState extends State<MainPage> {
           },
           items: const [
             LiquidGlassBarItem(iconData: Icons.home, label: 'Home'),
-            LiquidGlassBarItem(iconData: Icons.search, label: 'Search'),
+            LiquidGlassBarItem(iconData: Icons.star, label: 'Desire'),
             LiquidGlassBarItem(iconData: Icons.person, label: 'Profile'),
           ],
           style: LiquidGlassBarStyle(
