@@ -26,7 +26,7 @@ class CardList extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(.10),
+            color: Colors.grey.withValues(alpha: .10),
             blurRadius: 12,
             offset: const Offset(0, 5),
           ),

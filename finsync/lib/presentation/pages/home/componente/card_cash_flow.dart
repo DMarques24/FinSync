@@ -4,7 +4,7 @@ class CardCashFlow extends StatelessWidget {
   final int cashIn;
   final int cashOut;
 
-  const CardCashFlow({required this.cashIn, required this.cashOut});
+  const CardCashFlow({super.key, required this.cashIn, required this.cashOut});
 
   @override
   Widget build(BuildContext context) {
@@ -28,12 +28,12 @@ class CardCashFlow extends StatelessWidget {
           ),
           SizedBox(height: 10),
           Text(
-            'Cash In: ${cashIn}€',
+            'Cash In: $cashIn€',
             style: TextStyle(color: Colors.white, fontSize: 16),
           ),
           SizedBox(height: 5),
           Text(
-            'Cash Out: ${cashOut}€',
+            'Cash Out: $cashOut€',
             style: TextStyle(color: Colors.white, fontSize: 16),
           ),
         ],

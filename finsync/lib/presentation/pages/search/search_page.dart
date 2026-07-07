@@ -13,7 +13,7 @@ class _SearchPageState extends State<SearchPage> {
     return SafeArea(
       child: Center(
         child: Text(
-          'Search Page',
+          "No item find",
           style: Theme.of(context).textTheme.headlineMedium,
         ),
       ),

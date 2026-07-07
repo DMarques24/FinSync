@@ -114,7 +114,7 @@ class _AddExpensesState extends State<AddExpenses> {
             const SizedBox(height: 16),
 
             DropdownButtonFormField<String>(
-              value: selectedCategory,
+              initialValue: selectedCategory,
               decoration: const InputDecoration(
                 labelText: "Categoria",
                 border: OutlineInputBorder(),

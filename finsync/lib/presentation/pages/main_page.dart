@@ -44,9 +44,9 @@ class _MainPageState extends State<MainPage> {
             builder: (context) => const AddExpenses(),
           );
         },
-        child: const Icon(Icons.add),
         foregroundColor: Colors.black,
         backgroundColor: Colors.blue,
+        child: const Icon(Icons.add),
       ),
       extendBody: true,
       body: pages[currentIndex],

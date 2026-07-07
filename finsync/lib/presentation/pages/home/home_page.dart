@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
           children: const [
             CardCashFlow(cashIn: 1000, cashOut: 20),
             SizedBox(height: 8),
-            const Text("Gastos:"),
+            Text("Gastos:"),
             SizedBox(height: 8),
             ExpensesList(),
           ],
