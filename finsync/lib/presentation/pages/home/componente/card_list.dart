@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:finsync/core/theme/colors.dart';
+import 'package:finsync/core/theme/text_styles.dart';
+
 class CardList extends StatelessWidget {
   final String nome;
   final String categoria;
@@ -19,25 +22,29 @@ class CardList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 14),
+      margin: const EdgeInsets.only(bottom: 16),
+
       padding: const EdgeInsets.all(16),
+
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withValues(alpha: .10),
-            blurRadius: 12,
-            offset: const Offset(0, 5),
-          ),
-        ],
+        color: AppColors.background,
+        borderRadius: BorderRadius.circular(20),
+
+        border: Border.all(color: AppColors.border),
       ),
+
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 24,
-            backgroundColor: Colors.blue.shade50,
-            child: Icon(icon, color: Colors.blue),
+          Container(
+            width: 52,
+            height: 52,
+
+            decoration: BoxDecoration(
+              color: AppColors.secondary.withOpacity(.10),
+              borderRadius: BorderRadius.circular(16),
+            ),
+
+            child: Icon(icon, color: AppColors.secondary, size: 28),
           ),
 
           const SizedBox(width: 16),
@@ -48,33 +55,65 @@ class CardList extends StatelessWidget {
               children: [
                 Text(
                   nome,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w600,
+                  style: AppTextStyles.bodyLarge.copyWith(
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
 
-                const SizedBox(height: 4),
+                const SizedBox(height: 8),
 
-                Text(categoria, style: TextStyle(color: Colors.grey.shade600)),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
 
-                const SizedBox(height: 2),
+                  decoration: BoxDecoration(
+                    color: AppColors.secondary.withOpacity(.08),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+
+                  child: Text(
+                    categoria,
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: AppColors.secondary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 8),
 
                 Text(
                   data,
-                  style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
                 ),
               ],
             ),
           ),
 
-          Text(
-            "- ${price.toStringAsFixed(2)}€",
-            style: const TextStyle(
-              color: Colors.blue,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+          const SizedBox(width: 12),
+
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                "- ${price.toStringAsFixed(2)} €",
+                style: AppTextStyles.bodyLarge.copyWith(
+                  color: AppColors.error,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              const SizedBox(height: 8),
+
+              const Icon(
+                Icons.chevron_right_rounded,
+                color: AppColors.textSecondary,
+              ),
+            ],
           ),
         ],
       ),

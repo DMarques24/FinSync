@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 
+import 'package:finsync/core/theme/colors.dart';
+import 'package:finsync/core/theme/text_styles.dart';
+
 class DesireComponent extends StatelessWidget {
   final ImageProvider image;
   final String name;
   final double price;
-  final DateTime date;
+  final double saved;
+  final String date;
   final VoidCallback? onTap;
 
   const DesireComponent({
@@ -12,69 +16,121 @@ class DesireComponent extends StatelessWidget {
     required this.image,
     required this.name,
     required this.price,
+    required this.saved,
     required this.date,
     this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final progress = (saved / price).clamp(0, 1);
 
-    return Card(
-      elevation: 3,
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 18),
+
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+
+        borderRadius: BorderRadius.circular(24),
+
+        border: Border.all(color: AppColors.border),
+      ),
+
       child: InkWell(
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(24),
+
         onTap: onTap,
+
         child: Padding(
-          padding: const EdgeInsets.all(14),
+          padding: const EdgeInsets.all(18),
+
           child: Row(
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(18),
+
                 child: Image(
                   image: image,
-                  width: 90,
-                  height: 90,
+                  width: 100,
+                  height: 100,
                   fit: BoxFit.cover,
                 ),
               ),
 
-              const SizedBox(width: 16),
+              const SizedBox(width: 18),
 
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+
                   children: [
                     Text(
                       name,
-                      style: theme.textTheme.titleMedium?.copyWith(
+                      style: AppTextStyles.bodyLarge.copyWith(
                         fontWeight: FontWeight.bold,
-                      ),
-                    ),
-
-                    const SizedBox(height: 6),
-
-                    Text(
-                      "${price.toStringAsFixed(2)} €",
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        color: Colors.green,
-                        fontWeight: FontWeight.w600,
                       ),
                     ),
 
                     const SizedBox(height: 8),
 
                     Text(
-                      "Adicionado em ${date.day}/${date.month}/${date.year}",
-                      style: theme.textTheme.bodySmall,
+                      "${price.toStringAsFixed(2)} €",
+                      style: AppTextStyles.bodyLarge.copyWith(
+                        color: AppColors.secondary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
+                    const SizedBox(height: 14),
+
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+
+                      child: LinearProgressIndicator(
+                        value: progress.toDouble(),
+
+                        minHeight: 8,
+
+                        backgroundColor: AppColors.border,
+
+                        valueColor: const AlwaysStoppedAnimation(
+                          AppColors.success,
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                      children: [
+                        Text(
+                          "${saved.toStringAsFixed(0)} € poupados",
+                          style: AppTextStyles.bodySmall,
+                        ),
+
+                        Text(
+                          "${(progress * 100).toInt()}%",
+                          style: AppTextStyles.bodySmall.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.success,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    Text(
+                      "Objetivo: $date",
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
                     ),
                   ],
                 ),
               ),
-
-              const Icon(Icons.chevron_right, color: Colors.grey),
             ],
           ),
         ),

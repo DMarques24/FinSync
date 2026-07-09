@@ -1,54 +1,131 @@
 import 'package:flutter/material.dart';
 
+import 'package:finsync/core/theme/colors.dart';
+import 'package:finsync/core/theme/text_styles.dart';
+
 class PhotoName extends StatelessWidget {
-  final Image image;
+  final String imagePath;
   final String name;
   final String userName;
 
   const PhotoName({
     super.key,
-    required this.image,
-    required this.userName,
+    required this.imagePath,
     required this.name,
+    required this.userName,
   });
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    return Container(
+      width: double.infinity,
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: Theme.of(context).colorScheme.primary,
-                width: 3,
-              ),
-            ),
-            child: CircleAvatar(radius: 55, backgroundImage: image.image),
-          ),
-          const SizedBox(height: 16),
+      padding: const EdgeInsets.all(24),
 
-          Text(
-            name,
-            style: theme.textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+      decoration: BoxDecoration(
+        color: AppColors.primary,
 
-          const SizedBox(height: 4),
+        borderRadius: BorderRadius.circular(28),
 
-          Text(
-            userName,
-            style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withOpacity(.20),
+            blurRadius: 22,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
+
+      child: Column(
+        children: [
+          Stack(
+            children: [
+              CircleAvatar(
+                radius: 48,
+                backgroundColor: Colors.white,
+
+                child: CircleAvatar(
+                  radius: 44,
+                  backgroundImage: AssetImage(imagePath),
+                ),
+              ),
+
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(7),
+
+                  decoration: BoxDecoration(
+                    color: AppColors.secondary,
+
+                    shape: BoxShape.circle,
+
+                    border: Border.all(color: Colors.white, width: 2),
+                  ),
+
+                  child: const Icon(Icons.edit, size: 16, color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 18),
+
+          Text(
+            name,
+            style: AppTextStyles.headingMedium.copyWith(color: Colors.white),
+          ),
+
+          const SizedBox(height: 6),
+
+          Text(
+            userName,
+            style: AppTextStyles.bodyMedium.copyWith(color: Colors.white70),
+          ),
+
+          const SizedBox(height: 22),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _InfoCard(title: "Despesas", value: "128"),
+              _InfoCard(title: "Desejos", value: "12"),
+              _InfoCard(title: "Poupado", value: "€2.4k"),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _InfoCard extends StatelessWidget {
+  final String title;
+  final String value;
+
+  const _InfoCard({required this.title, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          value,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+
+        const SizedBox(height: 4),
+
+        Text(
+          title,
+          style: const TextStyle(color: Colors.white70, fontSize: 13),
+        ),
+      ],
     );
   }
 }

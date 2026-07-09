@@ -1,6 +1,10 @@
+import 'package:flutter/material.dart';
+
+import 'package:finsync/core/theme/colors.dart';
+import 'package:finsync/core/theme/text_styles.dart';
+
 import 'package:finsync/presentation/pages/profile/componente/btn_settings.dart';
 import 'package:finsync/presentation/pages/profile/componente/photo_name.dart';
-import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -12,45 +16,47 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            PhotoName(
-              image: Image.asset(
-                "/Users/diogomomarques/Desktop/Diogo/FinSync/finsync/assets/images/person.jpeg",
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const PhotoName(
+                imagePath:
+                    "/Users/diogomomarques/Desktop/Diogo/FinSync/finsync/assets/images/person.jpeg",
+                name: "Diogo Marques",
+                userName: "@DiogoMarques",
               ),
-              name: "Diogo Marques",
-              userName: "@DiogoMarques",
-            ),
 
-            const SizedBox(height: 24),
+              const SizedBox(height: 30),
 
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
+              Text(
                 "Definições",
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                style: AppTextStyles.headingMedium.copyWith(fontSize: 22),
               ),
-            ),
 
-            const SizedBox(height: 12),
+              const SizedBox(height: 18),
 
-            Expanded(
-              child: Card(
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+              Container(
+                decoration: BoxDecoration(
+                  color: AppColors.surface,
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(color: AppColors.border),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(.03),
+                      blurRadius: 18,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
                 ),
-                child: ListView(
-                  children: const [
+                child: const Column(
+                  children: [
                     BtnSettings(
-                      icon: Icons.edit_outlined,
+                      icon: Icons.person_outline_rounded,
                       name: "Editar Perfil",
                     ),
                     Divider(height: 1),
@@ -61,7 +67,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     Divider(height: 1),
 
-                    BtnSettings(icon: Icons.lock_outline, name: "Segurança"),
+                    BtnSettings(
+                      icon: Icons.lock_outline_rounded,
+                      name: "Segurança",
+                    ),
                     Divider(height: 1),
 
                     BtnSettings(icon: Icons.dark_mode_outlined, name: "Tema"),
@@ -70,27 +79,44 @@ class _ProfilePageState extends State<ProfilePage> {
                     BtnSettings(icon: Icons.language_outlined, name: "Idioma"),
                     Divider(height: 1),
 
-                    BtnSettings(icon: Icons.help_outline, name: "Ajuda"),
+                    BtnSettings(
+                      icon: Icons.help_outline_rounded,
+                      name: "Ajuda",
+                    ),
                   ],
                 ),
               ),
-            ),
 
-            const SizedBox(height: 16),
+              const SizedBox(height: 24),
 
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton.icon(
-                onPressed: () {},
-                icon: const Icon(Icons.logout, color: Colors.red),
-                label: const Text("Sair", style: TextStyle(color: Colors.red)),
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: Colors.red),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: OutlinedButton.icon(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.logout_rounded,
+                    color: AppColors.error,
+                  ),
+                  label: const Text(
+                    "Terminar Sessão",
+                    style: TextStyle(
+                      color: AppColors.error,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: AppColors.error),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ],
+
+              const SizedBox(height: 30),
+            ],
+          ),
         ),
       ),
     );

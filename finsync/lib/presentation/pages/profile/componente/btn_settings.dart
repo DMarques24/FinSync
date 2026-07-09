@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:finsync/core/theme/colors.dart';
+import 'package:finsync/core/theme/text_styles.dart';
+
 class BtnSettings extends StatelessWidget {
   final IconData icon;
   final String name;
@@ -14,23 +17,53 @@ class BtnSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(18),
+        splashColor: AppColors.secondary.withOpacity(.08),
+        highlightColor: Colors.transparent,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+          child: Row(
+            children: [
+              Container(
+                width: 46,
+                height: 46,
+                decoration: BoxDecoration(
+                  color: AppColors.secondary.withOpacity(.10),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Icon(icon, color: AppColors.secondary, size: 24),
+              ),
 
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        child: Row(
-          children: [
-            Icon(icon),
+              const SizedBox(width: 18),
 
-            const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  name,
+                  style: AppTextStyles.bodyLarge.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
 
-            Expanded(child: Text(name, style: theme.textTheme.bodyLarge)),
-
-            const Icon(Icons.chevron_right, color: Colors.grey),
-          ],
+              Container(
+                width: 34,
+                height: 34,
+                decoration: BoxDecoration(
+                  color: AppColors.background,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.chevron_right_rounded,
+                  color: AppColors.textSecondary,
+                  size: 22,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

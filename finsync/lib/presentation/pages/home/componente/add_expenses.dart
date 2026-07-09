@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:finsync/core/theme/colors.dart';
+import 'package:finsync/core/theme/text_styles.dart';
+
 class AddExpenses extends StatefulWidget {
   const AddExpenses({super.key});
 
@@ -15,7 +18,7 @@ class _AddExpensesState extends State<AddExpenses> {
 
   String selectedCategory = "Alimentação";
 
-  final List<String> categories = [
+  final categories = const [
     "Alimentação",
     "Transportes",
     "Compras",
@@ -34,8 +37,11 @@ class _AddExpensesState extends State<AddExpenses> {
   Future<void> _selectDate() async {
     final picked = await showDatePicker(
       context: context,
+
       initialDate: DateTime.now(),
+
       firstDate: DateTime(2024),
+
       lastDate: DateTime(2035),
     );
 
@@ -47,114 +53,135 @@ class _AddExpensesState extends State<AddExpenses> {
   }
 
   void _saveExpense() {
-    final name = _nameController.text.trim();
-    final price = double.tryParse(_priceController.text);
-
-    if (name.isEmpty || price == null || selectedDate == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Preenche todos os campos.")),
-      );
-      return;
-    }
-
-    print(name);
-    print(price);
-    print(selectedCategory);
-    print(selectedDate);
-
     Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 20,
-        right: 20,
-        top: 20,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-      ),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Center(
-              child: Text(
-                "Nova Despesa",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(
+          24,
+          24,
+          24,
+          MediaQuery.of(context).viewInsets.bottom + 24,
+        ),
+
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+
+            children: [
+              Center(
+                child: Container(
+                  width: 45,
+                  height: 5,
+
+                  decoration: BoxDecoration(
+                    color: AppColors.disabled,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
               ),
-            ),
 
-            const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
-            TextFormField(
-              controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: "Nome",
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.shopping_bag),
+              Text("Nova Despesa", style: AppTextStyles.headingMedium),
+
+              const SizedBox(height: 6),
+
+              Text(
+                "Adiciona uma nova despesa.",
+                style: AppTextStyles.bodySmall,
               ),
-            ),
 
-            const SizedBox(height: 16),
+              const SizedBox(height: 28),
 
-            TextFormField(
-              controller: _priceController,
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
+              TextFormField(
+                controller: _nameController,
+                decoration: const InputDecoration(
+                  labelText: "Nome",
+                  prefixIcon: Icon(Icons.shopping_bag_outlined),
+                ),
               ),
-              decoration: const InputDecoration(
-                labelText: "Preço",
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.euro),
+
+              const SizedBox(height: 18),
+
+              TextFormField(
+                controller: _priceController,
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
+                decoration: const InputDecoration(
+                  labelText: "Valor (€)",
+                  prefixIcon: Icon(Icons.euro_rounded),
+                ),
               ),
-            ),
 
-            const SizedBox(height: 16),
+              const SizedBox(height: 18),
 
-            DropdownButtonFormField<String>(
-              initialValue: selectedCategory,
-              decoration: const InputDecoration(
-                labelText: "Categoria",
-                border: OutlineInputBorder(),
+              DropdownButtonFormField<String>(
+                value: selectedCategory,
+
+                decoration: const InputDecoration(
+                  labelText: "Categoria",
+                  prefixIcon: Icon(Icons.category_outlined),
+                ),
+
+                items: categories
+                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                    .toList(),
+
+                onChanged: (value) {
+                  setState(() {
+                    selectedCategory = value!;
+                  });
+                },
               ),
-              items: categories.map((category) {
-                return DropdownMenuItem(value: category, child: Text(category));
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  selectedCategory = value!;
-                });
-              },
-            ),
 
-            const SizedBox(height: 16),
+              const SizedBox(height: 18),
 
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: const Icon(Icons.calendar_month),
-              title: Text(
-                selectedDate == null
-                    ? "Selecionar data"
-                    : "${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}",
+              InkWell(
+                borderRadius: BorderRadius.circular(16),
+
+                onTap: _selectDate,
+
+                child: InputDecorator(
+                  decoration: const InputDecoration(
+                    labelText: "Data",
+
+                    prefixIcon: Icon(Icons.calendar_month),
+                  ),
+
+                  child: Text(
+                    selectedDate == null
+                        ? "Selecionar data"
+                        : "${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}",
+                  ),
+                ),
               ),
-              trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: _selectDate,
-            ),
 
-            const SizedBox(height: 24),
+              const SizedBox(height: 30),
 
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton.icon(
+              FilledButton.icon(
+                style: FilledButton.styleFrom(
+                  backgroundColor: AppColors.secondary,
+                  minimumSize: const Size(double.infinity, 56),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                ),
+
                 onPressed: _saveExpense,
-                icon: const Icon(Icons.save),
-                label: const Text("Guardar"),
+
+                icon: const Icon(Icons.save_outlined),
+
+                label: const Text("Guardar Despesa"),
               ),
-            ),
-          ],
+
+              const SizedBox(height: 10),
+            ],
+          ),
         ),
       ),
     );

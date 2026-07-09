@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'package:finsync/core/theme/colors.dart';
+import 'package:finsync/core/theme/text_styles.dart';
+
 class AddDesire extends StatefulWidget {
   const AddDesire({super.key});
 
@@ -17,6 +20,7 @@ class _AddDesireState extends State<AddDesire> {
   final ImagePicker picker = ImagePicker();
 
   File? _image;
+
   DateTime? _selectedDate;
 
   Future<void> pickImage() async {
@@ -54,117 +58,148 @@ class _AddDesireState extends State<AddDesire> {
     super.dispose();
   }
 
+  void save() {
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 20,
-        right: 20,
-        top: 20,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-      ),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Text(
-                "Novo Desejo",
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(
+          24,
+          20,
+          24,
+          MediaQuery.of(context).viewInsets.bottom + 24,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                width: 45,
+                height: 5,
+                decoration: BoxDecoration(
+                  color: AppColors.disabled,
+                  borderRadius: BorderRadius.circular(30),
                 ),
               ),
-            ),
 
-            const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
-            Center(
-              child: GestureDetector(
+              Text("Novo Desejo", style: AppTextStyles.headingMedium),
+
+              const SizedBox(height: 6),
+
+              Text(
+                "Cria um novo objetivo financeiro.",
+                style: AppTextStyles.bodySmall.copyWith(
+                  color: AppColors.textSecondary,
+                ),
+              ),
+
+              const SizedBox(height: 30),
+
+              GestureDetector(
                 onTap: pickImage,
                 child: Container(
                   width: 140,
                   height: 140,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(18),
-                    border: Border.all(color: Colors.grey.shade400),
+                    color: AppColors.background,
+                    borderRadius: BorderRadius.circular(22),
+                    border: Border.all(color: AppColors.border),
                   ),
                   child: _image == null
-                      ? const Column(
+                      ? Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.add_a_photo, size: 40),
-                            SizedBox(height: 8),
-                            Text("Adicionar imagem"),
+                          children: const [
+                            Icon(
+                              Icons.add_photo_alternate_outlined,
+                              size: 42,
+                              color: AppColors.secondary,
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              "Adicionar imagem",
+                              style: TextStyle(fontWeight: FontWeight.w600),
+                            ),
                           ],
                         )
                       : ClipRRect(
-                          borderRadius: BorderRadius.circular(18),
+                          borderRadius: BorderRadius.circular(22),
                           child: Image.file(_image!, fit: BoxFit.cover),
                         ),
                 ),
               ),
-            ),
 
-            const SizedBox(height: 24),
+              const SizedBox(height: 30),
 
-            TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: "Nome do desejo",
-                prefixIcon: Icon(Icons.shopping_bag_outlined),
-                border: OutlineInputBorder(),
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            TextField(
-              controller: _priceController,
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
-              ),
-              decoration: const InputDecoration(
-                labelText: "Preço (€)",
-                prefixIcon: Icon(Icons.euro),
-                border: OutlineInputBorder(),
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            InkWell(
-              onTap: selectDate,
-              borderRadius: BorderRadius.circular(12),
-              child: InputDecorator(
+              TextField(
+                controller: _nameController,
                 decoration: const InputDecoration(
-                  labelText: "Data objetivo",
-                  prefixIcon: Icon(Icons.calendar_month),
-                  border: OutlineInputBorder(),
-                ),
-                child: Text(
-                  _selectedDate == null
-                      ? "Selecionar data"
-                      : "${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}",
+                  labelText: "Nome do desejo",
+                  prefixIcon: Icon(
+                    Icons.favorite_border_rounded,
+                    color: AppColors.secondary,
+                  ),
                 ),
               ),
-            ),
 
-            const SizedBox(height: 30),
+              const SizedBox(height: 18),
 
-            SizedBox(
-              width: double.infinity,
-              child: FilledButton.icon(
-                onPressed: () {
-                  // Guardar desejo
-                },
-                icon: const Icon(Icons.save),
-                label: const Text("Guardar desejo"),
+              TextField(
+                controller: _priceController,
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
+                decoration: const InputDecoration(
+                  labelText: "Preço (€)",
+                  prefixIcon: Icon(
+                    Icons.euro_rounded,
+                    color: AppColors.secondary,
+                  ),
+                ),
               ),
-            ),
-          ],
+
+              const SizedBox(height: 18),
+
+              InkWell(
+                borderRadius: BorderRadius.circular(16),
+                onTap: selectDate,
+                child: InputDecorator(
+                  decoration: const InputDecoration(
+                    labelText: "Data objetivo",
+                    prefixIcon: Icon(
+                      Icons.calendar_month_rounded,
+                      color: AppColors.secondary,
+                    ),
+                  ),
+                  child: Text(
+                    _selectedDate == null
+                        ? "Selecionar data"
+                        : "${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}",
+                    style: AppTextStyles.bodyMedium,
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 32),
+
+              FilledButton.icon(
+                onPressed: save,
+                style: FilledButton.styleFrom(
+                  backgroundColor: AppColors.secondary,
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size(double.infinity, 58),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                ),
+                icon: const Icon(Icons.save_outlined),
+                label: const Text("Guardar Desejo"),
+              ),
+            ],
+          ),
         ),
       ),
     );
