@@ -3,22 +3,52 @@ import 'package:flutter/material.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 
+import 'package:finsync/domain/entities/expenses.dart';
+
 import 'card_list.dart';
 
 class ExpensesList extends StatelessWidget {
-  const ExpensesList({super.key});
+  final List<Expenses> expenses;
+
+  const ExpensesList({super.key, required this.expenses});
 
   @override
   Widget build(BuildContext context) {
+    if (expenses.isEmpty) {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(28),
+          border: Border.all(color: AppColors.border),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Últimas Despesas",
+              style: AppTextStyles.headingMedium.copyWith(fontSize: 22),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              "Ainda não existem despesas para mostrar.",
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Container(
       padding: const EdgeInsets.all(20),
-
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(28),
         border: Border.all(color: AppColors.border),
       ),
-
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -29,55 +59,24 @@ class ExpensesList extends StatelessWidget {
 
           const SizedBox(height: 20),
 
-          const CardList(
-            nome: "McDonald's",
-            categoria: "Alimentação",
-            data: "Hoje • 13:40",
-            price: 14.50,
-            icon: Icons.fastfood_rounded,
-          ),
-
-          CardList(
-            nome: "Uber",
-            categoria: "Transportes",
-            data: "Ontem • 22:15",
-            price: 8.90,
-            icon: Icons.local_taxi_rounded,
-          ),
-
-          CardList(
-            nome: "Netflix",
-            categoria: "Subscrições",
-            data: "15 Jun",
-            price: 12.99,
-            icon: Icons.movie_rounded,
-          ),
-
-          CardList(
-            nome: "Continente",
-            categoria: "Supermercado",
-            data: "13 Jun",
-            price: 56.40,
-            icon: Icons.shopping_cart_rounded,
-          ),
-
-          CardList(
-            nome: "Spotify",
-            categoria: "Subscrições",
-            data: "09 Jun",
-            price: 7.99,
-            icon: Icons.music_note_rounded,
-          ),
-
-          CardList(
-            nome: "Galp",
-            categoria: "Combustível",
-            data: "08 Jun",
-            price: 65,
-            icon: Icons.local_gas_station_rounded,
+          ...expenses.map(
+            (expense) => Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: CardList(
+                nome: expense.name,
+                categoria: expense.category,
+                data: _formatDate(expense.date),
+                price: expense.price,
+                icon: Icons.payments_rounded,
+              ),
+            ),
           ),
         ],
       ),
     );
+  }
+
+  String _formatDate(DateTime date) {
+    return "${date.day}/${date.month}/${date.year}";
   }
 }
