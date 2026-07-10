@@ -48,30 +48,36 @@ class _MainPageState extends State<MainPage> {
         child: pages[currentIndex],
       ),
 
-      floatingActionButton: FloatingActionButton(
-        heroTag: "addExpense",
-        elevation: 8,
-        backgroundColor: AppColors.secondary,
-        foregroundColor: Colors.white,
+      floatingActionButton: currentIndex == 0
+          ? FloatingActionButton(
+              heroTag: "addExpense",
+              elevation: 8,
+              backgroundColor: AppColors.secondary,
+              foregroundColor: Colors.white,
 
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18),
+              ),
 
-        child: const Icon(Icons.add, size: 28),
+              child: const Icon(Icons.add, size: 28),
 
-        onPressed: () {
-          showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            backgroundColor: AppColors.surface,
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: AppColors.surface,
 
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-            ),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(28),
+                    ),
+                  ),
 
-            builder: (_) => const AddExpenses(),
-          );
-        },
-      ),
+                  builder: (_) => const AddExpenses(),
+                );
+              },
+            )
+          : null,
 
       extendBody: true,
 
