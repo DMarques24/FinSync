@@ -1,3 +1,4 @@
+import 'package:finsync/presentation/pages/desire/desire_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:finsync/app/app_router.dart';
@@ -9,8 +10,11 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<HomeBloc>(
-      create: (_) => sl<HomeBloc>(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<HomeBloc>(create: (_) => sl<HomeBloc>()),
+        BlocProvider<DesireBloc>(create: (_) => sl<DesireBloc>()),
+      ],
       child: MaterialApp.router(routerConfig: router),
     );
   }
