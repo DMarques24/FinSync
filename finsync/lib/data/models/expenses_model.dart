@@ -1,4 +1,5 @@
 import 'package:finsync/domain/entities/expenses.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ExpensesModel {
   final int id;
@@ -26,6 +27,15 @@ class ExpensesModel {
           ? rawDate
           : DateTime.tryParse(rawDate?.toString() ?? '') ?? DateTime.now(),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'price': price,
+      'category': category,
+      'date': date.toIso8601String(),
+    };
   }
 
   Expenses toEntity() {

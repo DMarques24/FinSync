@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:finsync/domain/entities/expenses.dart';
+import 'package:finsync/presentation/pages/home/home_bloc.dart';
+import 'package:finsync/presentation/pages/home/home_event.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 
@@ -53,6 +57,30 @@ class _AddExpensesState extends State<AddExpenses> {
   }
 
   void _saveExpense() {
+    if (_nameController.text.trim().isEmpty) {
+      return;
+    }
+
+    final price = double.tryParse(_priceController.text.replaceAll(',', '.'));
+
+    if (price == null) {
+      return;
+    }
+
+    if (selectedDate == null) {
+      return;
+    }
+
+    final expense = Expenses(
+      id: 0,
+      name: _nameController.text.trim(),
+      price: price,
+      category: selectedCategory,
+      date: selectedDate!,
+    );
+
+    context.read<HomeBloc>().add(AddExpenseEvent(expense));
+
     Navigator.pop(context);
   }
 
