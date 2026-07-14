@@ -1,3 +1,5 @@
+import 'package:finsync/presentation/pages/createAcount/create_acount_bloc.dart';
+import 'package:finsync/presentation/pages/login/login_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,6 +18,8 @@ class App extends StatelessWidget {
       providers: [
         BlocProvider<HomeBloc>(create: (_) => sl<HomeBloc>()),
         BlocProvider<DesireBloc>(create: (_) => sl<DesireBloc>()),
+        BlocProvider<LoginBloc>(create: (_) => sl<LoginBloc>()),
+        BlocProvider<CreateAcountBloc>(create: (_) => sl<CreateAcountBloc>()),
       ],
       child: MaterialApp.router(
         theme: AppTheme.lightTheme,

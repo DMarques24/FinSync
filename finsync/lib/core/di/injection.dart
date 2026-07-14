@@ -1,3 +1,5 @@
+import 'package:finsync/presentation/pages/createAcount/create_acount_bloc.dart';
+import 'package:finsync/presentation/pages/login/login_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:finsync/data/datasources/desire_remote_datasource.dart';
@@ -55,4 +57,8 @@ Future<void> initDependencies() async {
   sl.registerFactory<DesireBloc>(
     () => DesireBloc(sl<GetAllDesires>(), sl<InsertDesire>()),
   );
+
+  sl.registerFactory<LoginBloc>(() => LoginBloc());
+
+  sl.registerFactory<CreateAcountBloc>(() => CreateAcountBloc());
 }
