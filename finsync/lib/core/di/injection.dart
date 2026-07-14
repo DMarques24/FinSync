@@ -2,14 +2,18 @@ import 'package:finsync/presentation/pages/createAcount/create_acount_bloc.dart'
 import 'package:finsync/presentation/pages/login/login_bloc.dart';
 import 'package:get_it/get_it.dart';
 
+import 'package:finsync/data/datasources/auth_user_remote_datasource.dart';
+import 'package:finsync/data/datasources/auth_user_remote_datasource_impl.dart';
 import 'package:finsync/data/datasources/desire_remote_datasource.dart';
 import 'package:finsync/data/datasources/desire_remote_datasource_impl.dart';
 import 'package:finsync/data/datasources/expense_remote_datasource.dart';
 import 'package:finsync/data/datasources/expense_remote_datasource_impl.dart';
 
+import 'package:finsync/data/repositories/auth_user_repository_impl.dart';
 import 'package:finsync/data/repositories/desire_repository_impl.dart';
 import 'package:finsync/data/repositories/expense_repository_impl.dart';
 
+import 'package:finsync/domain/repositories/auth_user_repository.dart';
 import 'package:finsync/domain/repositories/desire_repository.dart';
 import 'package:finsync/domain/repositories/expense_repository.dart';
 
@@ -17,6 +21,8 @@ import 'package:finsync/domain/usecases/get_all_desires.dart';
 import 'package:finsync/domain/usecases/get_all_expenses.dart';
 import 'package:finsync/domain/usecases/insert_desire.dart';
 import 'package:finsync/domain/usecases/insert_expense.dart';
+import 'package:finsync/domain/usecases/sign_in_user.dart';
+import 'package:finsync/domain/usecases/sign_up_user.dart';
 
 import 'package:finsync/presentation/pages/desire/desire_bloc.dart';
 import 'package:finsync/presentation/pages/home/home_bloc.dart';
@@ -25,6 +31,10 @@ final sl = GetIt.instance;
 
 Future<void> initDependencies() async {
   // DATASOURCES
+  sl.registerLazySingleton<AuthUserRemoteDatasource>(
+    () => AuthUserRemoteDatasourceImpl(),
+  );
+
   sl.registerLazySingleton<ExpenseRemoteDatasource>(
     () => ExpenseRemoteDatasourceImpl(),
   );
@@ -34,6 +44,10 @@ Future<void> initDependencies() async {
   );
 
   // REPOSITORIES
+  sl.registerLazySingleton<AuthUserRepository>(
+    () => AuthUserRepositoryImpl(sl()),
+  );
+
   sl.registerLazySingleton<ExpenseRepository>(
     () => ExpenseRepositoryImpl(sl()),
   );
@@ -41,6 +55,10 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton<DesireRepository>(() => DesireRepositoryImpl(sl()));
 
   // USE CASES
+  sl.registerLazySingleton<SignInUser>(() => SignInUser(sl()));
+
+  sl.registerLazySingleton<SignUpUser>(() => SignUpUser(sl()));
+
   sl.registerLazySingleton<GetAllExpenses>(() => GetAllExpenses(sl()));
 
   sl.registerLazySingleton<InsertExpense>(() => InsertExpense(sl()));
@@ -58,7 +76,9 @@ Future<void> initDependencies() async {
     () => DesireBloc(sl<GetAllDesires>(), sl<InsertDesire>()),
   );
 
-  sl.registerFactory<LoginBloc>(() => LoginBloc());
+  sl.registerFactory<LoginBloc>(() => LoginBloc(sl<SignInUser>()));
 
-  sl.registerFactory<CreateAcountBloc>(() => CreateAcountBloc());
+  sl.registerFactory<CreateAcountBloc>(
+    () => CreateAcountBloc(sl<SignUpUser>()),
+  );
 }
