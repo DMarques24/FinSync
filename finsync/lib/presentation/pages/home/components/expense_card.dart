@@ -3,26 +3,35 @@ import 'package:flutter/material.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 
-class CardList extends StatelessWidget {
-  final String nome;
-  final String categoria;
-  final String data;
+class ExpenseCard extends StatelessWidget {
+  final String name;
+  final String category;
+  final String date;
   final double price;
-  final IconData icon;
 
-  const CardList({
+  const ExpenseCard({
     super.key,
-    required this.nome,
-    required this.categoria,
-    required this.data,
+    required this.name,
+    required this.category,
+    required this.date,
     required this.price,
-    required this.icon,
   });
+
+  static const _categoryIcons = <String, IconData>{
+    "Alimentação": Icons.restaurant_rounded,
+    "Transportes": Icons.directions_car_filled_rounded,
+    "Compras": Icons.shopping_bag_rounded,
+    "Subscrições": Icons.autorenew_rounded,
+    "Saúde": Icons.favorite_rounded,
+    "Lazer": Icons.sports_esports_rounded,
+  };
+
+  IconData get _icon => _categoryIcons[category] ?? Icons.payments_rounded;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 14),
 
       padding: const EdgeInsets.all(16),
 
@@ -40,11 +49,11 @@ class CardList extends StatelessWidget {
             height: 52,
 
             decoration: BoxDecoration(
-              color: AppColors.secondary.withOpacity(.10),
+              color: AppColors.secondary.withValues(alpha: .10),
               borderRadius: BorderRadius.circular(16),
             ),
 
-            child: Icon(icon, color: AppColors.secondary, size: 28),
+            child: Icon(_icon, color: AppColors.secondary, size: 26),
           ),
 
           const SizedBox(width: 16),
@@ -54,7 +63,7 @@ class CardList extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  nome,
+                  name,
                   style: AppTextStyles.bodyLarge.copyWith(
                     fontWeight: FontWeight.w700,
                   ),
@@ -69,12 +78,12 @@ class CardList extends StatelessWidget {
                   ),
 
                   decoration: BoxDecoration(
-                    color: AppColors.secondary.withOpacity(.08),
+                    color: AppColors.secondary.withValues(alpha: .08),
                     borderRadius: BorderRadius.circular(20),
                   ),
 
                   child: Text(
-                    categoria,
+                    category,
                     style: AppTextStyles.bodySmall.copyWith(
                       color: AppColors.secondary,
                       fontWeight: FontWeight.w600,
@@ -85,7 +94,7 @@ class CardList extends StatelessWidget {
                 const SizedBox(height: 8),
 
                 Text(
-                  data,
+                  date,
                   style: AppTextStyles.bodySmall.copyWith(
                     color: AppColors.textSecondary,
                   ),

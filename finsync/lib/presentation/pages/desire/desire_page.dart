@@ -1,4 +1,4 @@
-import 'package:finsync/presentation/pages/desire/componente/desires_list.dart';
+import 'package:finsync/presentation/pages/desire/components/desires_list.dart';
 import 'package:finsync/presentation/pages/desire/desire_bloc.dart';
 import 'package:finsync/presentation/pages/desire/desire_event.dart';
 import 'package:finsync/presentation/pages/desire/desire_state.dart';
@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 
-import 'package:finsync/presentation/pages/desire/componente/add_desire.dart';
+import 'package:finsync/presentation/pages/desire/components/add_desire_form.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DesirePage extends StatefulWidget {
@@ -22,7 +22,7 @@ class _DesirePageState extends State<DesirePage> {
   void initState() {
     super.initState();
 
-    context.read<DesireBloc>().add(GetAllDesireEvent());
+    context.read<DesireBloc>().add(GetAllDesiresEvent());
   }
 
   @override
@@ -84,7 +84,7 @@ class _DesirePageState extends State<DesirePage> {
                             top: Radius.circular(28),
                           ),
                         ),
-                        builder: (context) => const AddDesire(),
+                        builder: (context) => const AddDesireForm(),
                       );
                     },
 

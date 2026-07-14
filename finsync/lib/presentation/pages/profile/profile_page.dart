@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 
-import 'package:finsync/presentation/pages/profile/componente/btn_settings.dart';
-import 'package:finsync/presentation/pages/profile/componente/photo_name.dart';
+import 'package:finsync/presentation/pages/profile/components/settings_button.dart';
+import 'package:finsync/presentation/pages/profile/components/profile_header.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -24,9 +24,8 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const PhotoName(
-                imagePath:
-                    "/Users/diogomomarques/Desktop/Diogo/FinSync/finsync/assets/images/person.jpeg",
+              const ProfileHeader(
+                imagePath: "assets/images/person.jpeg",
                 name: "Diogo Marques",
                 userName: "@DiogoMarques",
               ),
@@ -47,7 +46,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   border: Border.all(color: AppColors.border),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(.03),
+                      color: Colors.black.withValues(alpha: .03),
                       blurRadius: 18,
                       offset: const Offset(0, 10),
                     ),
@@ -55,31 +54,31 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 child: const Column(
                   children: [
-                    BtnSettings(
+                    SettingsButton(
                       icon: Icons.person_outline_rounded,
                       name: "Editar Perfil",
                     ),
                     Divider(height: 1),
 
-                    BtnSettings(
+                    SettingsButton(
                       icon: Icons.notifications_outlined,
                       name: "Notificações",
                     ),
                     Divider(height: 1),
 
-                    BtnSettings(
+                    SettingsButton(
                       icon: Icons.lock_outline_rounded,
                       name: "Segurança",
                     ),
                     Divider(height: 1),
 
-                    BtnSettings(icon: Icons.dark_mode_outlined, name: "Tema"),
+                    SettingsButton(icon: Icons.dark_mode_outlined, name: "Tema"),
                     Divider(height: 1),
 
-                    BtnSettings(icon: Icons.language_outlined, name: "Idioma"),
+                    SettingsButton(icon: Icons.language_outlined, name: "Idioma"),
                     Divider(height: 1),
 
-                    BtnSettings(
+                    SettingsButton(
                       icon: Icons.help_outline_rounded,
                       name: "Ajuda",
                     ),

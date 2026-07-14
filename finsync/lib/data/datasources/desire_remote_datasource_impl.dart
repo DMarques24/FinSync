@@ -5,12 +5,17 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DesireRemoteDatasourceImpl extends DesireRemoteDatasource {
   DesireRemoteDatasourceImpl();
+  final supabase = Supabase.instance.client;
 
   @override
-  Future<List<DesireModel>> getAllDesire() async {
-    final supabase = Supabase.instance.client;
+  Future<List<DesireModel>> getAllDesires() async {
     final List<dynamic> result = await supabase.from('desire').select();
-    debugPrint("DesireRemoteDatasourceImpl: getAllDesire result: $result");
+    debugPrint("DesireRemoteDatasourceImpl: getAllDesires result: $result");
     return result.map((json) => DesireModel.fromJson(json)).toList();
+  }
+
+  @override
+  Future<void> insertDesire(DesireModel desire) async {
+    await supabase.from('desire').insert(desire.toJson());
   }
 }

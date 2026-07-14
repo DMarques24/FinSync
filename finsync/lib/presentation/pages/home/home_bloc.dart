@@ -32,19 +32,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     AddExpenseEvent event,
     Emitter<HomeState> emit,
   ) async {
-    print("Evento recebido!");
-
     try {
       await insertExpense(event.expense);
-
-      print("Despesa inserida!");
 
       final expenses = await getAllExpenses();
 
       emit(HomeLoadedState(expenses));
-    } catch (e, s) {
-      print(e);
-      print(s);
+    } catch (e) {
       emit(HomeErrorState(e.toString()));
     }
   }

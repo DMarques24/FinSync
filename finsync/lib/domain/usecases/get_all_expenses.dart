@@ -1,12 +1,12 @@
-import 'package:finsync/domain/entities/expenses.dart';
-import 'package:finsync/domain/repositories/expenses_repository.dart';
+import 'package:finsync/domain/entities/expense.dart';
+import 'package:finsync/domain/repositories/expense_repository.dart';
 
 class GetAllExpenses {
-  final ExpensesRepository expensesRepository;
+  final ExpenseRepository expensesRepository;
 
   GetAllExpenses(this.expensesRepository);
 
-  Future<List<Expenses>> call() async {
+  Future<List<Expense>> call() async {
     return await expensesRepository.getAllExpenses();
   }
 }

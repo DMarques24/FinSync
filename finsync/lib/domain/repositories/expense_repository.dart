@@ -1,7 +1,7 @@
-import 'package:finsync/domain/entities/expenses.dart';
+import 'package:finsync/domain/entities/expense.dart';
 
-abstract class ExpensesRepository {
-  Future<List<Expenses>> getAllExpenses();
+abstract class ExpenseRepository {
+  Future<List<Expense>> getAllExpenses();
 
-  Future<void> insertExpense(Expenses expense);
+  Future<void> insertExpense(Expense expense);
 }

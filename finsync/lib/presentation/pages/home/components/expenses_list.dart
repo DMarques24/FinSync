@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 
-import 'package:finsync/domain/entities/expenses.dart';
+import 'package:finsync/domain/entities/expense.dart';
 
-import 'card_list.dart';
+import 'expense_card.dart';
 
 class ExpensesList extends StatelessWidget {
-  final List<Expenses> expenses;
+  final List<Expense> expenses;
 
   const ExpensesList({super.key, required this.expenses});
 
@@ -22,6 +22,13 @@ class ExpensesList extends StatelessWidget {
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(28),
           border: Border.all(color: AppColors.border),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: .03),
+              blurRadius: 18,
+              offset: const Offset(0, 10),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,13 +37,42 @@ class ExpensesList extends StatelessWidget {
               "Últimas Despesas",
               style: AppTextStyles.headingMedium.copyWith(fontSize: 22),
             ),
-            const SizedBox(height: 12),
-            Text(
-              "Ainda não existem despesas para mostrar.",
-              style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.textSecondary,
+            const SizedBox(height: 24),
+            Center(
+              child: Column(
+                children: [
+                  Container(
+                    width: 64,
+                    height: 64,
+                    decoration: BoxDecoration(
+                      color: AppColors.secondary.withValues(alpha: .10),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.receipt_long_rounded,
+                      color: AppColors.secondary,
+                      size: 30,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    "Ainda não existem despesas",
+                    style: AppTextStyles.bodyLarge.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    "Toca em \"+\" para adicionar a tua primeira despesa.",
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                ],
               ),
             ),
+            const SizedBox(height: 8),
           ],
         ),
       );
@@ -48,6 +84,13 @@ class ExpensesList extends StatelessWidget {
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(28),
         border: Border.all(color: AppColors.border),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: .03),
+            blurRadius: 18,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,12 +105,11 @@ class ExpensesList extends StatelessWidget {
           ...expenses.map(
             (expense) => Padding(
               padding: const EdgeInsets.only(bottom: 12),
-              child: CardList(
-                nome: expense.name,
-                categoria: expense.category,
-                data: _formatDate(expense.date),
+              child: ExpenseCard(
+                name: expense.name,
+                category: expense.category,
+                date: _formatDate(expense.date),
                 price: expense.price,
-                icon: Icons.payments_rounded,
               ),
             ),
           ),

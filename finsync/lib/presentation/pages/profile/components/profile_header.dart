@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 
-class PhotoName extends StatelessWidget {
+class ProfileHeader extends StatelessWidget {
   final String imagePath;
   final String name;
   final String userName;
 
-  const PhotoName({
+  const ProfileHeader({
     super.key,
     required this.imagePath,
     required this.name,
@@ -23,13 +23,17 @@ class PhotoName extends StatelessWidget {
       padding: const EdgeInsets.all(24),
 
       decoration: BoxDecoration(
-        color: AppColors.primary,
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [AppColors.primary, AppColors.secondary],
+        ),
 
         borderRadius: BorderRadius.circular(28),
 
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(.20),
+            color: AppColors.primary.withValues(alpha: .20),
             blurRadius: 22,
             offset: const Offset(0, 10),
           ),
@@ -44,9 +48,27 @@ class PhotoName extends StatelessWidget {
                 radius: 48,
                 backgroundColor: Colors.white,
 
-                child: CircleAvatar(
-                  radius: 44,
-                  backgroundImage: AssetImage(imagePath),
+                child: ClipOval(
+                  child: Image.asset(
+                    imagePath,
+                    width: 88,
+                    height: 88,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      width: 88,
+                      height: 88,
+                      alignment: Alignment.center,
+                      color: AppColors.secondary.withValues(alpha: .12),
+                      child: Text(
+                        _initials(name),
+                        style: const TextStyle(
+                          color: AppColors.secondary,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 28,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
 
@@ -97,6 +119,15 @@ class PhotoName extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _initials(String value) {
+    final parts = value
+        .trim()
+        .split(RegExp(r'\s+'))
+        .where((p) => p.isNotEmpty);
+    final letters = parts.take(2).map((p) => p[0].toUpperCase());
+    return letters.isEmpty ? "?" : letters.join();
   }
 }
 

@@ -3,7 +3,7 @@ import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 
 import 'package:finsync/presentation/pages/desire/desire_page.dart';
-import 'package:finsync/presentation/pages/home/componente/add_expenses.dart';
+import 'package:finsync/presentation/pages/home/components/add_expense_form.dart';
 import 'package:finsync/presentation/pages/home/home_page.dart';
 import 'package:finsync/presentation/pages/profile/profile_page.dart';
 
@@ -73,7 +73,7 @@ class _MainPageState extends State<MainPage> {
                     ),
                   ),
 
-                  builder: (_) => const AddExpenses(),
+                  builder: (_) => const AddExpenseForm(),
                 );
               },
             )

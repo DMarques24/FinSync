@@ -27,7 +27,7 @@ class CardCashFlow extends StatelessWidget {
 
         boxShadow: [
           BoxShadow(
-            color: AppColors.secondary.withOpacity(.25),
+            color: AppColors.secondary.withValues(alpha: .25),
             blurRadius: 30,
             offset: const Offset(0, 15),
           ),
@@ -43,7 +43,7 @@ class CardCashFlow extends StatelessWidget {
                 padding: const EdgeInsets.all(10),
 
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(.15),
+                  color: Colors.white.withValues(alpha: .15),
                   borderRadius: BorderRadius.circular(14),
                 ),
 
@@ -126,7 +126,7 @@ class _InfoCard extends StatelessWidget {
       padding: const EdgeInsets.all(16),
 
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(.12),
+        color: Colors.white.withValues(alpha: .12),
 
         borderRadius: BorderRadius.circular(18),
       ),

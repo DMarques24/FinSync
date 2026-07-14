@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:finsync/domain/entities/expenses.dart';
+import 'package:finsync/domain/entities/expense.dart';
 import 'package:finsync/presentation/pages/home/home_bloc.dart';
 import 'package:finsync/presentation/pages/home/home_event.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 
-class AddExpenses extends StatefulWidget {
-  const AddExpenses({super.key});
+class AddExpenseForm extends StatefulWidget {
+  const AddExpenseForm({super.key});
 
   @override
-  State<AddExpenses> createState() => _AddExpensesState();
+  State<AddExpenseForm> createState() => _AddExpenseFormState();
 }
 
-class _AddExpensesState extends State<AddExpenses> {
+class _AddExpenseFormState extends State<AddExpenseForm> {
   final _nameController = TextEditingController();
   final _priceController = TextEditingController();
 
@@ -71,7 +71,7 @@ class _AddExpensesState extends State<AddExpenses> {
       return;
     }
 
-    final expense = Expenses(
+    final expense = Expense(
       id: 0,
       name: _nameController.text.trim(),
       price: price,
@@ -149,7 +149,7 @@ class _AddExpensesState extends State<AddExpenses> {
               const SizedBox(height: 18),
 
               DropdownButtonFormField<String>(
-                value: selectedCategory,
+                initialValue: selectedCategory,
 
                 decoration: const InputDecoration(
                   labelText: "Categoria",

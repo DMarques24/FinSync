@@ -1,19 +1,23 @@
 import 'dart:io';
 
+import 'package:finsync/domain/entities/desire.dart';
+import 'package:finsync/presentation/pages/desire/desire_bloc.dart';
+import 'package:finsync/presentation/pages/desire/desire_event.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 
-class AddDesire extends StatefulWidget {
-  const AddDesire({super.key});
+class AddDesireForm extends StatefulWidget {
+  const AddDesireForm({super.key});
 
   @override
-  State<AddDesire> createState() => _AddDesireState();
+  State<AddDesireForm> createState() => _AddDesireFormState();
 }
 
-class _AddDesireState extends State<AddDesire> {
+class _AddDesireFormState extends State<AddDesireForm> {
   final _nameController = TextEditingController();
   final _priceController = TextEditingController();
 
@@ -58,7 +62,25 @@ class _AddDesireState extends State<AddDesire> {
     super.dispose();
   }
 
-  void save() {
+  void _saveDesire() {
+    final price = double.tryParse(_priceController.text.replaceAll(',', '.'));
+
+    if (_nameController.text.trim().isEmpty ||
+        price == null ||
+        _selectedDate == null) {
+      return;
+    }
+
+    final desire = Desire(
+      id: 0,
+      name: _nameController.text.trim(),
+      price: price,
+      date: _selectedDate!,
+      image: _image?.path,
+    );
+
+    context.read<DesireBloc>().add(AddDesireEvent(desire));
+
     Navigator.pop(context);
   }
 
@@ -186,7 +208,7 @@ class _AddDesireState extends State<AddDesire> {
               const SizedBox(height: 32),
 
               FilledButton.icon(
-                onPressed: save,
+                onPressed: _saveDesire,
                 style: FilledButton.styleFrom(
                   backgroundColor: AppColors.secondary,
                   foregroundColor: Colors.white,

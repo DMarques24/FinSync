@@ -1,21 +1,21 @@
-import 'package:finsync/data/datasources/expenses_remote_datasource.dart';
-import 'package:finsync/data/models/expenses_model.dart';
+import 'package:finsync/data/datasources/expense_remote_datasource.dart';
+import 'package:finsync/data/models/expense_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class ExpensesRemoteDatasourceImpl extends ExpensesRemoteDatasource {
-  ExpensesRemoteDatasourceImpl();
+class ExpenseRemoteDatasourceImpl extends ExpenseRemoteDatasource {
+  ExpenseRemoteDatasourceImpl();
   final supabase = Supabase.instance.client;
 
   @override
-  Future<List<ExpensesModel>> getAllExpenses() async {
+  Future<List<ExpenseModel>> getAllExpenses() async {
     final List<dynamic> result = await supabase.from("expenses").select();
-    debugPrint("ExpensesRemoteDatasourceImpl: getAllExpenses: result: $result");
-    return result.map((json) => ExpensesModel.fromJson(json)).toList();
+    debugPrint("ExpenseRemoteDatasourceImpl: getAllExpenses: result: $result");
+    return result.map((json) => ExpenseModel.fromJson(json)).toList();
   }
 
   @override
-  Future<void> insertExpenses(ExpensesModel expense) async {
+  Future<void> insertExpense(ExpenseModel expense) async {
     await supabase.from("expenses").insert(expense.toJson());
   }
 }

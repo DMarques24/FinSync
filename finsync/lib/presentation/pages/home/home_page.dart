@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 
-import 'package:finsync/presentation/pages/home/componente/card_cash_flow.dart';
-import 'package:finsync/presentation/pages/home/componente/expenses_list.dart';
+import 'package:finsync/presentation/pages/home/components/card_cash_flow.dart';
+import 'package:finsync/presentation/pages/home/components/expenses_list.dart';
 
 import 'package:finsync/presentation/pages/home/home_bloc.dart';
 import 'package:finsync/presentation/pages/home/home_event.dart';

@@ -1,4 +1,4 @@
-import 'package:finsync/domain/entities/expenses.dart' as expenses_entity;
+import 'package:finsync/domain/entities/expense.dart' as expense_entity;
 
 abstract class HomeState {}
 
@@ -7,7 +7,7 @@ class HomeInitialState extends HomeState {}
 class HomeLoadingState extends HomeState {}
 
 class HomeLoadedState extends HomeState {
-  final List<expenses_entity.Expenses> expenses;
+  final List<expense_entity.Expense> expenses;
 
   HomeLoadedState(this.expenses);
 }

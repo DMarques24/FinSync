@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 
-class BtnSettings extends StatelessWidget {
+class SettingsButton extends StatelessWidget {
   final IconData icon;
   final String name;
   final VoidCallback? onTap;
 
-  const BtnSettings({
+  const SettingsButton({
     super.key,
     required this.icon,
     required this.name,
@@ -22,7 +22,7 @@ class BtnSettings extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(18),
-        splashColor: AppColors.secondary.withOpacity(.08),
+        splashColor: AppColors.secondary.withValues(alpha: .08),
         highlightColor: Colors.transparent,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
@@ -32,7 +32,7 @@ class BtnSettings extends StatelessWidget {
                 width: 46,
                 height: 46,
                 decoration: BoxDecoration(
-                  color: AppColors.secondary.withOpacity(.10),
+                  color: AppColors.secondary.withValues(alpha: .10),
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: Icon(icon, color: AppColors.secondary, size: 24),

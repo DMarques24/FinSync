@@ -1,14 +1,13 @@
-import 'package:finsync/domain/entities/expenses.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:finsync/domain/entities/expense.dart';
 
-class ExpensesModel {
+class ExpenseModel {
   final int id;
   final String name;
   final double price;
   final String category;
   final DateTime date;
 
-  ExpensesModel({
+  ExpenseModel({
     required this.id,
     required this.name,
     required this.price,
@@ -16,9 +15,9 @@ class ExpensesModel {
     required this.date,
   });
 
-  factory ExpensesModel.fromJson(Map<String, dynamic> json) {
+  factory ExpenseModel.fromJson(Map<String, dynamic> json) {
     final rawDate = json['date'];
-    return ExpensesModel(
+    return ExpenseModel(
       id: (json['id'] as num?)?.toInt() ?? 0,
       name: json['name']?.toString() ?? '',
       price: (json['price'] as num?)?.toDouble() ?? 0,
@@ -38,8 +37,8 @@ class ExpensesModel {
     };
   }
 
-  Expenses toEntity() {
-    return Expenses(
+  Expense toEntity() {
+    return Expense(
       id: id,
       name: name,
       price: price,
