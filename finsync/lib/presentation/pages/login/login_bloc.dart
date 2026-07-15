@@ -18,7 +18,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(LoginLoadingState());
     try {
       await signInUser(
-        AuthUserEntity(email: event.email, password: event.password),
+        AuthUserEntity(email: event.email, password: event.password, username: ''),
       );
       emit(LoginLoadedState());
     } catch (e) {

@@ -7,12 +7,14 @@ class ProfileHeader extends StatelessWidget {
   final String imagePath;
   final String name;
   final String userName;
+  final String balance;
 
   const ProfileHeader({
     super.key,
     required this.imagePath,
     required this.name,
     required this.userName,
+    this.balance = '',
   });
 
   @override
@@ -107,6 +109,27 @@ class ProfileHeader extends StatelessWidget {
           ),
 
           const SizedBox(height: 22),
+
+          if (balance.isNotEmpty)
+            Column(
+              children: [
+                Text(
+                  "Saldo",
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: Colors.white70,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  balance,
+                  style: AppTextStyles.headingLarge.copyWith(
+                    color: Colors.white,
+                    fontSize: 28,
+                  ),
+                ),
+                const SizedBox(height: 22),
+              ],
+            ),
 
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

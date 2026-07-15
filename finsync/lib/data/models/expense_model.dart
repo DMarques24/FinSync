@@ -28,12 +28,13 @@ class ExpenseModel {
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson(String userId) {
     return {
       'name': name,
       'price': price,
       'category': category,
       'date': date.toIso8601String(),
+      'user_id': userId,
     };
   }
 

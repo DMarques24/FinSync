@@ -14,12 +14,14 @@ class CreateAcountPage extends StatefulWidget {
 }
 
 class _CreateAcountState extends State<CreateAcountPage> {
+  final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passWordController = TextEditingController();
   final _passWordConfirmController = TextEditingController();
 
   @override
   void dispose() {
+    _usernameController.dispose();
     _emailController.dispose();
     _passWordController.dispose();
     _passWordConfirmController.dispose();
@@ -83,6 +85,19 @@ class _CreateAcountState extends State<CreateAcountPage> {
                   const SizedBox(height: 40),
 
                   TextFormField(
+                    controller: _usernameController,
+                    decoration: InputDecoration(
+                      labelText: "Nome de utilizador",
+                      prefixIcon: const Icon(Icons.person_outline),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  TextFormField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
@@ -131,12 +146,14 @@ class _CreateAcountState extends State<CreateAcountPage> {
                       onPressed: isLoading
                           ? null
                           : () {
+                              final username = _usernameController.text.trim();
                               final email = _emailController.text.trim();
                               final password = _passWordController.text.trim();
                               final confirm = _passWordConfirmController.text
                                   .trim();
 
-                              if (email.isEmpty ||
+                              if (username.isEmpty ||
+                                  email.isEmpty ||
                                   password.isEmpty ||
                                   confirm.isEmpty) {
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -162,6 +179,7 @@ class _CreateAcountState extends State<CreateAcountPage> {
                                 CreateAcountSubmitEvent(
                                   email: email,
                                   password: password,
+                                  username: username,
                                 ),
                               );
                             },

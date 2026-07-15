@@ -18,7 +18,11 @@ class CreateAcountBloc extends Bloc<CreateAcountEvent, CreateAcountState> {
     emit(CreateAcountLoadingState());
     try {
       await signUpUser(
-        AuthUserEntity(email: event.email, password: event.password),
+        AuthUserEntity(
+          email: event.email,
+          password: event.password,
+          username: event.username,
+        ),
       );
       emit(CreateAcountLoadedState());
     } catch (e) {

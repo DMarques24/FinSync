@@ -7,7 +7,19 @@ class AuthUserRemoteDatasourceImpl implements AuthUserRemoteDatasource {
 
   @override
   Future<void> signUp(AuthUser user) async {
-    await supabase.auth.signUp(email: user.email, password: user.password);
+    final response = await supabase.auth.signUp(
+      email: user.email,
+      password: user.password,
+    );
+
+    final userId = response.user?.id;
+    if (userId != null) {
+      await supabase.from('profiles').insert({
+        'user_id': userId,
+        'username': user.username,
+        'balance': 0.0,
+      });
+    }
   }
 
   @override

@@ -28,12 +28,13 @@ class DesireModel {
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson(String userId) {
     return {
       'name': name,
       'price': price,
       'image': image,
       'date': date.toIso8601String(),
+      'user_id': userId,
     };
   }
 

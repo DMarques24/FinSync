@@ -6,12 +6,18 @@ import 'package:finsync/core/theme/text_styles.dart';
 class CardCashFlow extends StatelessWidget {
   final double cashIn;
   final double cashOut;
+  final double profileBalance;
 
-  const CardCashFlow({super.key, required this.cashIn, required this.cashOut});
+  const CardCashFlow({
+    super.key,
+    required this.cashIn,
+    required this.cashOut,
+    this.profileBalance = 0,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final balance = cashIn - cashOut;
+    final balance = profileBalance - cashOut;
 
     return Container(
       width: double.infinity,

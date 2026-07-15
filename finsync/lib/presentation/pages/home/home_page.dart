@@ -10,6 +10,8 @@ import 'package:finsync/presentation/pages/home/components/expenses_list.dart';
 import 'package:finsync/presentation/pages/home/home_bloc.dart';
 import 'package:finsync/presentation/pages/home/home_event.dart';
 import 'package:finsync/presentation/pages/home/home_state.dart';
+import 'package:finsync/presentation/pages/profile/profile_bloc.dart';
+import 'package:finsync/presentation/pages/profile/profile_state.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -60,6 +62,7 @@ class _HomePageState extends State<HomePage> {
 
             double cashOut = 0;
             double cashIn = 0;
+            double profileBalance = 0;
 
             if (state is HomeLoadedState) {
               cashOut = state.expenses.fold(
@@ -68,13 +71,20 @@ class _HomePageState extends State<HomePage> {
               );
             }
 
+            final profileState = context.watch<ProfileBloc>().state;
+            String username = '';
+            if (profileState is ProfileLoadedState) {
+              username = profileState.user.username;
+              profileBalance = profileState.user.balance;
+            }
+
             return SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 120),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Olá, Diogo 👋",
+                    username.isNotEmpty ? "Olá, $username 👋" : "Olá 👋",
                     style: AppTextStyles.headingLarge.copyWith(fontSize: 30),
                   ),
 
@@ -89,7 +99,11 @@ class _HomePageState extends State<HomePage> {
 
                   const SizedBox(height: 28),
 
-                  CardCashFlow(cashIn: cashIn, cashOut: cashOut),
+                  CardCashFlow(
+                    cashIn: cashIn,
+                    cashOut: cashOut,
+                    profileBalance: profileBalance,
+                  ),
 
                   const SizedBox(height: 30),
 
