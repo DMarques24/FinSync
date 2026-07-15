@@ -9,19 +9,13 @@ class ExpenseRemoteDatasourceImpl extends ExpenseRemoteDatasource {
 
   @override
   Future<List<ExpenseModel>> getAllExpenses() async {
-    final userId = supabase.auth.currentUser!.id;
-
-    final List<dynamic> result = await supabase
-        .from("expenses")
-        .select()
-        .eq('user_id', userId);
+    final List<dynamic> result = await supabase.from("expenses").select();
     debugPrint("ExpenseRemoteDatasourceImpl: getAllExpenses: result: $result");
     return result.map((json) => ExpenseModel.fromJson(json)).toList();
   }
 
   @override
   Future<void> insertExpense(ExpenseModel expense) async {
-    final userId = supabase.auth.currentUser!.id;
-    await supabase.from("expenses").insert(expense.toJson(userId));
+    await supabase.from("expenses").insert(expense.toJson());
   }
 }

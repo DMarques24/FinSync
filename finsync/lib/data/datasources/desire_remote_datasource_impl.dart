@@ -9,19 +9,13 @@ class DesireRemoteDatasourceImpl extends DesireRemoteDatasource {
 
   @override
   Future<List<DesireModel>> getAllDesires() async {
-    final userId = supabase.auth.currentUser!.id;
-    final List<dynamic> result = await supabase
-        .from('desire')
-        .select()
-        .eq('user_id', userId);
+    final List<dynamic> result = await supabase.from('desire').select();
     debugPrint("DesireRemoteDatasourceImpl: getAllDesires result: $result");
     return result.map((json) => DesireModel.fromJson(json)).toList();
   }
 
   @override
   Future<void> insertDesire(DesireModel desire) async {
-    final userId = supabase.auth.currentUser!.id;
-
-    await supabase.from('desire').insert(desire.toJson(userId));
+    await supabase.from('desire').insert(desire.toJson());
   }
 }
