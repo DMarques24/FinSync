@@ -16,6 +16,7 @@ class CreateAcountPage extends StatefulWidget {
 class _CreateAcountState extends State<CreateAcountPage> {
   final _emailController = TextEditingController();
   final _passWordController = TextEditingController();
+  final _usernamController = TextEditingController();
   final _passWordConfirmController = TextEditingController();
 
   @override
@@ -23,6 +24,7 @@ class _CreateAcountState extends State<CreateAcountPage> {
     _emailController.dispose();
     _passWordController.dispose();
     _passWordConfirmController.dispose();
+    _usernamController.dispose();
     super.dispose();
   }
 
@@ -97,6 +99,20 @@ class _CreateAcountState extends State<CreateAcountPage> {
                   const SizedBox(height: 20),
 
                   TextFormField(
+                    controller: _usernamController,
+                    keyboardType: TextInputType.name,
+                    decoration: InputDecoration(
+                      labelText: "Username",
+                      prefixIcon: const Icon(Icons.person_outline),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  TextFormField(
                     controller: _passWordController,
                     obscureText: true,
                     decoration: InputDecoration(
@@ -132,6 +148,7 @@ class _CreateAcountState extends State<CreateAcountPage> {
                           ? null
                           : () {
                               final email = _emailController.text.trim();
+                              final userName = _usernamController.text.trim();
                               final password = _passWordController.text.trim();
                               final confirm = _passWordConfirmController.text
                                   .trim();
@@ -162,6 +179,7 @@ class _CreateAcountState extends State<CreateAcountPage> {
                                 CreateAcountSubmitEvent(
                                   email: email,
                                   password: password,
+                                  userName: userName,
                                 ),
                               );
                             },
