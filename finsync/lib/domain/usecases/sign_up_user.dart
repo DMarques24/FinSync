@@ -6,7 +6,7 @@ class SignUpUser {
 
   SignUpUser(this.authRepository);
 
-  Future<void> call(AuthUserEntity user) async {
+  Future<String> call(AuthUserEntity user) async {
     return await authRepository.signUp(user);
   }
 }

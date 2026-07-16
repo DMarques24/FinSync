@@ -3,7 +3,7 @@ import 'package:finsync/data/models/user_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UserRemoteDatasourceImpl implements UserRemoteDatasource {
-  final SupabaseClient supabase = Supabase.instance.client;
+  final supabase = Supabase.instance.client;
 
   @override
   Future<List<UserModel>> getUser() async {
@@ -17,5 +17,10 @@ class UserRemoteDatasourceImpl implements UserRemoteDatasource {
     return result
         .map((json) => UserModel.fromJson(json as Map<String, dynamic>))
         .toList();
+  }
+
+  @override
+  Future<void> insertUser(UserModel user, String userId) async {
+    await supabase.from('profiles').insert(user.toJson(userId));
   }
 }

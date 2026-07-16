@@ -13,6 +13,10 @@ class UserModel {
     );
   }
 
+  Map<String, dynamic> toJson(String userId) {
+    return {'username': username, 'balance': balance, 'user_id': userId};
+  }
+
   User toEntity() {
     return User(username: username, balance: balance);
   }

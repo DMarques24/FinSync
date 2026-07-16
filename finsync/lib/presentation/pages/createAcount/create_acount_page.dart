@@ -177,9 +177,9 @@ class _CreateAcountState extends State<CreateAcountPage> {
 
                               context.read<CreateAcountBloc>().add(
                                 CreateAcountSubmitEvent(
+                                  username: username,
                                   email: email,
                                   password: password,
-                                  username: username,
                                 ),
                               );
                             },

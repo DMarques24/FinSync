@@ -6,20 +6,16 @@ class AuthUserRemoteDatasourceImpl implements AuthUserRemoteDatasource {
   final SupabaseClient supabase = Supabase.instance.client;
 
   @override
-  Future<void> signUp(AuthUser user) async {
+  Future<String> signUp(AuthUser user) async {
     final response = await supabase.auth.signUp(
       email: user.email,
       password: user.password,
     );
-
     final userId = response.user?.id;
-    if (userId != null) {
-      await supabase.from('profiles').insert({
-        'user_id': userId,
-        'username': user.username,
-        'balance': 0.0,
-      });
+    if (userId == null) {
+      throw Exception('Não foi possível obter o utilizador após o registo.');
     }
+    return userId;
   }
 
   @override

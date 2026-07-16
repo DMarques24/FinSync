@@ -1,4 +1,5 @@
 import 'package:finsync/data/datasources/user_remote_datasource.dart';
+import 'package:finsync/data/models/user_model.dart';
 import 'package:finsync/domain/entities/user.dart';
 import 'package:finsync/domain/repositories/user_repository.dart';
 
@@ -10,5 +11,11 @@ class UserRepositoryImpl implements UserRepository {
   Future<List<User>> getUser() async {
     final models = await remoteDatasource.getUser();
     return models.map((model) => model.toEntity()).toList();
+  }
+
+  @override
+  Future<void> insertUser(User user, String userId) async {
+    final model = UserModel(username: user.username, balance: user.balance);
+    await remoteDatasource.insertUser(model, userId);
   }
 }

@@ -1,3 +1,4 @@
+import 'package:finsync/domain/usecases/insert_user.dart';
 import 'package:finsync/presentation/pages/createAcount/create_acount_bloc.dart';
 import 'package:finsync/presentation/pages/login/login_bloc.dart';
 import 'package:finsync/presentation/pages/profile/profile_bloc.dart';
@@ -71,6 +72,8 @@ Future<void> initDependencies() async {
 
   sl.registerLazySingleton<SignUpUser>(() => SignUpUser(sl()));
 
+  sl.registerLazySingleton<InsertUser>(() => InsertUser(sl()));
+
   sl.registerLazySingleton<GetAllExpenses>(() => GetAllExpenses(sl()));
 
   sl.registerLazySingleton<InsertExpense>(() => InsertExpense(sl()));
@@ -93,7 +96,7 @@ Future<void> initDependencies() async {
   sl.registerFactory<LoginBloc>(() => LoginBloc(sl<SignInUser>()));
 
   sl.registerFactory<CreateAcountBloc>(
-    () => CreateAcountBloc(sl<SignUpUser>()),
+    () => CreateAcountBloc(sl<SignUpUser>(), sl<InsertUser>()),
   );
 
   sl.registerFactory<ProfileBloc>(() => ProfileBloc(sl<GetUser>()));

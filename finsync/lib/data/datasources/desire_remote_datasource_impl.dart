@@ -1,6 +1,5 @@
 import 'package:finsync/data/datasources/desire_remote_datasource.dart';
 import 'package:finsync/data/models/desire_model.dart';
-import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DesireRemoteDatasourceImpl extends DesireRemoteDatasource {

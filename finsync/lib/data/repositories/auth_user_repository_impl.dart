@@ -9,22 +9,14 @@ class AuthUserRepositoryImpl implements AuthUserRepository {
   AuthUserRepositoryImpl(this.remoteDatasource);
 
   @override
-  Future<void> signUp(AuthUserEntity user) async {
-    final model = AuthUser(
-      email: user.email,
-      password: user.password,
-      username: user.username,
-    );
-    await remoteDatasource.signUp(model);
+  Future<String> signUp(AuthUserEntity user) async {
+    final model = AuthUser(email: user.email, password: user.password);
+    return await remoteDatasource.signUp(model);
   }
 
   @override
   Future<void> signIn(AuthUserEntity user) async {
-    final model = AuthUser(
-      email: user.email,
-      password: user.password,
-      username: user.username,
-    );
+    final model = AuthUser(email: user.email, password: user.password);
     await remoteDatasource.signIn(model);
   }
 }
