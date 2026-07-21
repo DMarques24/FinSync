@@ -1,19 +1,27 @@
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/presentation/pages/analytics/analytics_bloc.dart';
+import 'package:finsync/presentation/pages/analytics/analytics_event.dart';
 import 'package:finsync/presentation/pages/analytics/analytics_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sankey_flutter/sankey_helpers.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class AnalyticsPage extends StatefulWidget {
   const AnalyticsPage({super.key});
 
   @override
-  State<StatefulWidget> createState() => _AnalyticsPageState();
+  State<AnalyticsPage> createState() => _AnalyticsPageState();
 }
 
 class _AnalyticsPageState extends State<AnalyticsPage> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<AnalyticsBloc>().add(LoadAnalyticsEvent());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,22 +29,15 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
       body: SafeArea(
         child: BlocBuilder<AnalyticsBloc, AnalyticsState>(
           builder: (context, state) {
-            if (state is AnalyticsLoadedState) {}
-
             return SingleChildScrollView(
               padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (state is AnalyticsLoadingState)
-                    const Center(child: CircularProgressIndicator())
-                  else if (state is AnalyticsErrorState)
-                    Center(child: Text(state.message))
-                  else
-                    Text(
-                      "Analytics and Calendar",
-                      style: AppTextStyles.headingMedium.copyWith(fontSize: 22),
-                    ),
+                  Text(
+                    "Analytics and Calendar",
+                    style: AppTextStyles.headingMedium.copyWith(fontSize: 22),
+                  ),
                   const SizedBox(height: 24),
 
                   TableCalendar(
@@ -46,13 +47,54 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                   ),
                   const SizedBox(height: 24),
 
+                  if (state is AnalyticsLoadingState)
+                    const Center(child: CircularProgressIndicator())
+                  else if (state is AnalyticsErrorState)
+                    Center(child: Text(state.message))
+                  else if (state is AnalyticsLoadedState)
+                    if (state.nodes.isEmpty)
+                      const Text(
+                        "Ainda não há despesas suficientes para gerar o gráfico.",
+                      )
+                    else
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          final width = constraints.maxWidth;
+                          const height = 400.0;
+                          final dataSet =
+                              SankeyDataSet(
+                                nodes: state.nodes,
+                                links: state.links,
+                              )..layout(
+                                generateSankeyLayout(
+                                  width: width,
+                                  height: height,
+                                ),
+                              );
+
+                          return SankeyDiagramWidget(
+                            data: dataSet,
+                            nodeColors: generateDefaultNodeColorMap(
+                              state.nodes,
+                            ),
+                            size: Size(width, height),
+                            showLabels: true,
+                            showTexture: true,
+                            onNodeSelected: (node) {},
+                          );
+                        },
+                      ),
+
+                  const SizedBox(height: 24),
                   SizedBox(
                     width: double.infinity,
                     height: 56,
                     child: OutlinedButton.icon(
-                      onPressed: () {},
+                      onPressed: () {
+                        // TODO: export PDF
+                      },
                       icon: const Icon(
-                        Icons.logout_rounded,
+                        Icons.picture_as_pdf_rounded,
                         color: AppColors.error,
                       ),
                       label: const Text(
