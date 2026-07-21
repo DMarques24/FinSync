@@ -4,4 +4,6 @@ abstract class UserRemoteDatasource {
   Future<List<UserModel>> getUser();
 
   Future<void> insertUser(UserModel user, String userId);
+
+  Future<void> completeOnboarding(String userId, double balance);
 }

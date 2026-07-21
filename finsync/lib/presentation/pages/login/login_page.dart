@@ -36,7 +36,11 @@ class _LoginPageState extends State<LoginPage> {
         child: BlocConsumer<LoginBloc, LoginState>(
           listener: (context, state) {
             if (state is LoginLoadedState) {
-              context.go('/');
+              if (state.isFirstLogin) {
+                context.go('/onboarding');
+              } else {
+                context.go('/');
+              }
             }
             if (state is LoginErrorState) {
               ScaffoldMessenger.of(context).showSnackBar(

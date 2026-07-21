@@ -23,4 +23,12 @@ class UserRemoteDatasourceImpl implements UserRemoteDatasource {
   Future<void> insertUser(UserModel user, String userId) async {
     await supabase.from('profiles').insert(user.toJson(userId));
   }
+
+  @override
+  Future<void> completeOnboarding(String userId, double balance) async {
+    await supabase
+        .from('profiles')
+        .update({'balance': balance, 'isFirstLogin': false})
+        .eq('user_id', userId);
+  }
 }

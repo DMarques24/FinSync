@@ -1,6 +1,8 @@
+import 'package:finsync/domain/usecases/complete_onboarding.dart';
 import 'package:finsync/domain/usecases/insert_user.dart';
 import 'package:finsync/presentation/pages/createAcount/create_acount_bloc.dart';
 import 'package:finsync/presentation/pages/login/login_bloc.dart';
+import 'package:finsync/presentation/pages/onboarding/onboarding_bloc.dart';
 import 'package:finsync/presentation/pages/profile/profile_bloc.dart';
 import 'package:get_it/get_it.dart';
 
@@ -84,6 +86,10 @@ Future<void> initDependencies() async {
 
   sl.registerLazySingleton<GetUser>(() => GetUser(sl()));
 
+  sl.registerLazySingleton<CompleteOnboarding>(
+    () => CompleteOnboarding(sl()),
+  );
+
   // BLOCS
   sl.registerFactory<HomeBloc>(
     () => HomeBloc(sl<GetAllExpenses>(), sl<InsertExpense>()),
@@ -93,11 +99,17 @@ Future<void> initDependencies() async {
     () => DesireBloc(sl<GetAllDesires>(), sl<InsertDesire>()),
   );
 
-  sl.registerFactory<LoginBloc>(() => LoginBloc(sl<SignInUser>()));
+  sl.registerFactory<LoginBloc>(
+    () => LoginBloc(sl<SignInUser>(), sl<GetUser>()),
+  );
 
   sl.registerFactory<CreateAcountBloc>(
     () => CreateAcountBloc(sl<SignUpUser>(), sl<InsertUser>()),
   );
 
   sl.registerFactory<ProfileBloc>(() => ProfileBloc(sl<GetUser>()));
+
+  sl.registerFactory<OnboardingBloc>(
+    () => OnboardingBloc(sl<CompleteOnboarding>()),
+  );
 }

@@ -1,5 +1,6 @@
 import 'package:finsync/presentation/pages/createAcount/create_acount_bloc.dart';
 import 'package:finsync/presentation/pages/login/login_bloc.dart';
+import 'package:finsync/presentation/pages/onboarding/onboarding_bloc.dart';
 import 'package:finsync/presentation/pages/profile/profile_bloc.dart';
 import 'package:finsync/presentation/pages/profile/profile_event.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ class App extends StatelessWidget {
         BlocProvider<DesireBloc>(create: (_) => sl<DesireBloc>()),
         BlocProvider<LoginBloc>(create: (_) => sl<LoginBloc>()),
         BlocProvider<CreateAcountBloc>(create: (_) => sl<CreateAcountBloc>()),
+        BlocProvider<OnboardingBloc>(create: (_) => sl<OnboardingBloc>()),
         BlocProvider<ProfileBloc>(
           create: (_) => sl<ProfileBloc>()..add(LoadProfileEvent()),
         ),

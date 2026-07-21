@@ -18,4 +18,9 @@ class UserRepositoryImpl implements UserRepository {
     final model = UserModel(username: user.username, balance: user.balance);
     await remoteDatasource.insertUser(model, userId);
   }
+
+  @override
+  Future<void> completeOnboarding(String userId, double balance) async {
+    await remoteDatasource.completeOnboarding(userId, balance);
+  }
 }
