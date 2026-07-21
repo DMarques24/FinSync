@@ -1,3 +1,4 @@
+import 'package:finsync/presentation/pages/analytics/analytics_bloc.dart';
 import 'package:finsync/presentation/pages/createAcount/create_acount_bloc.dart';
 import 'package:finsync/presentation/pages/login/login_bloc.dart';
 import 'package:finsync/presentation/pages/onboarding/onboarding_bloc.dart';
@@ -27,6 +28,7 @@ class App extends StatelessWidget {
         BlocProvider<ProfileBloc>(
           create: (_) => sl<ProfileBloc>()..add(LoadProfileEvent()),
         ),
+        BlocProvider(create: (_) => sl<AnalyticsBloc>()),
       ],
       child: MaterialApp.router(
         theme: AppTheme.lightTheme,

@@ -1,5 +1,7 @@
 import 'package:finsync/domain/usecases/complete_onboarding.dart';
+import 'package:finsync/domain/usecases/get_filter_time_expenses.dart';
 import 'package:finsync/domain/usecases/insert_user.dart';
+import 'package:finsync/presentation/pages/analytics/analytics_bloc.dart';
 import 'package:finsync/presentation/pages/createAcount/create_acount_bloc.dart';
 import 'package:finsync/presentation/pages/login/login_bloc.dart';
 import 'package:finsync/presentation/pages/onboarding/onboarding_bloc.dart';
@@ -78,6 +80,10 @@ Future<void> initDependencies() async {
 
   sl.registerLazySingleton<GetAllExpenses>(() => GetAllExpenses(sl()));
 
+  sl.registerLazySingleton<GetFilterTimeExpenses>(
+    () => GetFilterTimeExpenses(sl()),
+  );
+
   sl.registerLazySingleton<InsertExpense>(() => InsertExpense(sl()));
 
   sl.registerLazySingleton<GetAllDesires>(() => GetAllDesires(sl()));
@@ -86,13 +92,15 @@ Future<void> initDependencies() async {
 
   sl.registerLazySingleton<GetUser>(() => GetUser(sl()));
 
-  sl.registerLazySingleton<CompleteOnboarding>(
-    () => CompleteOnboarding(sl()),
-  );
+  sl.registerLazySingleton<CompleteOnboarding>(() => CompleteOnboarding(sl()));
 
   // BLOCS
   sl.registerFactory<HomeBloc>(
-    () => HomeBloc(sl<GetAllExpenses>(), sl<InsertExpense>()),
+    () => HomeBloc(
+      sl<GetAllExpenses>(),
+      sl<GetFilterTimeExpenses>(),
+      sl<InsertExpense>(),
+    ),
   );
 
   sl.registerFactory<DesireBloc>(
@@ -112,4 +120,6 @@ Future<void> initDependencies() async {
   sl.registerFactory<OnboardingBloc>(
     () => OnboardingBloc(sl<CompleteOnboarding>()),
   );
+
+  sl.registerFactory<AnalyticsBloc>(() => AnalyticsBloc());
 }

@@ -3,9 +3,12 @@ import 'package:finsync/presentation/pages/login/login_page.dart';
 import 'package:finsync/presentation/pages/onboarding/onboarding_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:finsync/presentation/pages/main_page.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+final session = Supabase.instance.client.auth.currentSession;
 
 final router = GoRouter(
-  initialLocation: '/login',
+  initialLocation: session != null ? '/' : '/login',
   routes: [
     GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
     GoRoute(

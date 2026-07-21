@@ -16,7 +16,7 @@ class ExpenseModel {
   });
 
   factory ExpenseModel.fromJson(Map<String, dynamic> json) {
-    final rawDate = json['date'];
+    final rawDate = json['created_at'];
     return ExpenseModel(
       id: (json['id'] as num?)?.toInt() ?? 0,
       name: json['name']?.toString() ?? '',
@@ -33,7 +33,7 @@ class ExpenseModel {
       'name': name,
       'price': price,
       'category': category,
-      'date': date.toIso8601String(),
+      'created_at': date.toIso8601String(),
       'user_id': userId,
     };
   }

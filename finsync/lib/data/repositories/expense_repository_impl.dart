@@ -15,6 +15,12 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
   }
 
   @override
+  Future<List<Expense>> getFilterTimeExpenses(DateTime time) async {
+    final models = await remoteDatasource.getFilterTimeExpenses(time);
+    return models.map((model) => model.toEntity()).toList();
+  }
+
+  @override
   Future<void> insertExpense(Expense expense) async {
     final model = ExpenseModel(
       id: expense.id,

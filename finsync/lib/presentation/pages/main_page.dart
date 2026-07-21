@@ -1,3 +1,4 @@
+import 'package:finsync/presentation/pages/analytics/analytics_page.dart';
 import 'package:flutter/material.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
@@ -19,7 +20,12 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int currentIndex = 0;
 
-  final pages = const [HomePage(), DesirePage(), ProfilePage()];
+  final pages = const [
+    HomePage(),
+    AnalyticsPage(),
+    DesirePage(),
+    ProfilePage(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +100,7 @@ class _MainPageState extends State<MainPage> {
 
           items: const [
             LiquidGlassBarItem(iconData: Icons.home_rounded, label: "Home"),
+            LiquidGlassBarItem(iconData: Icons.analytics, label: "Analytics"),
             LiquidGlassBarItem(
               iconData: Icons.favorite_rounded,
               label: "Goals",

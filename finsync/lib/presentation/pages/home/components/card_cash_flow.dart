@@ -1,7 +1,10 @@
+import 'package:finsync/presentation/pages/home/home_bloc.dart';
+import 'package:finsync/presentation/pages/home/home_event.dart';
 import 'package:flutter/material.dart';
 
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CardCashFlow extends StatelessWidget {
   final double cashIn;
@@ -61,7 +64,32 @@ class CardCashFlow extends StatelessWidget {
 
               const Spacer(),
 
-              const Icon(Icons.more_horiz, color: Colors.white70),
+              PopupMenuButton<TimeFilter>(
+                icon: const Icon(Icons.more_vert, color: Colors.white70),
+                onSelected: (filter) {
+                  context.read<HomeBloc>().add(
+                    GetFilterTimeExpensesEvent(filter),
+                  );
+                },
+                itemBuilder: (context) => const [
+                  PopupMenuItem(
+                    value: TimeFilter.lastDay,
+                    child: Text('Last day'),
+                  ),
+                  PopupMenuItem(
+                    value: TimeFilter.last7Days,
+                    child: Text('Last 7 days'),
+                  ),
+                  PopupMenuItem(
+                    value: TimeFilter.last30Days,
+                    child: Text('Last 30 days'),
+                  ),
+                  PopupMenuItem(
+                    value: TimeFilter.last5Months,
+                    child: Text('Last 5 months'),
+                  ),
+                ],
+              ),
             ],
           ),
 
