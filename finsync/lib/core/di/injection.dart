@@ -121,7 +121,5 @@ Future<void> initDependencies() async {
     () => OnboardingBloc(sl<CompleteOnboarding>()),
   );
 
-  sl.registerFactory<AnalyticsBloc>(
-    () => AnalyticsBloc(sl<GetAllExpenses>(), sl<GetAllDesires>()),
-  );
+  sl.registerFactory<AnalyticsBloc>(() => AnalyticsBloc(sl<GetAllExpenses>()));
 }

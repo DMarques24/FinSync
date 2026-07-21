@@ -8,8 +8,7 @@ import 'package:sankey_flutter/sankey_node.dart';
 
 class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
   final GetAllExpenses getAllExpenses;
-  final GetAllDesires getAllDesires;
-  AnalyticsBloc(this.getAllExpenses, this.getAllDesires)
+  AnalyticsBloc(this.getAllExpenses)
     : super(AnalyticsInitialState()) {
     on<LoadAnalyticsEvent>(_onLoadAnalytics);
   }
@@ -20,7 +19,6 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
     emit(AnalyticsLoadingState());
     try {
       final expenses = await getAllExpenses();
-      final desires = await getAllDesires();
 
       final nodesById = <String, SankeyNode>{};
       SankeyNode node(String label) => nodesById.putIfAbsent(
@@ -44,17 +42,6 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
           ),
         );
       });
-
-      final desiresTotal = desires.fold<double>(0, (sum, d) => sum + d.price);
-      if (desiresTotal > 0) {
-        links.add(
-          SankeyLink(
-            source: node('Salário'),
-            target: node('Objetivos'),
-            value: desiresTotal,
-          ),
-        );
-      }
 
       emit(
         AnalyticsLoadedState(nodes: nodesById.values.toList(), links: links),
