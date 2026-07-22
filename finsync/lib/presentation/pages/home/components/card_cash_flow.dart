@@ -2,6 +2,7 @@ import 'package:finsync/presentation/pages/home/home_bloc.dart';
 import 'package:finsync/presentation/pages/home/home_event.dart';
 import 'package:flutter/material.dart';
 
+import 'package:finsync/core/currency/app_currency.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -103,7 +104,7 @@ class CardCashFlow extends StatelessWidget {
           const SizedBox(height: 8),
 
           Text(
-            "${balance.toStringAsFixed(2)} €",
+            AppCurrency.format(balance),
             style: AppTextStyles.headingLarge.copyWith(
               color: Colors.white,
               fontSize: 38,
@@ -178,7 +179,7 @@ class _InfoCard extends StatelessWidget {
           const SizedBox(height: 6),
 
           Text(
-            "${value.toStringAsFixed(2)} €",
+            AppCurrency.format(value),
             style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,

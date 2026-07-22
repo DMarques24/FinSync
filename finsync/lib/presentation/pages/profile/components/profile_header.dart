@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:finsync/core/currency/app_currency.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 
@@ -136,7 +137,12 @@ class ProfileHeader extends StatelessWidget {
             children: [
               _InfoCard(title: "Despesas", value: "128"),
               _InfoCard(title: "Desejos", value: "12"),
-              _InfoCard(title: "Poupado", value: "€2.4k"),
+              _InfoCard(
+                title: "Poupado",
+                value: AppCurrency.type.symbolBefore
+                    ? "${AppCurrency.symbol}2.4k"
+                    : "2.4k ${AppCurrency.symbol}",
+              ),
             ],
           ),
         ],

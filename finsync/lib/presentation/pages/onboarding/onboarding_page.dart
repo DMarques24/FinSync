@@ -1,3 +1,4 @@
+import 'package:finsync/core/currency/app_currency.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/presentation/pages/onboarding/onboarding_bloc.dart';
 import 'package:finsync/presentation/pages/onboarding/onboarding_event.dart';
@@ -357,8 +358,8 @@ class _BalanceStep extends StatelessWidget {
               FilteringTextInputFormatter.allow(RegExp(r'^\d*[.,]?\d{0,2}')),
             ],
             decoration: InputDecoration(
-              labelText: "Saldo atual (€)",
-              prefixIcon: const Icon(Icons.euro_rounded),
+              labelText: "Saldo atual (${AppCurrency.symbol})",
+              prefixIcon: Icon(AppCurrency.icon),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
               ),

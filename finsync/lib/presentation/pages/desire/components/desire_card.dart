@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:finsync/core/currency/app_currency.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 
@@ -108,7 +109,7 @@ class DesireCard extends StatelessWidget {
                     const SizedBox(height: 8),
 
                     Text(
-                      "${price.toStringAsFixed(2)} €",
+                      AppCurrency.format(price),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: AppTextStyles.bodyLarge.copyWith(

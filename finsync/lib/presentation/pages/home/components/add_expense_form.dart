@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:finsync/domain/entities/expense.dart';
 import 'package:finsync/presentation/pages/home/home_bloc.dart';
 import 'package:finsync/presentation/pages/home/home_event.dart';
+import 'package:finsync/core/currency/app_currency.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 
@@ -140,9 +141,9 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
                 keyboardType: const TextInputType.numberWithOptions(
                   decimal: true,
                 ),
-                decoration: const InputDecoration(
-                  labelText: "Valor (€)",
-                  prefixIcon: Icon(Icons.euro_rounded),
+                decoration: InputDecoration(
+                  labelText: "Valor (${AppCurrency.symbol})",
+                  prefixIcon: Icon(AppCurrency.icon),
                 ),
               ),
 

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:finsync/core/currency/app_currency.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 
 import 'package:finsync/presentation/pages/profile/components/settings_button.dart';
 import 'package:finsync/presentation/pages/profile/components/profile_header.dart';
 import 'package:finsync/presentation/pages/profile/components/theme_picker_sheet.dart';
+import 'package:finsync/presentation/pages/profile/components/currency_picker_sheet.dart';
 import 'package:finsync/presentation/pages/profile/profile_bloc.dart';
 import 'package:finsync/presentation/pages/profile/profile_event.dart';
 import 'package:finsync/presentation/pages/profile/profile_state.dart';
@@ -39,8 +41,7 @@ class _ProfilePageState extends State<ProfilePage> {
             if (state is ProfileLoadedState) {
               displayName = state.user.username;
               displayEmail = state.email;
-              displayBalance =
-                  '${state.user.balance.toStringAsFixed(2)} €';
+              displayBalance = AppCurrency.format(state.user.balance);
             }
 
             return SingleChildScrollView(
@@ -115,6 +116,24 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                               ),
                               builder: (_) => const ThemePickerSheet(),
+                            );
+                          },
+                        ),
+                        const Divider(height: 1),
+
+                        SettingsButton(
+                          icon: Icons.attach_money_rounded,
+                          name: "Moeda",
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              backgroundColor: AppColors.surface,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(28),
+                                ),
+                              ),
+                              builder: (_) => const CurrencyPickerSheet(),
                             );
                           },
                         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:finsync/core/currency/app_currency.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 
@@ -109,7 +110,7 @@ class ExpenseCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                "- ${price.toStringAsFixed(2)} €",
+                AppCurrency.format(price, sign: '- '),
                 style: AppTextStyles.bodyLarge.copyWith(
                   color: AppColors.error,
                   fontWeight: FontWeight.bold,

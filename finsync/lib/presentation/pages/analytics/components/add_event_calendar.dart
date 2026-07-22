@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:finsync/core/currency/app_currency.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/domain/entities/calendar_event.dart';
@@ -202,9 +203,9 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
                 keyboardType: const TextInputType.numberWithOptions(
                   decimal: true,
                 ),
-                decoration: const InputDecoration(
-                  labelText: "Valor (€)",
-                  prefixIcon: Icon(Icons.euro_rounded),
+                decoration: InputDecoration(
+                  labelText: "Valor (${AppCurrency.symbol})",
+                  prefixIcon: Icon(AppCurrency.icon),
                 ),
               ),
               const SizedBox(height: 18),

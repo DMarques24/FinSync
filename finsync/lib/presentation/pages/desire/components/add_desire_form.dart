@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'package:finsync/core/currency/app_currency.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 
@@ -175,9 +176,9 @@ class _AddDesireFormState extends State<AddDesireForm> {
                   decimal: true,
                 ),
                 decoration: InputDecoration(
-                  labelText: "Preço (€)",
+                  labelText: "Preço (${AppCurrency.symbol})",
                   prefixIcon: Icon(
-                    Icons.euro_rounded,
+                    AppCurrency.icon,
                     color: AppColors.secondary,
                   ),
                 ),
