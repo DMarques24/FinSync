@@ -137,18 +137,59 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
                 ),
               ),
               const SizedBox(height: 24),
-              Text(
-                "Adiciona Evento no calendário",
-                style: AppTextStyles.headingMedium,
+
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppColors.secondary.withValues(alpha: .10),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: const Icon(
+                      Icons.event_available_rounded,
+                      color: AppColors.secondary,
+                      size: 26,
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Novo evento",
+                          style: AppTextStyles.headingMedium.copyWith(
+                            fontSize: 20,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          "Adiciona um evento ao teu calendário.",
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 6),
+
+              const SizedBox(height: 28),
+
               TextFormField(
                 controller: _nameEventController,
-                decoration: const InputDecoration(labelText: "Evento nome"),
+                enabled: !_isSaving,
+                decoration: const InputDecoration(
+                  labelText: "Nome do evento",
+                  prefixIcon: Icon(Icons.title_rounded),
+                ),
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 18),
               TextFormField(
                 controller: _priceEventController,
+                enabled: !_isSaving,
                 keyboardType: const TextInputType.numberWithOptions(
                   decimal: true,
                 ),
@@ -162,19 +203,26 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
               InkWell(
                 borderRadius: BorderRadius.circular(16),
 
-                onTap: _selectDate,
+                onTap: _isSaving ? null : _selectDate,
 
                 child: InputDecorator(
                   decoration: const InputDecoration(
                     labelText: "Data",
 
-                    prefixIcon: Icon(Icons.calendar_month),
+                    prefixIcon: Icon(Icons.calendar_month_rounded),
                   ),
 
                   child: Text(
                     selectedDate == null
                         ? "Selecionar data"
                         : "${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}",
+                    style: selectedDate == null
+                        ? AppTextStyles.bodyMedium.copyWith(
+                            color: AppColors.textSecondary,
+                          )
+                        : AppTextStyles.bodyMedium.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
                   ),
                 ),
               ),
@@ -195,11 +243,14 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
                     ? const SizedBox(
                         width: 18,
                         height: 18,
-                        child: CircularProgressIndicator(strokeWidth: 2),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
                       )
                     : const Icon(Icons.save_outlined),
 
-                label: const Text("Guardar Despesa"),
+                label: const Text("Guardar Evento"),
               ),
             ],
           ),
