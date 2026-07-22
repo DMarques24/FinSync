@@ -17,6 +17,9 @@ class AnalyticsPage extends StatefulWidget {
 }
 
 class _AnalyticsPageState extends State<AnalyticsPage> {
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
+
   @override
   void initState() {
     super.initState();
@@ -44,8 +47,43 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                   TableCalendar(
                     firstDay: DateTime.utc(2010, 10, 16),
                     lastDay: DateTime.utc(2030, 3, 14),
-                    focusedDay: DateTime.now(),
+
+                    focusedDay: _focusedDay,
+
+                    selectedDayPredicate: (day) {
+                      return isSameDay(_selectedDay, day);
+                    },
+
+                    onDaySelected: (selectedDay, focusedDay) {
+                      setState(() {
+                        _selectedDay = selectedDay;
+                        _focusedDay = focusedDay;
+                      });
+                    },
+
+                    eventLoader: (day) {
+                      if (state is! AnalyticsLoadedState) {
+                        return [];
+                      }
+
+                      return state.event.where((event) {
+                        return isSameDay(event.date, day);
+                      }).toList();
+                    },
                   ),
+
+                  if (state is AnalyticsLoadedState && _selectedDay != null)
+                    ...state.event
+                        .where((event) => isSameDay(event.date, _selectedDay))
+                        .map(
+                          (event) => Card(
+                            child: ListTile(
+                              leading: const Icon(Icons.event),
+                              title: Text(event.name),
+                              subtitle: Text("${event.price} €"),
+                            ),
+                          ),
+                        ),
                   const SizedBox(height: 24),
 
                   SizedBox(
