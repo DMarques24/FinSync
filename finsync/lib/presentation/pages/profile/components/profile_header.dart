@@ -25,7 +25,7 @@ class ProfileHeader extends StatelessWidget {
       padding: const EdgeInsets.all(24),
 
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [AppColors.primary, AppColors.secondary],
@@ -63,7 +63,7 @@ class ProfileHeader extends StatelessWidget {
                       color: AppColors.secondary.withValues(alpha: .12),
                       child: Text(
                         _initials(name),
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: AppColors.secondary,
                           fontWeight: FontWeight.bold,
                           fontSize: 28,

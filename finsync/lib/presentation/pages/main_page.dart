@@ -111,7 +111,7 @@ class _MainPageState extends State<MainPage> {
             ),
           ],
 
-          style: const LiquidGlassBarStyle(
+          style: LiquidGlassBarStyle(
             activeColor: AppColors.secondary,
             inactiveColor: AppColors.textSecondary,
           ),

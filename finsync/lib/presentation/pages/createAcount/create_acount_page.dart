@@ -60,7 +60,7 @@ class _CreateAcountState extends State<CreateAcountPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.account_balance_wallet_rounded,
                     size: 80,
                     color: AppColors.primary,

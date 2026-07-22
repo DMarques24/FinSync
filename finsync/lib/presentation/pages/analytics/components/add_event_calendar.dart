@@ -155,7 +155,7 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
                       color: AppColors.secondary.withValues(alpha: .10),
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.event_available_rounded,
                       color: AppColors.secondary,
                       size: 26,

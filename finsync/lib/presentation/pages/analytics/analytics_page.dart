@@ -65,7 +65,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text(
+            child: Text(
               "Remover",
               style: TextStyle(color: AppColors.error),
             ),
@@ -196,11 +196,11 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                             titleTextStyle: AppTextStyles.bodyLarge.copyWith(
                               fontWeight: FontWeight.w700,
                             ),
-                            leftChevronIcon: const Icon(
+                            leftChevronIcon: Icon(
                               Icons.chevron_left_rounded,
                               color: AppColors.secondary,
                             ),
-                            rightChevronIcon: const Icon(
+                            rightChevronIcon: Icon(
                               Icons.chevron_right_rounded,
                               color: AppColors.secondary,
                             ),
@@ -217,11 +217,11 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                                 width: 1.5,
                               ),
                             ),
-                            todayTextStyle: const TextStyle(
+                            todayTextStyle: TextStyle(
                               color: AppColors.secondary,
                               fontWeight: FontWeight.bold,
                             ),
-                            selectedDecoration: const BoxDecoration(
+                            selectedDecoration: BoxDecoration(
                               color: AppColors.secondary,
                               shape: BoxShape.circle,
                             ),
@@ -313,11 +313,8 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                           builder: (_) => const AddEventCalendar(),
                         );
                       },
-                      icon: const Icon(
-                        Icons.add_rounded,
-                        color: AppColors.secondary,
-                      ),
-                      label: const Text(
+                      icon: Icon(Icons.add_rounded, color: AppColors.secondary),
+                      label: Text(
                         "Criar um evento",
                         style: TextStyle(
                           color: AppColors.secondary,
@@ -325,7 +322,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                         ),
                       ),
                       style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: AppColors.secondary),
+                        side: BorderSide(color: AppColors.secondary),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18),
                         ),
@@ -383,11 +380,11 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                       onPressed: () {
                         // TODO: export PDF
                       },
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.picture_as_pdf_rounded,
                         color: AppColors.error,
                       ),
-                      label: const Text(
+                      label: Text(
                         "Exportar PDF",
                         style: TextStyle(
                           color: AppColors.error,
@@ -395,7 +392,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                         ),
                       ),
                       style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: AppColors.error),
+                        side: BorderSide(color: AppColors.error),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18),
                         ),

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'colors.dart';
-import 'text_styles.dart';
 
 class AppTheme {
   AppTheme._();
@@ -9,63 +7,71 @@ class AppTheme {
     useMaterial3: true,
     splashFactory: InkSparkle.splashFactory,
 
-    scaffoldBackgroundColor: AppColors.background,
+    scaffoldBackgroundColor: const Color(0xFFF8FAFC),
 
     colorScheme: const ColorScheme.light(
-      primary: AppColors.primary,
-      onPrimary: AppColors.textOnPrimary,
-      secondary: AppColors.secondary,
-      onSecondary: AppColors.textOnPrimary,
-      surface: AppColors.surface,
-      onSurface: AppColors.textPrimary,
-      error: AppColors.error,
-      onError: AppColors.textOnPrimary,
-      outline: AppColors.border,
+      primary: Color(0xFF0F172A),
+      onPrimary: Color(0xFFFFFFFF),
+      secondary: Color(0xFF4338CA),
+      onSecondary: Color(0xFFFFFFFF),
+      surface: Color(0xFFFFFFFF),
+      onSurface: Color(0xFF0F172A),
+      error: Color(0xFFEF4444),
+      onError: Color(0xFFFFFFFF),
+      outline: Color(0xFFE2E8F0),
     ),
 
     textTheme: const TextTheme(
-      headlineLarge: AppTextStyles.headingLarge,
-      headlineMedium: AppTextStyles.headingMedium,
-      titleLarge: AppTextStyles.bodyLarge,
-      bodyLarge: AppTextStyles.bodyMedium,
-      bodyMedium: AppTextStyles.bodySmall,
+      headlineLarge: TextStyle(
+        fontSize: 32,
+        fontWeight: FontWeight.bold,
+        color: Color(0xFF0F172A),
+      ),
+      headlineMedium: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.w600,
+        color: Color(0xFF0F172A),
+      ),
+      titleLarge: TextStyle(fontSize: 18, color: Color(0xFF0F172A)),
+      bodyLarge: TextStyle(fontSize: 16, color: Color(0xFF0F172A)),
+      bodyMedium: TextStyle(fontSize: 14, color: Color(0xFF64748B)),
     ),
 
     dividerTheme: const DividerThemeData(
-      color: AppColors.border,
+      color: Color(0xFFE2E8F0),
       thickness: 1,
       space: 1,
     ),
 
     cardTheme: CardThemeData(
-      color: AppColors.surface,
+      color: const Color(0xFFFFFFFF),
       elevation: 0,
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
-        side: const BorderSide(color: AppColors.border),
+        side: const BorderSide(color: Color(0xFFE2E8F0)),
       ),
     ),
 
     appBarTheme: const AppBarTheme(
       elevation: 0,
       centerTitle: true,
-      backgroundColor: AppColors.background,
-      foregroundColor: AppColors.textPrimary,
+      backgroundColor: Color(0xFFF8FAFC),
+      foregroundColor: Color(0xFF0F172A),
       surfaceTintColor: Colors.transparent,
       scrolledUnderElevation: 0,
     ),
 
-    iconTheme: const IconThemeData(color: AppColors.textPrimary),
+    iconTheme: const IconThemeData(color: Color(0xFF0F172A)),
 
     progressIndicatorTheme: const ProgressIndicatorThemeData(
-      color: AppColors.secondary,
-      circularTrackColor: AppColors.border,
+      color: Color(0xFF4338CA),
+      circularTrackColor: Color(0xFFE2E8F0),
     ),
 
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.secondary,
+        backgroundColor: const Color(0xFF4338CA),
         foregroundColor: Colors.white,
         minimumSize: const Size(double.infinity, 54),
         elevation: 0,
@@ -76,7 +82,7 @@ class AppTheme {
 
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
-        backgroundColor: AppColors.secondary,
+        backgroundColor: const Color(0xFF4338CA),
         foregroundColor: Colors.white,
         minimumSize: const Size(double.infinity, 54),
         textStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
@@ -94,92 +100,97 @@ class AppTheme {
 
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        foregroundColor: AppColors.secondary,
+        foregroundColor: const Color(0xFF4338CA),
         textStyle: const TextStyle(fontWeight: FontWeight.w600),
       ),
     ),
 
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: AppColors.surface,
-      labelStyle: const TextStyle(color: AppColors.textSecondary),
-      hintStyle: const TextStyle(color: AppColors.textSecondary),
+      fillColor: const Color(0xFFFFFFFF),
+      labelStyle: const TextStyle(color: Color(0xFF64748B)),
+      hintStyle: const TextStyle(color: Color(0xFF64748B)),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
-        borderSide: const BorderSide(color: AppColors.border),
+        borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
-        borderSide: const BorderSide(color: AppColors.border),
+        borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
-        borderSide: const BorderSide(color: AppColors.secondary, width: 2),
+        borderSide: const BorderSide(color: Color(0xFF4338CA), width: 2),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
-        borderSide: const BorderSide(color: AppColors.error),
+        borderSide: const BorderSide(color: Color(0xFFEF4444)),
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
     ),
 
     dialogTheme: DialogThemeData(
-      backgroundColor: AppColors.surface,
+      backgroundColor: const Color(0xFFFFFFFF),
       surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      titleTextStyle: AppTextStyles.headingMedium,
-      contentTextStyle: AppTextStyles.bodyMedium,
+      titleTextStyle: const TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.w600,
+        color: Color(0xFF0F172A),
+      ),
+      contentTextStyle: const TextStyle(fontSize: 16, color: Color(0xFF0F172A)),
     ),
 
     datePickerTheme: DatePickerThemeData(
-      backgroundColor: AppColors.surface,
+      backgroundColor: const Color(0xFFFFFFFF),
       surfaceTintColor: Colors.transparent,
-      headerBackgroundColor: AppColors.primary,
+      headerBackgroundColor: const Color(0xFF0F172A),
       headerForegroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      todayBorder: const BorderSide(color: AppColors.secondary),
+      todayBorder: const BorderSide(color: Color(0xFF4338CA)),
       dayOverlayColor: WidgetStateProperty.resolveWith(
         (states) => states.contains(WidgetState.selected)
             ? null
-            : AppColors.secondary.withValues(alpha: .08),
+            : const Color(0xFF4338CA).withValues(alpha: .08),
       ),
       dayForegroundColor: WidgetStateProperty.resolveWith(
         (states) => states.contains(WidgetState.selected)
             ? Colors.white
-            : AppColors.textPrimary,
+            : const Color(0xFF0F172A),
       ),
       dayBackgroundColor: WidgetStateProperty.resolveWith(
-        (states) =>
-            states.contains(WidgetState.selected) ? AppColors.secondary : null,
+        (states) => states.contains(WidgetState.selected)
+            ? const Color(0xFF4338CA)
+            : null,
       ),
-      todayForegroundColor: const WidgetStatePropertyAll(AppColors.secondary),
+      todayForegroundColor: const WidgetStatePropertyAll(Color(0xFF4338CA)),
     ),
 
     bottomSheetTheme: BottomSheetThemeData(
-      backgroundColor: AppColors.surface,
+      backgroundColor: const Color(0xFFFFFFFF),
       surfaceTintColor: Colors.transparent,
-      modalBackgroundColor: AppColors.surface,
+      modalBackgroundColor: const Color(0xFFFFFFFF),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
     ),
 
     snackBarTheme: SnackBarThemeData(
-      backgroundColor: AppColors.primary,
+      backgroundColor: const Color(0xFF0F172A),
       contentTextStyle: const TextStyle(color: Colors.white),
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
     ),
 
     popupMenuTheme: PopupMenuThemeData(
-      color: AppColors.surface,
+      color: const Color(0xFFFFFFFF),
       surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
     ),
 
     dropdownMenuTheme: DropdownMenuThemeData(
       menuStyle: MenuStyle(
-        backgroundColor: const WidgetStatePropertyAll(AppColors.surface),
+        backgroundColor: const WidgetStatePropertyAll(Color(0xFFFFFFFF)),
         surfaceTintColor: const WidgetStatePropertyAll(Colors.transparent),
         shape: WidgetStatePropertyAll(
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -189,15 +200,15 @@ class AppTheme {
 
     checkboxTheme: CheckboxThemeData(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-      fillColor: const WidgetStatePropertyAll(AppColors.secondary),
+      fillColor: const WidgetStatePropertyAll(Color(0xFF4338CA)),
     ),
 
     switchTheme: SwitchThemeData(
       thumbColor: const WidgetStatePropertyAll(Colors.white),
       trackColor: WidgetStateProperty.resolveWith(
         (states) => states.contains(WidgetState.selected)
-            ? AppColors.secondary
-            : AppColors.disabled,
+            ? const Color(0xFF4338CA)
+            : const Color(0xFFCBD5E1),
       ),
     ),
   );
@@ -226,12 +237,20 @@ class AppTheme {
     ),
 
     textTheme: const TextTheme(
-      headlineLarge: AppTextStyles.headingLarge,
-      headlineMedium: AppTextStyles.headingMedium,
-      titleLarge: AppTextStyles.bodyLarge,
-      bodyLarge: AppTextStyles.bodyMedium,
-      bodyMedium: AppTextStyles.bodySmall,
-    ).apply(bodyColor: Colors.white, displayColor: Colors.white),
+      headlineLarge: TextStyle(
+        fontSize: 32,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+      headlineMedium: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.w600,
+        color: Colors.white,
+      ),
+      titleLarge: TextStyle(fontSize: 18, color: Colors.white),
+      bodyLarge: TextStyle(fontSize: 16, color: Colors.white),
+      bodyMedium: TextStyle(fontSize: 14, color: Colors.white70),
+    ),
 
     dividerTheme: const DividerThemeData(
       color: Color(0xFF32353D),
@@ -277,6 +296,21 @@ class AppTheme {
       ),
     ),
 
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        minimumSize: const Size(double.infinity, 54),
+        textStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      ),
+    ),
+
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: const Color(0xFF4F8CFF),
+        textStyle: const TextStyle(fontWeight: FontWeight.w600),
+      ),
+    ),
+
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: const Color(0xFF1A1C22),
@@ -311,12 +345,27 @@ class AppTheme {
       backgroundColor: const Color(0xFF1A1C22),
       surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      titleTextStyle: const TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.w600,
+        color: Colors.white,
+      ),
+      contentTextStyle: const TextStyle(fontSize: 16, color: Colors.white70),
     ),
 
     snackBarTheme: SnackBarThemeData(
       backgroundColor: const Color(0xFF4F8CFF),
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+    ),
+
+    switchTheme: SwitchThemeData(
+      thumbColor: const WidgetStatePropertyAll(Colors.white),
+      trackColor: WidgetStateProperty.resolveWith(
+        (states) => states.contains(WidgetState.selected)
+            ? const Color(0xFF4F8CFF)
+            : const Color(0xFF4B4F58),
+      ),
     ),
   );
 }

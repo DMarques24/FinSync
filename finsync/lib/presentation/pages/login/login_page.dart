@@ -59,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.account_balance_wallet_rounded,
                     size: 80,
                     color: AppColors.primary,

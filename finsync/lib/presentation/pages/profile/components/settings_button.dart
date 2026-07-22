@@ -56,7 +56,7 @@ class SettingsButton extends StatelessWidget {
                   color: AppColors.background,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.chevron_right_rounded,
                   color: AppColors.textSecondary,
                   size: 22,

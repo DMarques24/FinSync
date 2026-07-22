@@ -67,7 +67,7 @@ class EventTile extends StatelessWidget {
             IconButton(
               onPressed: onDelete,
               splashRadius: 20,
-              icon: const Icon(
+              icon: Icon(
                 Icons.delete_outline_rounded,
                 color: AppColors.textSecondary,
                 size: 20,

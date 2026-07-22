@@ -72,7 +72,7 @@ class DesireCard extends StatelessWidget {
                               width: 100,
                               height: 100,
                               color: AppColors.background,
-                              child: const Icon(
+                              child: Icon(
                                 Icons.image_outlined,
                                 color: AppColors.secondary,
                               ),
@@ -82,7 +82,7 @@ class DesireCard extends StatelessWidget {
                         width: 100,
                         height: 100,
                         color: AppColors.background,
-                        child: const Icon(
+                        child: Icon(
                           Icons.image_outlined,
                           color: AppColors.secondary,
                         ),

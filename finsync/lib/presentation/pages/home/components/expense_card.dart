@@ -118,7 +118,7 @@ class ExpenseCard extends StatelessWidget {
 
               const SizedBox(height: 8),
 
-              const Icon(
+              Icon(
                 Icons.chevron_right_rounded,
                 color: AppColors.textSecondary,
               ),

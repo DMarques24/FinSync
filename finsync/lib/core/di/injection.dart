@@ -14,6 +14,7 @@ import 'package:finsync/presentation/pages/createAcount/create_acount_bloc.dart'
 import 'package:finsync/presentation/pages/login/login_bloc.dart';
 import 'package:finsync/presentation/pages/onboarding/onboarding_bloc.dart';
 import 'package:finsync/presentation/pages/profile/profile_bloc.dart';
+import 'package:finsync/core/theme/theme_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:finsync/data/datasources/auth_user_remote_datasource.dart';
@@ -160,4 +161,6 @@ Future<void> initDependencies() async {
       sl<DeleteCalendarEvent>(),
     ),
   );
+
+  sl.registerFactory<ThemeBloc>(() => ThemeBloc());
 }

@@ -48,7 +48,7 @@ class ExpensesList extends StatelessWidget {
                       color: AppColors.secondary.withValues(alpha: .10),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.receipt_long_rounded,
                       color: AppColors.secondary,
                       size: 30,

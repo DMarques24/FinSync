@@ -10,6 +10,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:finsync/app/app_router.dart';
 import 'package:finsync/core/di/injection.dart';
 import 'package:finsync/core/theme/app_theme.dart';
+import 'package:finsync/core/theme/theme_bloc.dart';
+import 'package:finsync/core/theme/theme_event.dart';
+import 'package:finsync/core/theme/theme_state.dart';
 import 'package:finsync/presentation/pages/home/home_bloc.dart';
 import 'package:finsync/presentation/pages/desire/desire_bloc.dart';
 
@@ -29,12 +32,20 @@ class App extends StatelessWidget {
           create: (_) => sl<ProfileBloc>()..add(LoadProfileEvent()),
         ),
         BlocProvider(create: (_) => sl<AnalyticsBloc>()),
+        BlocProvider<ThemeBloc>(
+          create: (_) => sl<ThemeBloc>()..add(LoadThemeEvent()),
+        ),
       ],
-      child: MaterialApp.router(
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        themeMode: ThemeMode.system,
-        routerConfig: router,
+      child: BlocBuilder<ThemeBloc, ThemeState>(
+        builder: (context, themeState) {
+          return MaterialApp.router(
+            key: ValueKey(themeState.mode),
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: themeState.mode,
+            routerConfig: router,
+          );
+        },
       ),
     );
   }

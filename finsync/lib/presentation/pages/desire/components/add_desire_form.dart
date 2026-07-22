@@ -134,14 +134,14 @@ class _AddDesireFormState extends State<AddDesireForm> {
                   child: _image == null
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children: [
                             Icon(
                               Icons.add_photo_alternate_outlined,
                               size: 42,
                               color: AppColors.secondary,
                             ),
-                            SizedBox(height: 10),
-                            Text(
+                            const SizedBox(height: 10),
+                            const Text(
                               "Adicionar imagem",
                               style: TextStyle(fontWeight: FontWeight.w600),
                             ),
@@ -158,7 +158,7 @@ class _AddDesireFormState extends State<AddDesireForm> {
 
               TextField(
                 controller: _nameController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: "Nome do desejo",
                   prefixIcon: Icon(
                     Icons.favorite_border_rounded,
@@ -174,7 +174,7 @@ class _AddDesireFormState extends State<AddDesireForm> {
                 keyboardType: const TextInputType.numberWithOptions(
                   decimal: true,
                 ),
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: "Preço (€)",
                   prefixIcon: Icon(
                     Icons.euro_rounded,
@@ -189,7 +189,7 @@ class _AddDesireFormState extends State<AddDesireForm> {
                 borderRadius: BorderRadius.circular(16),
                 onTap: selectDate,
                 child: InputDecorator(
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: "Data objetivo",
                     prefixIcon: Icon(
                       Icons.calendar_month_rounded,

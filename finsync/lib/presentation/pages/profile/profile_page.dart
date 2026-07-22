@@ -6,6 +6,7 @@ import 'package:finsync/core/theme/text_styles.dart';
 
 import 'package:finsync/presentation/pages/profile/components/settings_button.dart';
 import 'package:finsync/presentation/pages/profile/components/profile_header.dart';
+import 'package:finsync/presentation/pages/profile/components/theme_picker_sheet.dart';
 import 'package:finsync/presentation/pages/profile/profile_bloc.dart';
 import 'package:finsync/presentation/pages/profile/profile_event.dart';
 import 'package:finsync/presentation/pages/profile/profile_state.dart';
@@ -81,35 +82,51 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ],
                     ),
-                    child: const Column(
+                    child: Column(
                       children: [
-                        SettingsButton(
+                        const SettingsButton(
                           icon: Icons.person_outline_rounded,
                           name: "Editar Perfil",
                         ),
-                        Divider(height: 1),
+                        const Divider(height: 1),
 
-                        SettingsButton(
+                        const SettingsButton(
                           icon: Icons.notifications_outlined,
                           name: "Notificações",
                         ),
-                        Divider(height: 1),
+                        const Divider(height: 1),
 
-                        SettingsButton(
+                        const SettingsButton(
                           icon: Icons.lock_outline_rounded,
                           name: "Segurança",
                         ),
-                        Divider(height: 1),
+                        const Divider(height: 1),
 
                         SettingsButton(
-                            icon: Icons.dark_mode_outlined, name: "Tema"),
-                        Divider(height: 1),
+                          icon: Icons.dark_mode_outlined,
+                          name: "Tema",
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              backgroundColor: AppColors.surface,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(28),
+                                ),
+                              ),
+                              builder: (_) => const ThemePickerSheet(),
+                            );
+                          },
+                        ),
+                        const Divider(height: 1),
 
-                        SettingsButton(
-                            icon: Icons.language_outlined, name: "Idioma"),
-                        Divider(height: 1),
+                        const SettingsButton(
+                          icon: Icons.language_outlined,
+                          name: "Idioma",
+                        ),
+                        const Divider(height: 1),
 
-                        SettingsButton(
+                        const SettingsButton(
                           icon: Icons.help_outline_rounded,
                           name: "Ajuda",
                         ),
@@ -124,11 +141,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     height: 56,
                     child: OutlinedButton.icon(
                       onPressed: () {},
-                      icon: const Icon(
-                        Icons.logout_rounded,
-                        color: AppColors.error,
-                      ),
-                      label: const Text(
+                      icon: Icon(Icons.logout_rounded, color: AppColors.error),
+                      label: Text(
                         "Terminar Sessão",
                         style: TextStyle(
                           color: AppColors.error,
@@ -136,7 +150,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                       style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: AppColors.error),
+                        side: BorderSide(color: AppColors.error),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18),
                         ),
