@@ -6,6 +6,7 @@ class CalendarEventsModel {
   final double price;
   final DateTime dateEvent;
   final CalendarEventType type;
+  final bool repeatMonthly;
 
   CalendarEventsModel({
     required this.id,
@@ -13,6 +14,7 @@ class CalendarEventsModel {
     required this.price,
     required this.dateEvent,
     this.type = CalendarEventType.despesa,
+    this.repeatMonthly = false,
   });
 
   factory CalendarEventsModel.fromJson(Map<String, dynamic> json) {
@@ -28,6 +30,7 @@ class CalendarEventsModel {
         (value) => value.name == json['type'],
         orElse: () => CalendarEventType.despesa,
       ),
+      repeatMonthly: json['repeat_monthly'] as bool? ?? false,
     );
   }
 
@@ -38,6 +41,7 @@ class CalendarEventsModel {
       'event_date': dateEvent.toIso8601String(),
       'user_id': userId,
       'type': type.name,
+      'repeat_monthly': repeatMonthly,
     };
   }
 
@@ -48,6 +52,7 @@ class CalendarEventsModel {
       price: price,
       date: dateEvent,
       type: type,
+      repeatMonthly: repeatMonthly,
     );
   }
 }

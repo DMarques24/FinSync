@@ -5,11 +5,15 @@ import 'package:flutter/material.dart';
 
 class EventTile extends StatelessWidget {
   final CalendarEventEntity event;
+  final VoidCallback? onDelete;
 
-  const EventTile({required this.event});
+  const EventTile({required this.event, this.onDelete});
 
   @override
   Widget build(BuildContext context) {
+    final isIncome = event.type == CalendarEventType.receita;
+    final color = isIncome ? AppColors.success : AppColors.error;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(14),
@@ -24,12 +28,14 @@ class EventTile extends StatelessWidget {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: AppColors.secondary.withValues(alpha: .10),
+              color: color.withValues(alpha: .10),
               borderRadius: BorderRadius.circular(14),
             ),
-            child: const Icon(
-              Icons.event_rounded,
-              color: AppColors.secondary,
+            child: Icon(
+              isIncome
+                  ? Icons.arrow_downward_rounded
+                  : Icons.arrow_upward_rounded,
+              color: color,
               size: 22,
             ),
           ),
@@ -47,15 +53,26 @@ class EventTile extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(width: 12),
+          const SizedBox(width: 8),
 
           Text(
-            "${event.price.toStringAsFixed(2)} €",
+            "${isIncome ? '+' : '-'} ${event.price.toStringAsFixed(2)} €",
             style: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.error,
+              color: color,
               fontWeight: FontWeight.bold,
             ),
           ),
+
+          if (onDelete != null)
+            IconButton(
+              onPressed: onDelete,
+              splashRadius: 20,
+              icon: const Icon(
+                Icons.delete_outline_rounded,
+                color: AppColors.textSecondary,
+                size: 20,
+              ),
+            ),
         ],
       ),
     );

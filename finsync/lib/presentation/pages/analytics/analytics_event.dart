@@ -12,3 +12,10 @@ class AddEventCalendarEvent extends AnalyticsEvent {
 
   AddEventCalendarEvent(this.event, {this.completer});
 }
+
+class DeleteEventCalendarEvent extends AnalyticsEvent {
+  final CalendarEventEntity event;
+  final Completer<void>? completer;
+
+  DeleteEventCalendarEvent(this.event, {this.completer});
+}

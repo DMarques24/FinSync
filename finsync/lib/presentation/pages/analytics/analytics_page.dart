@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/domain/entities/calendar_event.dart';
@@ -9,6 +11,8 @@ import 'package:finsync/presentation/pages/analytics/components/empty_state.dart
 import 'package:finsync/presentation/pages/analytics/components/error_card.dart';
 import 'package:finsync/presentation/pages/analytics/components/event_tile.dart';
 import 'package:finsync/presentation/pages/analytics/components/section_card.dart';
+import 'package:finsync/presentation/pages/profile/profile_bloc.dart';
+import 'package:finsync/presentation/pages/profile/profile_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sankey_flutter/sankey_helpers.dart';
@@ -46,6 +50,48 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
   void initState() {
     super.initState();
     context.read<AnalyticsBloc>().add(LoadAnalyticsEvent());
+  }
+
+  Future<void> _deleteEvent(CalendarEventEntity event) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Remover evento"),
+        content: Text('Tens a certeza que queres remover "${event.name}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text("Cancelar"),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text(
+              "Remover",
+              style: TextStyle(color: AppColors.error),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    try {
+      final completer = Completer<void>();
+      context.read<AnalyticsBloc>().add(
+        DeleteEventCalendarEvent(event, completer: completer),
+      );
+
+      await completer.future.timeout(const Duration(seconds: 12));
+
+      if (!mounted) return;
+      context.read<ProfileBloc>().add(LoadProfileEvent());
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.toString())));
+    }
   }
 
   @override
@@ -183,11 +229,39 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
-                            markerDecoration: const BoxDecoration(
-                              color: AppColors.error,
-                              shape: BoxShape.circle,
-                            ),
-                            markersMaxCount: 1,
+                          ),
+
+                          calendarBuilders: CalendarBuilders(
+                            markerBuilder: (context, day, events) {
+                              if (events.isEmpty) return null;
+                              final dayEvents = events
+                                  .cast<CalendarEventEntity>();
+
+                              return Positioned(
+                                bottom: 4,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: dayEvents.take(3).map((event) {
+                                    final color =
+                                        event.type == CalendarEventType.receita
+                                        ? AppColors.success
+                                        : AppColors.error;
+
+                                    return Container(
+                                      width: 6,
+                                      height: 6,
+                                      margin: const EdgeInsets.symmetric(
+                                        horizontal: 1,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: color,
+                                        shape: BoxShape.circle,
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              );
+                            },
                           ),
                         ),
 
@@ -210,7 +284,12 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                             message: "Sem eventos neste dia.",
                           )
                         else
-                          ...dayEvents.map((event) => EventTile(event: event)),
+                          ...dayEvents.map(
+                            (event) => EventTile(
+                              event: event,
+                              onDelete: () => _deleteEvent(event),
+                            ),
+                          ),
                       ],
                     ),
                   ),

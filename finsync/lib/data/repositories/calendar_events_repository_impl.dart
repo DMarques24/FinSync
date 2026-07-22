@@ -22,7 +22,13 @@ class CalendarEventsRepositoryImpl implements CalendarEventRepository {
       price: event.price,
       dateEvent: event.date,
       type: event.type,
+      repeatMonthly: event.repeatMonthly,
     );
     await remoteDatasource.insertCalendarEvents(model);
+  }
+
+  @override
+  Future<void> deleteCalendarEvent(int id) async {
+    await remoteDatasource.deleteCalendarEvent(id);
   }
 }

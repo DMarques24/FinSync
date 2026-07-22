@@ -25,6 +25,7 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
   bool _isSaving = false;
 
   CalendarEventType selectedType = CalendarEventType.despesa;
+  bool repeatMonthly = false;
 
   @override
   void dispose() {
@@ -75,6 +76,7 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
       price: price,
       date: selectedDate!,
       type: selectedType,
+      repeatMonthly: repeatMonthly,
     );
 
     setState(() {
@@ -242,6 +244,39 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
                     selectedForegroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 18),
+
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.background,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: AppColors.border),
+                ),
+                child: SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  value: repeatMonthly,
+                  onChanged: _isSaving
+                      ? null
+                      : (value) {
+                          setState(() {
+                            repeatMonthly = value;
+                          });
+                        },
+                  activeThumbColor: AppColors.secondary,
+                  title: const Text("Repetir no próximo mês"),
+                  subtitle: Text(
+                    "Cria automaticamente o mesmo evento um mês depois.",
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: AppColors.textSecondary,
                     ),
                   ),
                 ),

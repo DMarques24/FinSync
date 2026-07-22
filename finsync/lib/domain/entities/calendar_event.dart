@@ -6,6 +6,7 @@ class CalendarEventEntity {
   final double price;
   final DateTime date;
   final CalendarEventType type;
+  final bool repeatMonthly;
 
   CalendarEventEntity({
     required this.id,
@@ -13,5 +14,6 @@ class CalendarEventEntity {
     required this.price,
     required this.date,
     this.type = CalendarEventType.despesa,
+    this.repeatMonthly = false,
   });
 }

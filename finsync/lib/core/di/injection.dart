@@ -4,6 +4,7 @@ import 'package:finsync/data/repositories/calendar_events_repository_impl.dart';
 import 'package:finsync/domain/repositories/calendar_event_repository.dart';
 import 'package:finsync/domain/usecases/adjust_balance.dart';
 import 'package:finsync/domain/usecases/complete_onboarding.dart';
+import 'package:finsync/domain/usecases/delete_calendar_event.dart';
 import 'package:finsync/domain/usecases/get_all_calendar_events.dart';
 import 'package:finsync/domain/usecases/get_filter_time_expenses.dart';
 import 'package:finsync/domain/usecases/insert_calendar_event.dart';
@@ -119,6 +120,10 @@ Future<void> initDependencies() async {
     () => InsertCalendarEvent(sl()),
   );
 
+  sl.registerLazySingleton<DeleteCalendarEvent>(
+    () => DeleteCalendarEvent(sl()),
+  );
+
   // BLOCS
   sl.registerFactory<HomeBloc>(
     () => HomeBloc(
@@ -152,6 +157,7 @@ Future<void> initDependencies() async {
       sl<InsertCalendarEvent>(),
       sl<GetAllCalendarEvents>(),
       sl<AdjustBalance>(),
+      sl<DeleteCalendarEvent>(),
     ),
   );
 }

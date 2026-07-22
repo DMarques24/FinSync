@@ -35,4 +35,17 @@ class CalendarEventsRemoteDatasourceImpl
       throw Exception('Erro ao guardar evento: ${e.message}');
     }
   }
+
+  @override
+  Future<void> deleteCalendarEvent(int id) async {
+    try {
+      await supabase
+          .from('calendar_events')
+          .delete()
+          .eq('id', id)
+          .eq('user_id', userId);
+    } on PostgrestException catch (e) {
+      throw Exception('Erro ao remover evento: ${e.message}');
+    }
+  }
 }
