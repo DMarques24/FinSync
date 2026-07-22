@@ -1,5 +1,6 @@
-import 'package:finsync/domain/usecases/get_all_desires.dart';
+import 'package:finsync/domain/usecases/get_all_calendar_events.dart';
 import 'package:finsync/domain/usecases/get_all_expenses.dart';
+import 'package:finsync/domain/usecases/insert_calendar_event.dart';
 import 'package:finsync/presentation/pages/analytics/analytics_event.dart';
 import 'package:finsync/presentation/pages/analytics/analytics_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,19 +9,28 @@ import 'package:sankey_flutter/sankey_node.dart';
 
 class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
   final GetAllExpenses getAllExpenses;
-  AnalyticsBloc(this.getAllExpenses)
-    : super(AnalyticsInitialState()) {
+  final InsertCalendarEvent insertCalendarEvent;
+  final GetAllCalendarEvents getAllCalendarEvents;
+  AnalyticsBloc(
+    this.getAllExpenses,
+    this.insertCalendarEvent,
+    this.getAllCalendarEvents,
+  ) : super(AnalyticsInitialState()) {
     on<LoadAnalyticsEvent>(_onLoadAnalytics);
+    on<AddEventCalendarEvent>(_addCalendarEvent);
   }
   Future<void> _onLoadAnalytics(
     LoadAnalyticsEvent event,
     Emitter<AnalyticsState> emit,
   ) async {
     emit(AnalyticsLoadingState());
+
     try {
       final expenses = await getAllExpenses();
+      final calendarEvents = await getAllCalendarEvents();
 
       final nodesById = <String, SankeyNode>{};
+
       SankeyNode node(String label) => nodesById.putIfAbsent(
         label,
         () => SankeyNode(id: nodesById.length, label: label),
@@ -29,14 +39,16 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
       final links = <SankeyLink>[];
 
       final byCategory = <String, double>{};
+
       for (final expense in expenses) {
         byCategory[expense.category] =
             (byCategory[expense.category] ?? 0) + expense.price;
       }
+
       byCategory.forEach((category, total) {
         links.add(
           SankeyLink(
-            source: node('Salário'),
+            source: node("Salário"),
             target: node(category),
             value: total,
           ),
@@ -44,9 +56,28 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
       });
 
       emit(
-        AnalyticsLoadedState(nodes: nodesById.values.toList(), links: links),
+        AnalyticsLoadedState(
+          nodes: nodesById.values.toList(),
+          links: links,
+          event: calendarEvents,
+        ),
       );
     } catch (e) {
+      emit(AnalyticsErrorState(e.toString()));
+    }
+  }
+
+  Future<void> _addCalendarEvent(
+    AddEventCalendarEvent event,
+    Emitter<AnalyticsState> emit,
+  ) async {
+    try {
+      await insertCalendarEvent(event.event);
+      event.completer?.complete();
+
+      add(LoadAnalyticsEvent());
+    } catch (e) {
+      event.completer?.completeError(e);
       emit(AnalyticsErrorState(e.toString()));
     }
   }

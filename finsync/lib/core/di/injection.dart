@@ -1,5 +1,11 @@
+import 'package:finsync/data/datasources/calendar_events_remote_datasource.dart';
+import 'package:finsync/data/datasources/calendar_events_remote_datasource_impl.dart';
+import 'package:finsync/data/repositories/calendar_events_repository_impl.dart';
+import 'package:finsync/domain/repositories/calendar_event_repository.dart';
 import 'package:finsync/domain/usecases/complete_onboarding.dart';
+import 'package:finsync/domain/usecases/get_all_calendar_events.dart';
 import 'package:finsync/domain/usecases/get_filter_time_expenses.dart';
+import 'package:finsync/domain/usecases/insert_calendar_event.dart';
 import 'package:finsync/domain/usecases/insert_user.dart';
 import 'package:finsync/presentation/pages/analytics/analytics_bloc.dart';
 import 'package:finsync/presentation/pages/createAcount/create_acount_bloc.dart';
@@ -58,6 +64,10 @@ Future<void> initDependencies() async {
     () => UserRemoteDatasourceImpl(),
   );
 
+  sl.registerLazySingleton<CalendarEventsRemoteDatasource>(
+    () => CalendarEventsRemoteDatasourceImpl(),
+  );
+
   // REPOSITORIES
   sl.registerLazySingleton<AuthUserRepository>(
     () => AuthUserRepositoryImpl(sl()),
@@ -70,6 +80,10 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton<DesireRepository>(() => DesireRepositoryImpl(sl()));
 
   sl.registerLazySingleton<UserRepository>(() => UserRepositoryImpl(sl()));
+
+  sl.registerLazySingleton<CalendarEventRepository>(
+    () => CalendarEventsRepositoryImpl(sl()),
+  );
 
   // USE CASES
   sl.registerLazySingleton<SignInUser>(() => SignInUser(sl()));
@@ -93,6 +107,14 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton<GetUser>(() => GetUser(sl()));
 
   sl.registerLazySingleton<CompleteOnboarding>(() => CompleteOnboarding(sl()));
+
+  sl.registerLazySingleton<GetAllCalendarEvents>(
+    () => GetAllCalendarEvents(sl()),
+  );
+
+  sl.registerLazySingleton<InsertCalendarEvent>(
+    () => InsertCalendarEvent(sl()),
+  );
 
   // BLOCS
   sl.registerFactory<HomeBloc>(
@@ -121,5 +143,11 @@ Future<void> initDependencies() async {
     () => OnboardingBloc(sl<CompleteOnboarding>()),
   );
 
-  sl.registerFactory<AnalyticsBloc>(() => AnalyticsBloc(sl<GetAllExpenses>()));
+  sl.registerFactory<AnalyticsBloc>(
+    () => AnalyticsBloc(
+      sl<GetAllExpenses>(),
+      sl<InsertCalendarEvent>(),
+      sl<GetAllCalendarEvents>(),
+    ),
+  );
 }

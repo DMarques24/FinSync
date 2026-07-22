@@ -3,6 +3,7 @@ import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/presentation/pages/analytics/analytics_bloc.dart';
 import 'package:finsync/presentation/pages/analytics/analytics_event.dart';
 import 'package:finsync/presentation/pages/analytics/analytics_state.dart';
+import 'package:finsync/presentation/pages/analytics/components/add_event_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sankey_flutter/sankey_helpers.dart';
@@ -44,6 +45,37 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                     firstDay: DateTime.utc(2010, 10, 16),
                     lastDay: DateTime.utc(2030, 3, 14),
                     focusedDay: DateTime.now(),
+                  ),
+                  const SizedBox(height: 24),
+
+                  SizedBox(
+                    width: double.infinity,
+                    height: 56,
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (_) => const AddEventCalendar(),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.calendar_month,
+                        color: AppColors.secondary,
+                      ),
+                      label: const Text(
+                        "Criar um evento",
+                        style: TextStyle(
+                          color: AppColors.secondary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: AppColors.secondary),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 24),
 

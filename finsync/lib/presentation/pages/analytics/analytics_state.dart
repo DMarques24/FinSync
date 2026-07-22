@@ -1,3 +1,4 @@
+import 'package:finsync/domain/entities/calendar_event.dart';
 import 'package:sankey_flutter/sankey_link.dart';
 import 'package:sankey_flutter/sankey_node.dart';
 
@@ -10,8 +11,13 @@ class AnalyticsLoadingState extends AnalyticsState {}
 class AnalyticsLoadedState extends AnalyticsState {
   final List<SankeyNode> nodes;
   final List<SankeyLink> links;
+  final List<CalendarEventEntity> event;
 
-  AnalyticsLoadedState({required this.nodes, required this.links});
+  AnalyticsLoadedState({
+    required this.nodes,
+    required this.links,
+    required this.event,
+  });
 }
 
 class AnalyticsErrorState extends AnalyticsState {
