@@ -31,4 +31,9 @@ class UserRemoteDatasourceImpl implements UserRemoteDatasource {
         .update({'balance': balance, 'isFirstLogin': false})
         .eq('user_id', userId);
   }
+
+  @override
+  Future<void> adjustBalance(double delta) async {
+    await supabase.rpc('adjust_profile_balance', params: {'p_delta': delta});
+  }
 }

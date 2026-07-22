@@ -5,6 +5,8 @@ import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/domain/entities/calendar_event.dart';
 import 'package:finsync/presentation/pages/analytics/analytics_bloc.dart';
 import 'package:finsync/presentation/pages/analytics/analytics_event.dart';
+import 'package:finsync/presentation/pages/profile/profile_bloc.dart';
+import 'package:finsync/presentation/pages/profile/profile_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,6 +23,8 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
 
   DateTime? selectedDate;
   bool _isSaving = false;
+
+  CalendarEventType selectedType = CalendarEventType.despesa;
 
   @override
   void dispose() {
@@ -70,6 +74,7 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
       name: _nameEventController.text.trim(),
       price: price,
       date: selectedDate!,
+      type: selectedType,
     );
 
     setState(() {
@@ -85,6 +90,8 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
       await completer.future.timeout(const Duration(seconds: 12));
 
       if (!mounted) return;
+      context.read<ProfileBloc>().add(LoadProfileEvent());
+
       final messenger = ScaffoldMessenger.of(context);
       Navigator.pop(context);
       messenger.showSnackBar(
@@ -198,6 +205,48 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
                   prefixIcon: Icon(Icons.euro_rounded),
                 ),
               ),
+              const SizedBox(height: 18),
+
+              Text(
+                "Tipo",
+                style: AppTextStyles.bodySmall.copyWith(
+                  color: AppColors.textSecondary,
+                ),
+              ),
+              const SizedBox(height: 8),
+              SizedBox(
+                width: double.infinity,
+                child: SegmentedButton<CalendarEventType>(
+                  segments: const [
+                    ButtonSegment(
+                      value: CalendarEventType.despesa,
+                      label: Text("Despesa"),
+                      icon: Icon(Icons.arrow_upward_rounded),
+                    ),
+                    ButtonSegment(
+                      value: CalendarEventType.receita,
+                      label: Text("Receita"),
+                      icon: Icon(Icons.arrow_downward_rounded),
+                    ),
+                  ],
+                  selected: {selectedType},
+                  onSelectionChanged: _isSaving
+                      ? null
+                      : (selection) {
+                          setState(() {
+                            selectedType = selection.first;
+                          });
+                        },
+                  style: SegmentedButton.styleFrom(
+                    selectedBackgroundColor: AppColors.secondary,
+                    selectedForegroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                ),
+              ),
+
               const SizedBox(height: 18),
 
               InkWell(

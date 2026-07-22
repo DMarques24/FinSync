@@ -2,6 +2,7 @@ import 'package:finsync/data/datasources/calendar_events_remote_datasource.dart'
 import 'package:finsync/data/datasources/calendar_events_remote_datasource_impl.dart';
 import 'package:finsync/data/repositories/calendar_events_repository_impl.dart';
 import 'package:finsync/domain/repositories/calendar_event_repository.dart';
+import 'package:finsync/domain/usecases/adjust_balance.dart';
 import 'package:finsync/domain/usecases/complete_onboarding.dart';
 import 'package:finsync/domain/usecases/get_all_calendar_events.dart';
 import 'package:finsync/domain/usecases/get_filter_time_expenses.dart';
@@ -108,6 +109,8 @@ Future<void> initDependencies() async {
 
   sl.registerLazySingleton<CompleteOnboarding>(() => CompleteOnboarding(sl()));
 
+  sl.registerLazySingleton<AdjustBalance>(() => AdjustBalance(sl()));
+
   sl.registerLazySingleton<GetAllCalendarEvents>(
     () => GetAllCalendarEvents(sl()),
   );
@@ -148,6 +151,7 @@ Future<void> initDependencies() async {
       sl<GetAllExpenses>(),
       sl<InsertCalendarEvent>(),
       sl<GetAllCalendarEvents>(),
+      sl<AdjustBalance>(),
     ),
   );
 }

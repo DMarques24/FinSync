@@ -5,12 +5,14 @@ class CalendarEventsModel {
   final String nameEvent;
   final double price;
   final DateTime dateEvent;
+  final CalendarEventType type;
 
   CalendarEventsModel({
     required this.id,
     required this.nameEvent,
     required this.price,
     required this.dateEvent,
+    this.type = CalendarEventType.despesa,
   });
 
   factory CalendarEventsModel.fromJson(Map<String, dynamic> json) {
@@ -22,6 +24,10 @@ class CalendarEventsModel {
       dateEvent: rawDate is DateTime
           ? rawDate
           : DateTime.tryParse(rawDate?.toString() ?? '') ?? DateTime.now(),
+      type: CalendarEventType.values.firstWhere(
+        (value) => value.name == json['type'],
+        orElse: () => CalendarEventType.despesa,
+      ),
     );
   }
 
@@ -31,6 +37,7 @@ class CalendarEventsModel {
       'price': price,
       'event_date': dateEvent.toIso8601String(),
       'user_id': userId,
+      'type': type.name,
     };
   }
 
@@ -40,6 +47,7 @@ class CalendarEventsModel {
       name: nameEvent,
       price: price,
       date: dateEvent,
+      type: type,
     );
   }
 }

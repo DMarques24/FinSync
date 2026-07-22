@@ -1,3 +1,5 @@
+import 'package:finsync/domain/entities/calendar_event.dart';
+import 'package:finsync/domain/usecases/adjust_balance.dart';
 import 'package:finsync/domain/usecases/get_all_calendar_events.dart';
 import 'package:finsync/domain/usecases/get_all_expenses.dart';
 import 'package:finsync/domain/usecases/insert_calendar_event.dart';
@@ -11,10 +13,13 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
   final GetAllExpenses getAllExpenses;
   final InsertCalendarEvent insertCalendarEvent;
   final GetAllCalendarEvents getAllCalendarEvents;
+  final AdjustBalance adjustBalance;
+
   AnalyticsBloc(
     this.getAllExpenses,
     this.insertCalendarEvent,
     this.getAllCalendarEvents,
+    this.adjustBalance,
   ) : super(AnalyticsInitialState()) {
     on<LoadAnalyticsEvent>(_onLoadAnalytics);
     on<AddEventCalendarEvent>(_addCalendarEvent);
@@ -73,6 +78,12 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
   ) async {
     try {
       await insertCalendarEvent(event.event);
+
+      final delta = event.event.type == CalendarEventType.receita
+          ? event.event.price
+          : -event.event.price;
+      await adjustBalance(delta);
+
       event.completer?.complete();
 
       add(LoadAnalyticsEvent());

@@ -21,6 +21,7 @@ class CalendarEventsRepositoryImpl implements CalendarEventRepository {
       nameEvent: event.name,
       price: event.price,
       dateEvent: event.date,
+      type: event.type,
     );
     await remoteDatasource.insertCalendarEvents(model);
   }

@@ -6,4 +6,6 @@ abstract class UserRemoteDatasource {
   Future<void> insertUser(UserModel user, String userId);
 
   Future<void> completeOnboarding(String userId, double balance);
+
+  Future<void> adjustBalance(double delta);
 }
