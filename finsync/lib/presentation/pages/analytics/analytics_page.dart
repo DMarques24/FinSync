@@ -342,32 +342,47 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                             message:
                                 "Ainda não há despesas suficientes para gerar o gráfico.",
                           )
-                        : LayoutBuilder(
-                            builder: (context, constraints) {
-                              final width = constraints.maxWidth;
-                              const height = 380.0;
-                              final dataSet =
-                                  SankeyDataSet(
-                                    nodes: loaded.nodes,
-                                    links: loaded.links,
-                                  )..layout(
-                                    generateSankeyLayout(
-                                      width: width,
-                                      height: height,
-                                    ),
-                                  );
+                        : Container(
+                            // O SankeyDiagramWidget desenha as labels sempre a
+                            // preto e não expõe nenhuma opção de cor de texto,
+                            // por isso mantemos este cartão sempre claro (em
+                            // vez de seguir o AppColors.surface do tema) para
+                            // o texto continuar legível no modo escuro.
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                final width = constraints.maxWidth;
+                                const height = 380.0;
+                                final dataSet =
+                                    SankeyDataSet(
+                                      nodes: loaded.nodes,
+                                      links: loaded.links,
+                                    )..layout(
+                                      generateSankeyLayout(
+                                        width: width,
+                                        height: height,
+                                      ),
+                                    );
 
-                              return SankeyDiagramWidget(
-                                data: dataSet,
-                                nodeColors: generateDefaultNodeColorMap(
-                                  loaded.nodes,
-                                ),
-                                size: Size(width, height),
-                                showLabels: true,
-                                showTexture: true,
-                                onNodeSelected: (node) {},
-                              );
-                            },
+                                return SankeyDiagramWidget(
+                                  data: dataSet,
+                                  nodeColors: generateDefaultNodeColorMap(
+                                    loaded.nodes,
+                                  ),
+                                  size: Size(width, height),
+                                  showLabels: true,
+                                  // O texture overlay é o que desenha aquelas
+                                  // linhas horizontais por cima dos links.
+                                  showTexture: false,
+                                  onNodeSelected: (node) {},
+                                );
+                              },
+                            ),
                           ),
                   ),
 
