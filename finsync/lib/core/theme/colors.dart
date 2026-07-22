@@ -7,9 +7,9 @@ class AppColors {
 
   // Cores principais
   static Color get primary =>
-      isDark ? const Color(0xFF4F8CFF) : const Color(0xFF0F172A);
+      isDark ? const Color(0xFF4338CA) : const Color(0xFF0F172A);
   static Color get secondary =>
-      isDark ? const Color(0xFF4F8CFF) : const Color(0xFF4338CA);
+      isDark ? const Color(0xFF4338CA) : const Color(0xFF4338CA);
 
   // Fundo
   static Color get background =>

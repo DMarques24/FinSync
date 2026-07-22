@@ -221,10 +221,10 @@ class AppTheme {
     scaffoldBackgroundColor: const Color(0xFF0F1115),
 
     colorScheme: const ColorScheme.dark(
-      primary: Color(0xFF4F8CFF),
+      primary: Color(0xFF4338CA),
       onPrimary: Colors.white,
 
-      secondary: Color(0xFF4F8CFF),
+      secondary: Color(0xFF4338CA),
       onSecondary: Colors.white,
 
       surface: Color(0xFF1A1C22),
@@ -277,12 +277,12 @@ class AppTheme {
     iconTheme: const IconThemeData(color: Colors.white),
 
     progressIndicatorTheme: const ProgressIndicatorThemeData(
-      color: Color(0xFF4F8CFF),
+      color: Color(0xFF4338CA),
     ),
 
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF4F8CFF),
+        backgroundColor: const Color(0xFF4338CA),
         foregroundColor: Colors.white,
         minimumSize: const Size(double.infinity, 54),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -291,7 +291,7 @@ class AppTheme {
 
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
-        backgroundColor: const Color(0xFF4F8CFF),
+        backgroundColor: const Color(0xFF4338CA),
         foregroundColor: Colors.white,
       ),
     ),
@@ -363,7 +363,7 @@ class AppTheme {
       thumbColor: const WidgetStatePropertyAll(Colors.white),
       trackColor: WidgetStateProperty.resolveWith(
         (states) => states.contains(WidgetState.selected)
-            ? const Color(0xFF4F8CFF)
+            ? const Color(0xFF4338CA)
             : const Color(0xFF4B4F58),
       ),
     ),
