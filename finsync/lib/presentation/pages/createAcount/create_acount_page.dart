@@ -3,6 +3,7 @@ import 'package:finsync/presentation/pages/createAcount/create_acount_bloc.dart'
 import 'package:finsync/presentation/pages/createAcount/create_acount_event.dart';
 import 'package:finsync/presentation/pages/createAcount/create_acount_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -86,9 +87,11 @@ class _CreateAcountState extends State<CreateAcountPage> {
 
                   TextFormField(
                     controller: _usernameController,
+                    maxLength: 15,
                     decoration: InputDecoration(
                       labelText: "Nome de utilizador",
                       prefixIcon: const Icon(Icons.person_outline),
+                      counterText: "",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),

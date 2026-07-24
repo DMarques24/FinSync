@@ -1,3 +1,4 @@
+import 'package:finsync/core/errors/auth_error_translator.dart';
 import 'package:finsync/domain/entities/auth_user.dart';
 import 'package:finsync/domain/usecases/get_user.dart';
 import 'package:finsync/domain/usecases/sign_in_user.dart';
@@ -26,7 +27,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       final isFirstLogin = users.isNotEmpty ? users.first.isFirstLogin : false;
       emit(LoginLoadedState(isFirstLogin: isFirstLogin));
     } catch (e) {
-      emit(LoginErrorState(e.toString()));
+      emit(LoginErrorState(AuthErrorTranslator.translate(e)));
     }
   }
 }
