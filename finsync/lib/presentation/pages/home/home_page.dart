@@ -12,6 +12,7 @@ import 'package:finsync/presentation/pages/home/home_bloc.dart';
 import 'package:finsync/presentation/pages/home/home_event.dart';
 import 'package:finsync/presentation/pages/home/home_state.dart';
 import 'package:finsync/presentation/pages/profile/profile_bloc.dart';
+import 'package:finsync/presentation/pages/profile/profile_event.dart';
 import 'package:finsync/presentation/pages/profile/profile_state.dart';
 
 class HomePage extends StatefulWidget {
@@ -54,11 +55,43 @@ class _HomePageState extends State<HomePage> {
         child: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) {
             if (state is HomeLoadingState) {
-              return const Center(child: CircularProgressIndicator());
+              return Center(
+                child: CircularProgressIndicator(color: AppColors.secondary),
+              );
             }
 
             if (state is HomeErrorState) {
-              return Center(child: Text(state.message));
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 32),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.cloud_off_rounded,
+                        size: 48,
+                        color: AppColors.textSecondary,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        state.message,
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      OutlinedButton.icon(
+                        onPressed: () => context.read<HomeBloc>().add(
+                          GetAllExpensesEvent(),
+                        ),
+                        icon: const Icon(Icons.refresh_rounded),
+                        label: const Text("Tentar novamente"),
+                      ),
+                    ],
+                  ),
+                ),
+              );
             }
 
             double cashOut = 0;
@@ -82,7 +115,14 @@ class _HomePageState extends State<HomePage> {
               profileBalance = profileState.user.balance;
             }
 
-            return SingleChildScrollView(
+            return RefreshIndicator(
+              color: AppColors.secondary,
+              onRefresh: () async {
+                context.read<HomeBloc>().add(GetAllExpensesEvent());
+                context.read<ProfileBloc>().add(LoadProfileEvent());
+              },
+              child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 120),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -114,6 +154,7 @@ class _HomePageState extends State<HomePage> {
                   if (state is HomeLoadedState)
                     ExpensesList(expenses: state.expenses),
                 ],
+              ),
               ),
             );
           },

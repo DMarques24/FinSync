@@ -40,4 +40,30 @@ class AppColors {
   // Desativado
   static Color get disabled =>
       isDark ? const Color(0xFF4B4F58) : const Color(0xFFCBD5E1);
+
+  // Camadas / elevação suave (usado em cards e headers em destaque)
+  static Color get surfaceElevated =>
+      isDark ? const Color(0xFF20232B) : const Color(0xFFFFFFFF);
+
+  // Sombra subtil e consistente entre temas para dar profundidade sem
+  // parecer pesada. Usar em Container(decoration: BoxDecoration(boxShadow: AppColors.cardShadow)).
+  static List<BoxShadow> get cardShadow => [
+    BoxShadow(
+      color: isDark
+          ? Colors.black.withValues(alpha: .32)
+          : const Color(0xFF0F172A).withValues(alpha: .06),
+      blurRadius: 24,
+      offset: const Offset(0, 10),
+    ),
+  ];
+
+  static List<BoxShadow> get softShadow => [
+    BoxShadow(
+      color: isDark
+          ? Colors.black.withValues(alpha: .24)
+          : const Color(0xFF0F172A).withValues(alpha: .04),
+      blurRadius: 12,
+      offset: const Offset(0, 4),
+    ),
+  ];
 }

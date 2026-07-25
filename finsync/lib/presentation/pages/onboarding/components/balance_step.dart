@@ -1,5 +1,6 @@
 import 'package:finsync/core/currency/app_currency.dart';
 import 'package:finsync/core/theme/colors.dart';
+import 'package:finsync/core/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -12,25 +13,36 @@ class BalanceStep extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
+      padding: const EdgeInsets.fromLTRB(24, 40, 24, 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.savings_rounded, size: 80, color: AppColors.primary),
-
-          const SizedBox(height: 20),
-
-          const Text(
-            "Qual é o teu saldo atual? 💰",
-            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          Container(
+            width: 96,
+            height: 96,
+            decoration: BoxDecoration(
+              color: AppColors.secondary.withValues(alpha: .1),
+              borderRadius: BorderRadius.circular(28),
+            ),
+            child: Icon(
+              Icons.savings_rounded,
+              size: 46,
+              color: AppColors.secondary,
+            ),
           ),
 
-          const SizedBox(height: 8),
+          const SizedBox(height: 28),
+
+          Text("Qual é o teu saldo atual? 💰", style: AppTextStyles.headingLarge),
+
+          const SizedBox(height: 10),
 
           Text(
             "Vamos usar este valor como ponto de partida para "
             "acompanhares as tuas finanças.",
-            style: TextStyle(color: Colors.grey.shade600),
+            style: AppTextStyles.bodyMedium.copyWith(
+              color: AppColors.textSecondary,
+            ),
           ),
 
           const SizedBox(height: 32),
@@ -39,15 +51,13 @@ class BalanceStep extends StatelessWidget {
             controller: controller,
             enabled: !isLoading,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            style: AppTextStyles.bodyLarge,
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp(r'^\d*[.,]?\d{0,2}')),
             ],
             decoration: InputDecoration(
               labelText: "Saldo atual (${AppCurrency.symbol})",
-              prefixIcon: Icon(AppCurrency.icon),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
+              prefixIcon: Icon(AppCurrency.icon, color: AppColors.secondary),
             ),
           ),
         ],

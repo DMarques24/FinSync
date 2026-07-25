@@ -24,7 +24,6 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
   String selectedCategory = "Alimentação";
 
   ExpenseType selectedType = ExpenseType.despesa;
-  bool _isSaving = false;
 
   final categories = const [
     "Alimentação",
@@ -45,11 +44,8 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
   Future<void> _selectDate() async {
     final picked = await showDatePicker(
       context: context,
-
-      initialDate: DateTime.now(),
-
+      initialDate: selectedDate ?? DateTime.now(),
       firstDate: DateTime(2024),
-
       lastDate: DateTime(2035),
     );
 
@@ -61,25 +57,21 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
   }
 
   void _saveExpense() {
-    if (_isSaving) return;
-
-    if (_nameController.text.trim().isEmpty) {
-      return;
-    }
-
+    final name = _nameController.text.trim();
     final price = double.tryParse(_priceController.text.replaceAll(',', '.'));
 
-    if (price == null) {
-      return;
-    }
-
-    if (selectedDate == null) {
+    if (name.isEmpty || price == null || selectedDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Preenche o nome e o valor antes de guardar.'),
+        ),
+      );
       return;
     }
 
     final expense = Expense(
       id: 0,
-      name: _nameController.text.trim(),
+      name: name,
       price: price,
       category: selectedCategory,
       date: selectedDate!,
@@ -97,24 +89,21 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
       child: Padding(
         padding: EdgeInsets.fromLTRB(
           24,
-          24,
+          20,
           24,
           MediaQuery.of(context).viewInsets.bottom + 24,
         ),
-
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-
             children: [
               Center(
                 child: Container(
                   width: 45,
                   height: 5,
-
                   decoration: BoxDecoration(
                     color: AppColors.disabled,
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(30),
                   ),
                 ),
               ),
@@ -127,76 +116,13 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
 
               Text(
                 "Regista uma despesa, receita ou outro movimento.",
-                style: AppTextStyles.bodySmall,
+                style: AppTextStyles.bodySmall.copyWith(
+                  color: AppColors.textSecondary,
+                ),
               ),
 
               const SizedBox(height: 28),
 
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: "Nome",
-                  prefixIcon: Icon(Icons.shopping_bag_outlined),
-                ),
-              ),
-
-              const SizedBox(height: 18),
-
-              TextFormField(
-                controller: _priceController,
-                keyboardType: const TextInputType.numberWithOptions(
-                  decimal: true,
-                ),
-                decoration: InputDecoration(
-                  labelText: "Valor (${AppCurrency.symbol})",
-                  prefixIcon: Icon(AppCurrency.icon),
-                ),
-              ),
-
-              const SizedBox(height: 18),
-
-              DropdownButtonFormField<String>(
-                initialValue: selectedCategory,
-
-                decoration: const InputDecoration(
-                  labelText: "Categoria",
-                  prefixIcon: Icon(Icons.category_outlined),
-                ),
-
-                items: categories
-                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                    .toList(),
-
-                onChanged: (value) {
-                  setState(() {
-                    selectedCategory = value!;
-                  });
-                },
-              ),
-
-              const SizedBox(height: 18),
-
-              InkWell(
-                borderRadius: BorderRadius.circular(16),
-
-                onTap: _selectDate,
-
-                child: InputDecorator(
-                  decoration: const InputDecoration(
-                    labelText: "Data",
-
-                    prefixIcon: Icon(Icons.calendar_month),
-                  ),
-
-                  child: Text(
-                    selectedDate == null
-                        ? "Selecionar data"
-                        : "${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}",
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 30),
               SizedBox(
                 width: double.infinity,
                 child: SegmentedButton<ExpenseType>(
@@ -213,13 +139,11 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
                     ),
                   ],
                   selected: {selectedType},
-                  onSelectionChanged: _isSaving
-                      ? null
-                      : (selection) {
-                          setState(() {
-                            selectedType = selection.first;
-                          });
-                        },
+                  onSelectionChanged: (selection) {
+                    setState(() {
+                      selectedType = selection.first;
+                    });
+                  },
                   style: SegmentedButton.styleFrom(
                     selectedBackgroundColor: AppColors.secondary,
                     selectedForegroundColor: Colors.white,
@@ -229,21 +153,92 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+
+              const SizedBox(height: 22),
+
+              TextFormField(
+                controller: _nameController,
+                style: AppTextStyles.bodyMedium,
+                decoration: InputDecoration(
+                  labelText: "Nome",
+                  prefixIcon: Icon(
+                    Icons.shopping_bag_outlined,
+                    color: AppColors.secondary,
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 18),
+
+              TextFormField(
+                controller: _priceController,
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
+                style: AppTextStyles.bodyMedium,
+                decoration: InputDecoration(
+                  labelText: "Valor (${AppCurrency.symbol})",
+                  prefixIcon: Icon(AppCurrency.icon, color: AppColors.secondary),
+                ),
+              ),
+
+              const SizedBox(height: 18),
+
+              DropdownButtonFormField<String>(
+                initialValue: selectedCategory,
+                style: AppTextStyles.bodyMedium,
+                decoration: InputDecoration(
+                  labelText: "Categoria",
+                  prefixIcon: Icon(
+                    Icons.category_outlined,
+                    color: AppColors.secondary,
+                  ),
+                ),
+                items: categories
+                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    selectedCategory = value!;
+                  });
+                },
+              ),
+
+              const SizedBox(height: 18),
+
+              InkWell(
+                borderRadius: BorderRadius.circular(16),
+                onTap: _selectDate,
+                child: InputDecorator(
+                  decoration: InputDecoration(
+                    labelText: "Data",
+                    prefixIcon: Icon(
+                      Icons.calendar_month_rounded,
+                      color: AppColors.secondary,
+                    ),
+                  ),
+                  child: Text(
+                    selectedDate == null
+                        ? "Selecionar data"
+                        : "${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}",
+                    style: AppTextStyles.bodyMedium,
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 32),
 
               FilledButton.icon(
                 style: FilledButton.styleFrom(
                   backgroundColor: AppColors.secondary,
-                  minimumSize: const Size(double.infinity, 56),
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size(double.infinity, 58),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18),
                   ),
                 ),
-
                 onPressed: _saveExpense,
-
                 icon: const Icon(Icons.save_outlined),
-
                 label: const Text("Guardar"),
               ),
             ],

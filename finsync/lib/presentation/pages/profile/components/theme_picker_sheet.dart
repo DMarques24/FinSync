@@ -2,6 +2,7 @@ import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/core/theme/theme_bloc.dart';
 import 'package:finsync/core/theme/theme_event.dart';
+import 'package:finsync/presentation/pages/profile/components/theme_option.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -45,7 +46,7 @@ class ThemePickerSheet extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            _ThemeOption(
+            ThemeOption(
               icon: Icons.light_mode_outlined,
               label: "Claro",
               selected: currentMode == ThemeMode.light,
@@ -57,7 +58,7 @@ class ThemePickerSheet extends StatelessWidget {
               },
             ),
 
-            _ThemeOption(
+            ThemeOption(
               icon: Icons.dark_mode_outlined,
               label: "Escuro",
               selected: currentMode == ThemeMode.dark,
@@ -69,7 +70,7 @@ class ThemePickerSheet extends StatelessWidget {
               },
             ),
 
-            _ThemeOption(
+            ThemeOption(
               icon: Icons.brightness_auto_outlined,
               label: "Automático (sistema)",
               selected: currentMode == ThemeMode.system,
@@ -81,72 +82,6 @@ class ThemePickerSheet extends StatelessWidget {
               },
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ThemeOption extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  const _ThemeOption({
-    required this.icon,
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final color = selected ? AppColors.secondary : AppColors.textSecondary;
-
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 10),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          decoration: BoxDecoration(
-            color: selected
-                ? AppColors.secondary.withValues(alpha: .10)
-                : AppColors.background,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: selected ? AppColors.secondary : AppColors.border,
-            ),
-          ),
-          child: Row(
-            children: [
-              Icon(icon, color: color),
-
-              const SizedBox(width: 14),
-
-              Expanded(
-                child: Text(
-                  label,
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                    color: selected
-                        ? AppColors.secondary
-                        : AppColors.textPrimary,
-                  ),
-                ),
-              ),
-
-              if (selected)
-                Icon(
-                  Icons.check_circle_rounded,
-                  color: AppColors.secondary,
-                  size: 20,
-                ),
-            ],
-          ),
         ),
       ),
     );

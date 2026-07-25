@@ -1,4 +1,5 @@
 import 'package:finsync/core/theme/colors.dart';
+import 'package:finsync/core/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeStep extends StatelessWidget {
@@ -7,21 +8,29 @@ class WelcomeStep extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
+      padding: const EdgeInsets.fromLTRB(24, 40, 24, 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            Icons.account_balance_wallet_rounded,
-            size: 80,
-            color: AppColors.primary,
+          Container(
+            width: 96,
+            height: 96,
+            decoration: BoxDecoration(
+              color: AppColors.secondary.withValues(alpha: .1),
+              borderRadius: BorderRadius.circular(28),
+            ),
+            child: Icon(
+              Icons.account_balance_wallet_rounded,
+              size: 46,
+              color: AppColors.secondary,
+            ),
           ),
 
-          const SizedBox(height: 20),
+          const SizedBox(height: 28),
 
-          const Text(
+          Text(
             "Bem-vindo ao FinSync 👋",
-            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            style: AppTextStyles.headingLarge,
           ),
 
           const SizedBox(height: 12),
@@ -29,9 +38,8 @@ class WelcomeStep extends StatelessWidget {
           Text(
             "A tua nova app para organizares as tuas finanças, controlares "
             "despesas e alcançares os teus objetivos com mais clareza.",
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey.shade600,
+            style: AppTextStyles.bodyMedium.copyWith(
+              color: AppColors.textSecondary,
               height: 1.5,
             ),
           ),

@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 
-import 'package:finsync/core/currency/app_currency.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
+import 'package:finsync/presentation/pages/profile/components/profile_stat_card.dart';
 
 class ProfileHeader extends StatelessWidget {
   final String imagePath;
   final String name;
   final String userName;
   final String balance;
+  final String expensesCount;
+  final String desiresCount;
+  final String savedAmount;
 
   const ProfileHeader({
     super.key,
@@ -16,6 +19,9 @@ class ProfileHeader extends StatelessWidget {
     required this.name,
     required this.userName,
     this.balance = '',
+    this.expensesCount = '0',
+    this.desiresCount = '0',
+    this.savedAmount = '0',
   });
 
   @override
@@ -135,14 +141,9 @@ class ProfileHeader extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _InfoCard(title: "Despesas", value: "128"),
-              _InfoCard(title: "Desejos", value: "12"),
-              _InfoCard(
-                title: "Poupado",
-                value: AppCurrency.type.symbolBefore
-                    ? "${AppCurrency.symbol}2.4k"
-                    : "2.4k ${AppCurrency.symbol}",
-              ),
+              ProfileStatCard(title: "Despesas", value: expensesCount),
+              ProfileStatCard(title: "Desejos", value: desiresCount),
+              ProfileStatCard(title: "Poupado", value: savedAmount),
             ],
           ),
         ],
@@ -157,35 +158,5 @@ class ProfileHeader extends StatelessWidget {
         .where((p) => p.isNotEmpty);
     final letters = parts.take(2).map((p) => p[0].toUpperCase());
     return letters.isEmpty ? "?" : letters.join();
-  }
-}
-
-class _InfoCard extends StatelessWidget {
-  final String title;
-  final String value;
-
-  const _InfoCard({required this.title, required this.value});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          value,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-
-        const SizedBox(height: 4),
-
-        Text(
-          title,
-          style: const TextStyle(color: Colors.white70, fontSize: 13),
-        ),
-      ],
-    );
   }
 }

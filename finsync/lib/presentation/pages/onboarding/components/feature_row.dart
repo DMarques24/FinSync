@@ -1,4 +1,5 @@
 import 'package:finsync/core/theme/colors.dart';
+import 'package:finsync/core/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 
 class FeatureRow extends StatelessWidget {
@@ -34,14 +35,17 @@ class FeatureRow extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: TextStyle(
-                  fontSize: 18,
+                style: AppTextStyles.bodyLarge.copyWith(
                   fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 4),
-              Text(description, style: TextStyle(color: Colors.grey.shade600)),
+              Text(
+                description,
+                style: AppTextStyles.bodySmall.copyWith(
+                  color: AppColors.textSecondary,
+                ),
+              ),
             ],
           ),
         ),

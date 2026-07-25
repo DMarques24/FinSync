@@ -9,6 +9,11 @@ import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/domain/usecases/sign_out_user.dart';
 
+import 'package:finsync/presentation/pages/desire/desire_bloc.dart';
+import 'package:finsync/presentation/pages/desire/desire_event.dart';
+import 'package:finsync/presentation/pages/desire/desire_state.dart';
+import 'package:finsync/presentation/pages/home/home_bloc.dart';
+import 'package:finsync/presentation/pages/home/home_state.dart';
 import 'package:finsync/presentation/pages/profile/components/settings_button.dart';
 import 'package:finsync/presentation/pages/profile/components/profile_header.dart';
 import 'package:finsync/presentation/pages/profile/components/theme_picker_sheet.dart';
@@ -31,6 +36,13 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
     context.read<ProfileBloc>().add(LoadProfileEvent());
+
+    // Garante que as estatísticas do cabeçalho (desejos/poupado) aparecem
+    // mesmo que o utilizador ainda não tenha visitado o separador Goals.
+    final desireState = context.read<DesireBloc>().state;
+    if (desireState is! DesireLoadedState) {
+      context.read<DesireBloc>().add(GetAllDesiresEvent());
+    }
   }
 
   Future<void> _confirmLogout() async {
@@ -100,21 +112,73 @@ class _ProfilePageState extends State<ProfilePage> {
               displayBalance = AppCurrency.format(state.user.balance);
             }
 
+            final homeState = context.watch<HomeBloc>().state;
+            final expensesCount = homeState is HomeLoadedState
+                ? homeState.expenses.length.toString()
+                : '—';
+
+            final desireState = context.watch<DesireBloc>().state;
+            String desiresCount = '—';
+            String savedAmount = '—';
+            if (desireState is DesireLoadedState) {
+              desiresCount = desireState.desire.length.toString();
+              final totalSaved = desireState.desire.fold<double>(
+                0,
+                (sum, desire) => sum + desire.saved,
+              );
+              savedAmount = AppCurrency.format(totalSaved);
+            }
+
             return SingleChildScrollView(
               padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (state is ProfileLoadingState)
-                    const Center(child: CircularProgressIndicator())
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 60),
+                        child: CircularProgressIndicator(
+                          color: AppColors.secondary,
+                        ),
+                      ),
+                    )
                   else if (state is ProfileErrorState)
-                    Center(child: Text(state.message))
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 40,
+                          horizontal: 20,
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.cloud_off_rounded,
+                              size: 40,
+                              color: AppColors.textSecondary,
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              state.message,
+                              textAlign: TextAlign.center,
+                              style: AppTextStyles.bodyMedium.copyWith(
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
                   else
                     ProfileHeader(
                       imagePath: "assets/images/person.jpeg",
                       name: displayName,
                       userName: displayEmail,
                       balance: displayBalance,
+                      expensesCount: expensesCount,
+                      desiresCount: desiresCount,
+                      savedAmount: savedAmount,
                     ),
 
                   const SizedBox(height: 30),
@@ -131,29 +195,23 @@ class _ProfilePageState extends State<ProfilePage> {
                       color: AppColors.surface,
                       borderRadius: BorderRadius.circular(24),
                       border: Border.all(color: AppColors.border),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: .03),
-                          blurRadius: 18,
-                          offset: const Offset(0, 10),
-                        ),
-                      ],
+                      boxShadow: AppColors.softShadow,
                     ),
                     child: Column(
                       children: [
-                        const SettingsButton(
+                        SettingsButton(
                           icon: Icons.person_outline_rounded,
                           name: "Editar Perfil",
                         ),
                         const Divider(height: 1),
 
-                        const SettingsButton(
+                        SettingsButton(
                           icon: Icons.notifications_outlined,
                           name: "Notificações",
                         ),
                         const Divider(height: 1),
 
-                        const SettingsButton(
+                        SettingsButton(
                           icon: Icons.lock_outline_rounded,
                           name: "Segurança",
                         ),
@@ -195,13 +253,13 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         const Divider(height: 1),
 
-                        const SettingsButton(
+                        SettingsButton(
                           icon: Icons.language_outlined,
                           name: "Idioma",
                         ),
                         const Divider(height: 1),
 
-                        const SettingsButton(
+                        SettingsButton(
                           icon: Icons.help_outline_rounded,
                           name: "Ajuda",
                         ),

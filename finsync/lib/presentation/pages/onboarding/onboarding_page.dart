@@ -76,10 +76,40 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
               return Column(
                 children: [
+                  // Permite voltar atrás em qualquer passo, exceto no primeiro.
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 8, 20, 0),
+                    child: SizedBox(
+                      height: 44,
+                      child: AnimatedOpacity(
+                        duration: const Duration(milliseconds: 200),
+                        opacity: _currentPage > 0 ? 1 : 0,
+                        child: IgnorePointer(
+                          ignoring: _currentPage == 0,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: IconButton(
+                              onPressed: () {
+                                _pageController.previousPage(
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut,
+                                );
+                              },
+                              icon: Icon(
+                                Icons.arrow_back_ios_new_rounded,
+                                size: 18,
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
                   Expanded(
                     child: PageView(
                       controller: _pageController,
-                    //  physics: const NeverScrollableScrollPhysics(),
                       onPageChanged: (index) {
                         setState(() => _currentPage = index);
                       },
@@ -95,7 +125,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   ),
 
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+                    padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
                     child: Column(
                       children: [
                         Row(
@@ -104,9 +134,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             final isActive = index == _currentPage;
                             return AnimatedContainer(
                               duration: const Duration(milliseconds: 250),
+                              curve: Curves.easeOut,
                               margin: const EdgeInsets.symmetric(horizontal: 4),
                               height: 8,
-                              width: isActive ? 24 : 8,
+                              width: isActive ? 26 : 8,
                               decoration: BoxDecoration(
                                 color: isActive
                                     ? AppColors.secondary
@@ -121,7 +152,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
                         SizedBox(
                           width: double.infinity,
-                          height: 56,
+                          height: 58,
                           child: FilledButton(
                             onPressed: isLoading
                                 ? null
@@ -133,9 +164,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                     }
                                   },
                             style: FilledButton.styleFrom(
-                              backgroundColor: AppColors.primary,
+                              backgroundColor: AppColors.secondary,
+                              foregroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
+                                borderRadius: BorderRadius.circular(18),
                               ),
                             ),
                             child: isLoading
@@ -151,7 +183,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                     _currentPage < _totalPages - 1
                                         ? "Seguinte"
                                         : "Concluir",
-                                    style: const TextStyle(fontSize: 18),
+                                    style: const TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
                           ),
                         ),

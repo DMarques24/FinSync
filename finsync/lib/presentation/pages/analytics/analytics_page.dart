@@ -103,7 +103,9 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
           builder: (context, state) {
             if (state is AnalyticsLoadingState ||
                 state is AnalyticsInitialState) {
-              return const Center(child: CircularProgressIndicator());
+              return Center(
+                child: CircularProgressIndicator(color: AppColors.secondary),
+              );
             }
 
             if (state is AnalyticsErrorState) {
@@ -393,21 +395,27 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                     height: 56,
                     child: OutlinedButton.icon(
                       onPressed: () {
-                        // TODO: export PDF
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              "Exportação de PDF disponível brevemente.",
+                            ),
+                          ),
+                        );
                       },
                       icon: Icon(
                         Icons.picture_as_pdf_rounded,
-                        color: AppColors.error,
+                        color: AppColors.textSecondary,
                       ),
                       label: Text(
                         "Exportar PDF",
                         style: TextStyle(
-                          color: AppColors.error,
+                          color: AppColors.textSecondary,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: AppColors.error),
+                        side: BorderSide(color: AppColors.border),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18),
                         ),

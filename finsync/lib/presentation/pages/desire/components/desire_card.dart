@@ -40,13 +40,7 @@ class DesireCard extends StatelessWidget {
 
         border: Border.all(color: AppColors.border),
 
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: .03),
-            blurRadius: 16,
-            offset: const Offset(0, 8),
-          ),
-        ],
+        boxShadow: AppColors.softShadow,
       ),
 
       child: InkWell(
@@ -68,6 +62,23 @@ class DesireCard extends StatelessWidget {
                         width: 100,
                         height: 100,
                         fit: BoxFit.cover,
+                        loadingBuilder: (context, child, progress) {
+                          if (progress == null) return child;
+                          return Container(
+                            width: 100,
+                            height: 100,
+                            color: AppColors.background,
+                            alignment: Alignment.center,
+                            child: SizedBox(
+                              width: 22,
+                              height: 22,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: AppColors.secondary,
+                              ),
+                            ),
+                          );
+                        },
                         errorBuilder: (context, error, stackTrace) =>
                             Container(
                               width: 100,

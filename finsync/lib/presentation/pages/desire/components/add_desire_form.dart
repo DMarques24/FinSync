@@ -256,15 +256,42 @@ class _AddDesireFormState extends State<AddDesireForm> {
 
               const SizedBox(height: 24),
 
-              Text("Novo Desejo", style: AppTextStyles.headingMedium),
-
-              const SizedBox(height: 6),
-
-              Text(
-                "Cria um novo objetivo financeiro.",
-                style: AppTextStyles.bodySmall.copyWith(
-                  color: AppColors.textSecondary,
-                ),
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppColors.secondary.withValues(alpha: .10),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Icon(
+                      Icons.flag_rounded,
+                      color: AppColors.secondary,
+                      size: 26,
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Novo desejo",
+                          style: AppTextStyles.headingMedium.copyWith(
+                            fontSize: 20,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          "Cria um novo objetivo financeiro.",
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
 
               const SizedBox(height: 30),

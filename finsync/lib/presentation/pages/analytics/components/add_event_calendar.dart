@@ -191,9 +191,13 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
               TextFormField(
                 controller: _nameEventController,
                 enabled: !_isSaving,
-                decoration: const InputDecoration(
+                style: AppTextStyles.bodyMedium,
+                decoration: InputDecoration(
                   labelText: "Nome do evento",
-                  prefixIcon: Icon(Icons.title_rounded),
+                  prefixIcon: Icon(
+                    Icons.title_rounded,
+                    color: AppColors.secondary,
+                  ),
                 ),
               ),
               const SizedBox(height: 18),
@@ -203,9 +207,10 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
                 keyboardType: const TextInputType.numberWithOptions(
                   decimal: true,
                 ),
+                style: AppTextStyles.bodyMedium,
                 decoration: InputDecoration(
                   labelText: "Valor (${AppCurrency.symbol})",
-                  prefixIcon: Icon(AppCurrency.icon),
+                  prefixIcon: Icon(AppCurrency.icon, color: AppColors.secondary),
                 ),
               ),
               const SizedBox(height: 18),
@@ -291,10 +296,12 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
                 onTap: _isSaving ? null : _selectDate,
 
                 child: InputDecorator(
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: "Data",
-
-                    prefixIcon: Icon(Icons.calendar_month_rounded),
+                    prefixIcon: Icon(
+                      Icons.calendar_month_rounded,
+                      color: AppColors.secondary,
+                    ),
                   ),
 
                   child: Text(

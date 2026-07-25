@@ -17,6 +17,12 @@ class AppTextStyles {
     color: AppColors.textPrimary,
   );
 
+  static TextStyle get headingSmall => TextStyle(
+    fontSize: 19,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textPrimary,
+  );
+
   static TextStyle get bodyLarge => TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.normal,
@@ -31,4 +37,11 @@ class AppTextStyles {
 
   static TextStyle get bodySmall =>
       TextStyle(fontSize: 14, color: AppColors.textSecondary);
+
+  static TextStyle get labelSmall => TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textSecondary,
+    letterSpacing: .2,
+  );
 }

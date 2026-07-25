@@ -31,14 +31,52 @@ class _DesirePageState extends State<DesirePage> {
       child: BlocBuilder<DesireBloc, DesireState>(
         builder: (context, state) {
           if (state is DesireLoadingState) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(
+              child: CircularProgressIndicator(color: AppColors.secondary),
+            );
           }
 
           if (state is DesireErrorState) {
-            return Center(child: Text(state.message));
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.cloud_off_rounded,
+                      size: 48,
+                      color: AppColors.textSecondary,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      state.message,
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    OutlinedButton.icon(
+                      onPressed: () => context.read<DesireBloc>().add(
+                        GetAllDesiresEvent(),
+                      ),
+                      icon: const Icon(Icons.refresh_rounded),
+                      label: const Text("Tentar novamente"),
+                    ),
+                  ],
+                ),
+              ),
+            );
           }
 
-          return SingleChildScrollView(
+          return RefreshIndicator(
+            color: AppColors.secondary,
+            onRefresh: () async {
+              context.read<DesireBloc>().add(GetAllDesiresEvent());
+            },
+            child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 120),
 
             child: Column(
@@ -103,6 +141,7 @@ class _DesirePageState extends State<DesirePage> {
                 if (state is DesireLoadedState)
                   DesiresList(desires: state.desire),
               ],
+            ),
             ),
           );
         },

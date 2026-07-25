@@ -39,13 +39,32 @@ class _MainPageState extends State<MainPage> {
         scrolledUnderElevation: 0,
         surfaceTintColor: Colors.transparent,
 
-        title: Text(
-          "FinSync",
-          style: AppTextStyles.headingMedium.copyWith(
-            color: AppColors.primary,
-            fontWeight: FontWeight.w800,
-            letterSpacing: 1.2,
-          ),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                color: AppColors.secondary.withValues(alpha: .12),
+                borderRadius: BorderRadius.circular(9),
+              ),
+              child: Icon(
+                Icons.account_balance_wallet_rounded,
+                size: 17,
+                color: AppColors.secondary,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Text(
+              "FinSync",
+              style: AppTextStyles.headingMedium.copyWith(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w800,
+                letterSpacing: .4,
+              ),
+            ),
+          ],
         ),
       ),
 
@@ -114,6 +133,14 @@ class _MainPageState extends State<MainPage> {
           style: LiquidGlassBarStyle(
             activeColor: AppColors.secondary,
             inactiveColor: AppColors.textSecondary,
+            // O package define um glassColor branco fixo por omissão, que
+            // não acompanha o tema escuro/claro da app — por isso definimos
+            // explicitamente com base em AppColors.isDark.
+            liquidGlassSettings: LiquidGlassSettings(
+              glassColor: AppColors.isDark
+                  ? Colors.black.withValues(alpha: .35)
+                  : Colors.white.withValues(alpha: .8),
+            ),
           ),
         ),
       ),
