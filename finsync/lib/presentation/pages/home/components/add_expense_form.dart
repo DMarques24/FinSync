@@ -19,9 +19,12 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
   final _nameController = TextEditingController();
   final _priceController = TextEditingController();
 
-  DateTime? selectedDate;
+  DateTime? selectedDate = DateTime.now();
 
   String selectedCategory = "Alimentação";
+
+  ExpenseType selectedType = ExpenseType.despesa;
+  bool _isSaving = false;
 
   final categories = const [
     "Alimentação",
@@ -58,6 +61,8 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
   }
 
   void _saveExpense() {
+    if (_isSaving) return;
+
     if (_nameController.text.trim().isEmpty) {
       return;
     }
@@ -78,6 +83,7 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
       price: price,
       category: selectedCategory,
       date: selectedDate!,
+      type: selectedType,
     );
 
     context.read<HomeBloc>().add(AddExpenseEvent(expense));
@@ -115,12 +121,12 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
 
               const SizedBox(height: 24),
 
-              Text("Nova Despesa", style: AppTextStyles.headingMedium),
+              Text("Novo Movimento", style: AppTextStyles.headingMedium),
 
               const SizedBox(height: 6),
 
               Text(
-                "Adiciona uma nova despesa.",
+                "Regista uma despesa, receita ou outro movimento.",
                 style: AppTextStyles.bodySmall,
               ),
 
@@ -191,6 +197,39 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
               ),
 
               const SizedBox(height: 30),
+              SizedBox(
+                width: double.infinity,
+                child: SegmentedButton<ExpenseType>(
+                  segments: const [
+                    ButtonSegment(
+                      value: ExpenseType.despesa,
+                      label: Text("Despesa"),
+                      icon: Icon(Icons.arrow_downward_rounded),
+                    ),
+                    ButtonSegment(
+                      value: ExpenseType.receita,
+                      label: Text("Receita"),
+                      icon: Icon(Icons.arrow_upward_rounded),
+                    ),
+                  ],
+                  selected: {selectedType},
+                  onSelectionChanged: _isSaving
+                      ? null
+                      : (selection) {
+                          setState(() {
+                            selectedType = selection.first;
+                          });
+                        },
+                  style: SegmentedButton.styleFrom(
+                    selectedBackgroundColor: AppColors.secondary,
+                    selectedForegroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
 
               FilledButton.icon(
                 style: FilledButton.styleFrom(
@@ -205,10 +244,8 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
 
                 icon: const Icon(Icons.save_outlined),
 
-                label: const Text("Guardar Despesa"),
+                label: const Text("Guardar"),
               ),
-
-              const SizedBox(height: 10),
             ],
           ),
         ),

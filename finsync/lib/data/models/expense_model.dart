@@ -6,6 +6,7 @@ class ExpenseModel {
   final double price;
   final String category;
   final DateTime date;
+  final ExpenseType type;
 
   ExpenseModel({
     required this.id,
@@ -13,6 +14,7 @@ class ExpenseModel {
     required this.price,
     required this.category,
     required this.date,
+    this.type = ExpenseType.despesa,
   });
 
   factory ExpenseModel.fromJson(Map<String, dynamic> json) {
@@ -25,6 +27,10 @@ class ExpenseModel {
       date: rawDate is DateTime
           ? rawDate
           : DateTime.tryParse(rawDate?.toString() ?? '') ?? DateTime.now(),
+      type: ExpenseType.values.firstWhere(
+        (value) => value.name == json['type'],
+        orElse: () => ExpenseType.despesa,
+      ),
     );
   }
 
@@ -35,6 +41,7 @@ class ExpenseModel {
       'category': category,
       'created_at': date.toIso8601String(),
       'user_id': userId,
+      'type': type.name,
     };
   }
 
@@ -45,6 +52,7 @@ class ExpenseModel {
       price: price,
       category: category,
       date: date,
+      type: type,
     );
   }
 }

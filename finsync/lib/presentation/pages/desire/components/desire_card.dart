@@ -8,7 +8,7 @@ class DesireCard extends StatelessWidget {
   final String? image;
   final String name;
   final double price;
-  //final double saved;
+  final double saved;
   final String date;
   final VoidCallback? onTap;
 
@@ -17,7 +17,7 @@ class DesireCard extends StatelessWidget {
     this.image,
     required this.name,
     required this.price,
-    // required this.saved,
+    this.saved = 0,
     required this.date,
     this.onTap,
   });
@@ -28,7 +28,7 @@ class DesireCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final progress = (saved / price).clamp(0, 1);
+    final progress = price > 0 ? (saved / price).clamp(0.0, 1.0) : 0.0;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 18),
@@ -115,6 +115,29 @@ class DesireCard extends StatelessWidget {
                       style: AppTextStyles.bodyLarge.copyWith(
                         color: AppColors.secondary,
                         fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(6),
+                      child: LinearProgressIndicator(
+                        value: progress,
+                        minHeight: 6,
+                        backgroundColor: AppColors.border,
+                        valueColor: AlwaysStoppedAnimation(AppColors.success),
+                      ),
+                    ),
+
+                    const SizedBox(height: 6),
+
+                    Text(
+                      "Guardado ${AppCurrency.format(saved)} de ${AppCurrency.format(price)}",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: AppColors.textSecondary,
                       ),
                     ),
 

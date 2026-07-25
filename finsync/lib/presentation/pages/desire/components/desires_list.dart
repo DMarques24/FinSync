@@ -65,7 +65,7 @@ class DesiresList extends StatelessWidget {
               image: desire.image,
               name: desire.name,
               price: desire.price,
-              //  saved: desire.saved,
+              saved: desire.saved,
               date: _formatDate(desire.date),
             ),
           ),

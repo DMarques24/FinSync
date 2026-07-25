@@ -28,6 +28,7 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
       price: expense.price,
       category: expense.category,
       date: expense.date,
+      type: expense.type,
     );
     await remoteDatasource.insertExpense(model);
   }

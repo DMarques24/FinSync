@@ -21,7 +21,7 @@ class CardCashFlow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final balance = profileBalance - cashOut;
+    final balance = profileBalance + cashIn - cashOut;
 
     return Container(
       width: double.infinity,
@@ -117,7 +117,7 @@ class CardCashFlow extends StatelessWidget {
             children: [
               Expanded(
                 child: _InfoCard(
-                  icon: Icons.arrow_downward_rounded,
+                  icon: Icons.arrow_upward_rounded,
                   title: "Receitas",
                   value: cashIn,
                   color: AppColors.success,
@@ -128,7 +128,7 @@ class CardCashFlow extends StatelessWidget {
 
               Expanded(
                 child: _InfoCard(
-                  icon: Icons.arrow_upward_rounded,
+                  icon: Icons.arrow_downward_rounded,
                   title: "Despesas",
                   value: cashOut,
                   color: AppColors.error,

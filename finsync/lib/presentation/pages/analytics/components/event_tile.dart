@@ -34,8 +34,8 @@ class EventTile extends StatelessWidget {
             ),
             child: Icon(
               isIncome
-                  ? Icons.arrow_downward_rounded
-                  : Icons.arrow_upward_rounded,
+                  ? Icons.arrow_upward_rounded
+                  : Icons.arrow_downward_rounded,
               color: color,
               size: 22,
             ),

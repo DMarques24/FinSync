@@ -6,6 +6,7 @@ class DesireModel {
   final double price;
   final DateTime date;
   final String? image;
+  final double saved;
 
   DesireModel({
     required this.id,
@@ -13,6 +14,7 @@ class DesireModel {
     required this.price,
     required this.date,
     this.image,
+    this.saved = 0,
   });
 
   factory DesireModel.fromJson(Map<String, dynamic> json) {
@@ -25,6 +27,7 @@ class DesireModel {
           ? rawDate
           : DateTime.tryParse(rawDate?.toString() ?? '') ?? DateTime.now(),
       image: json['image'] as String?,
+      saved: (json['saved'] as num?)?.toDouble() ?? 0,
     );
   }
 
@@ -35,10 +38,18 @@ class DesireModel {
       'image': image,
       'date': date.toIso8601String(),
       'user_id': userId,
+      'saved': saved,
     };
   }
 
   Desire toEntity() {
-    return Desire(id: id, name: name, price: price, date: date, image: image);
+    return Desire(
+      id: id,
+      name: name,
+      price: price,
+      date: date,
+      image: image,
+      saved: saved,
+    );
   }
 }

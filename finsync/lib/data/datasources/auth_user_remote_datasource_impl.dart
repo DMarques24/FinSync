@@ -25,4 +25,9 @@ class AuthUserRemoteDatasourceImpl implements AuthUserRemoteDatasource {
       password: user.password,
     );
   }
+
+  @override
+  Future<void> signOut() async {
+    await supabase.auth.signOut();
+  }
 }

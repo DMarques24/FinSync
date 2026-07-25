@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
+import 'package:finsync/domain/entities/expense.dart';
 
 import 'package:finsync/presentation/pages/home/components/card_cash_flow.dart';
 import 'package:finsync/presentation/pages/home/components/expenses_list.dart';
@@ -65,10 +66,13 @@ class _HomePageState extends State<HomePage> {
             double profileBalance = 0;
 
             if (state is HomeLoadedState) {
-              cashOut = state.expenses.fold(
-                0,
-                (sum, expense) => sum + expense.price,
-              );
+              cashOut = state.expenses
+                  .where((expense) => expense.type == ExpenseType.despesa)
+                  .fold(0, (sum, expense) => sum + expense.price);
+
+              cashIn = state.expenses
+                  .where((expense) => expense.type == ExpenseType.receita)
+                  .fold(0, (sum, expense) => sum + expense.price);
             }
 
             final profileState = context.watch<ProfileBloc>().state;

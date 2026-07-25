@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:finsync/core/currency/app_currency.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
+import 'package:finsync/domain/entities/expense.dart';
 
 class ExpenseCard extends StatelessWidget {
   final String name;
   final String category;
   final String date;
   final double price;
+  final ExpenseType type;
 
   const ExpenseCard({
     super.key,
@@ -16,6 +18,7 @@ class ExpenseCard extends StatelessWidget {
     required this.category,
     required this.date,
     required this.price,
+    this.type = ExpenseType.despesa,
   });
 
   static const _categoryIcons = <String, IconData>{
@@ -29,8 +32,12 @@ class ExpenseCard extends StatelessWidget {
 
   IconData get _icon => _categoryIcons[category] ?? Icons.payments_rounded;
 
+  bool get _isIncome => type == ExpenseType.receita;
+
   @override
   Widget build(BuildContext context) {
+    final amountColor = _isIncome ? AppColors.success : AppColors.error;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
 
@@ -110,9 +117,9 @@ class ExpenseCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                AppCurrency.format(price, sign: '- '),
+                AppCurrency.format(price, sign: _isIncome ? '+ ' : '- '),
                 style: AppTextStyles.bodyLarge.copyWith(
-                  color: AppColors.error,
+                  color: amountColor,
                   fontWeight: FontWeight.bold,
                 ),
               ),

@@ -41,8 +41,10 @@ import 'package:finsync/domain/usecases/get_all_desires.dart';
 import 'package:finsync/domain/usecases/get_all_expenses.dart';
 import 'package:finsync/domain/usecases/get_user.dart';
 import 'package:finsync/domain/usecases/insert_desire.dart';
+import 'package:finsync/domain/usecases/upload_desire_image.dart';
 import 'package:finsync/domain/usecases/insert_expense.dart';
 import 'package:finsync/domain/usecases/sign_in_user.dart';
+import 'package:finsync/domain/usecases/sign_out_user.dart';
 import 'package:finsync/domain/usecases/sign_up_user.dart';
 
 import 'package:finsync/presentation/pages/desire/desire_bloc.dart';
@@ -94,6 +96,8 @@ Future<void> initDependencies() async {
 
   sl.registerLazySingleton<SignUpUser>(() => SignUpUser(sl()));
 
+  sl.registerLazySingleton<SignOutUser>(() => SignOutUser(sl()));
+
   sl.registerLazySingleton<InsertUser>(() => InsertUser(sl()));
 
   sl.registerLazySingleton<GetAllExpenses>(() => GetAllExpenses(sl()));
@@ -107,6 +111,8 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton<GetAllDesires>(() => GetAllDesires(sl()));
 
   sl.registerLazySingleton<InsertDesire>(() => InsertDesire(sl()));
+
+  sl.registerLazySingleton<UploadDesireImage>(() => UploadDesireImage(sl()));
 
   sl.registerLazySingleton<GetUser>(() => GetUser(sl()));
 
@@ -136,7 +142,12 @@ Future<void> initDependencies() async {
   );
 
   sl.registerFactory<DesireBloc>(
-    () => DesireBloc(sl<GetAllDesires>(), sl<InsertDesire>()),
+    () => DesireBloc(
+      sl<GetAllDesires>(),
+      sl<InsertDesire>(),
+      sl<AdjustBalance>(),
+      sl<UploadDesireImage>(),
+    ),
   );
 
   sl.registerFactory<LoginBloc>(

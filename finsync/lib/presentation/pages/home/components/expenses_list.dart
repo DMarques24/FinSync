@@ -110,6 +110,7 @@ class ExpensesList extends StatelessWidget {
                 category: expense.category,
                 date: _formatDate(expense.date),
                 price: expense.price,
+                type: expense.type,
               ),
             ),
           ),

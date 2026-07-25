@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:finsync/core/currency/app_currency.dart';
+import 'package:finsync/core/di/injection.dart';
+import 'package:finsync/core/errors/auth_error_translator.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
+import 'package:finsync/domain/usecases/sign_out_user.dart';
 
 import 'package:finsync/presentation/pages/profile/components/settings_button.dart';
 import 'package:finsync/presentation/pages/profile/components/profile_header.dart';
@@ -21,10 +25,62 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  bool _isLoggingOut = false;
+
   @override
   void initState() {
     super.initState();
     context.read<ProfileBloc>().add(LoadProfileEvent());
+  }
+
+  Future<void> _confirmLogout() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Terminar sessão"),
+        content: const Text("Tens a certeza que queres sair da tua conta?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text("Cancelar"),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(
+              "Terminar Sessão",
+              style: TextStyle(color: AppColors.error),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      await _logout();
+    }
+  }
+
+  Future<void> _logout() async {
+    if (_isLoggingOut) return;
+
+    setState(() {
+      _isLoggingOut = true;
+    });
+
+    try {
+      await sl<SignOutUser>()();
+
+      if (!mounted) return;
+      context.go('/login');
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AuthErrorTranslator.translate(e))),
+      );
+      setState(() {
+        _isLoggingOut = false;
+      });
+    }
   }
 
   @override
@@ -159,8 +215,20 @@ class _ProfilePageState extends State<ProfilePage> {
                     width: double.infinity,
                     height: 56,
                     child: OutlinedButton.icon(
-                      onPressed: () {},
-                      icon: Icon(Icons.logout_rounded, color: AppColors.error),
+                      onPressed: _isLoggingOut ? null : _confirmLogout,
+                      icon: _isLoggingOut
+                          ? SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: AppColors.error,
+                              ),
+                            )
+                          : Icon(
+                              Icons.logout_rounded,
+                              color: AppColors.error,
+                            ),
                       label: Text(
                         "Terminar Sessão",
                         style: TextStyle(

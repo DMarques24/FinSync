@@ -4,6 +4,10 @@
 <dict>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Precisamos da câmara para tirares uma foto para o teu objetivo.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Precisamos de acesso às tuas fotos para escolheres uma imagem para o teu objetivo.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

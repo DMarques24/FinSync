@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:finsync/data/datasources/desire_remote_datasource.dart';
 import 'package:finsync/data/models/desire_model.dart';
 import 'package:finsync/domain/entities/desire.dart';
@@ -22,7 +24,13 @@ class DesireRepositoryImpl implements DesireRepository {
       price: desire.price,
       date: desire.date,
       image: desire.image,
+      saved: desire.saved,
     );
     await remoteDatasource.insertDesire(model);
+  }
+
+  @override
+  Future<String> uploadImage(File file) async {
+    return await remoteDatasource.uploadImage(file);
   }
 }

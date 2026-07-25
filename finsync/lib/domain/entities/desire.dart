@@ -4,6 +4,7 @@ class Desire {
   final double price;
   final DateTime date;
   final String? image;
+  final double saved;
 
   Desire({
     required this.id,
@@ -11,5 +12,6 @@ class Desire {
     required this.price,
     required this.date,
     this.image,
+    this.saved = 0,
   });
 }

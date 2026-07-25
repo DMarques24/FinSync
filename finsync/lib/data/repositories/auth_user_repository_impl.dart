@@ -19,4 +19,9 @@ class AuthUserRepositoryImpl implements AuthUserRepository {
     final model = AuthUser(email: user.email, password: user.password);
     await remoteDatasource.signIn(model);
   }
+
+  @override
+  Future<void> signOut() async {
+    await remoteDatasource.signOut();
+  }
 }

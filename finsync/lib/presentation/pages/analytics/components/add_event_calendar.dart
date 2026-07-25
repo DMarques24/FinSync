@@ -224,12 +224,12 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
                     ButtonSegment(
                       value: CalendarEventType.despesa,
                       label: Text("Despesa"),
-                      icon: Icon(Icons.arrow_upward_rounded),
+                      icon: Icon(Icons.arrow_downward_rounded),
                     ),
                     ButtonSegment(
                       value: CalendarEventType.receita,
                       label: Text("Receita"),
-                      icon: Icon(Icons.arrow_downward_rounded),
+                      icon: Icon(Icons.arrow_upward_rounded),
                     ),
                   ],
                   selected: {selectedType},
