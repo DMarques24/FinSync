@@ -1,3 +1,4 @@
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +47,7 @@ class PdfExportResultSheet extends StatelessWidget {
             const SizedBox(height: 20),
 
             Text(
-              "Relatório gerado com sucesso",
+              tr('analytics.pdf_success_title'),
               textAlign: TextAlign.center,
               style: AppTextStyles.headingMedium.copyWith(fontSize: 19),
             ),
@@ -54,7 +55,7 @@ class PdfExportResultSheet extends StatelessWidget {
             const SizedBox(height: 8),
 
             Text(
-              "O teu relatório financeiro em PDF está pronto.",
+              tr('analytics.pdf_success_subtitle'),
               textAlign: TextAlign.center,
               style: AppTextStyles.bodySmall.copyWith(
                 color: AppColors.textSecondary,
@@ -117,14 +118,14 @@ class PdfExportResultSheet extends StatelessWidget {
               ),
               onPressed: () => _share(context),
               icon: const Icon(Icons.ios_share_rounded),
-              label: const Text("Partilhar"),
+              label: Text(tr('analytics.share')),
             ),
 
             const SizedBox(height: 8),
 
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text("Fechar"),
+              child: Text(tr('common.close')),
             ),
           ],
         ),

@@ -12,6 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:finsync/core/currency/app_currency.dart';
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 
@@ -53,7 +54,7 @@ class _AddDesireFormState extends State<AddDesireForm> {
                   color: AppColors.secondary,
                 ),
                 title: Text(
-                  "Escolher da galeria",
+                  tr('desire.gallery'),
                   style: AppTextStyles.bodyMedium,
                 ),
                 onTap: () => Navigator.pop(context, ImageSource.gallery),
@@ -64,7 +65,7 @@ class _AddDesireFormState extends State<AddDesireForm> {
                   color: AppColors.secondary,
                 ),
                 title: Text(
-                  "Tirar fotografia",
+                  tr('desire.camera'),
                   style: AppTextStyles.bodyMedium,
                 ),
                 onTap: () => Navigator.pop(context, ImageSource.camera),
@@ -119,15 +120,12 @@ class _AddDesireFormState extends State<AddDesireForm> {
     return showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Permissão necessária"),
-        content: const Text(
-          "Para adicionares uma foto precisamos de acesso à câmara/galeria. "
-          "Podes ativar isso nas Definições do teu dispositivo.",
-        ),
+        title: Text(tr('desire.permission_required_title')),
+        content: Text(tr('desire.permission_required_message')),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("Cancelar"),
+            child: Text(tr('common.cancel')),
           ),
           TextButton(
             onPressed: () {
@@ -135,7 +133,7 @@ class _AddDesireFormState extends State<AddDesireForm> {
               openAppSettings();
             },
             child: Text(
-              "Abrir Definições",
+              tr('desire.open_settings'),
               style: TextStyle(color: AppColors.secondary),
             ),
           ),
@@ -179,9 +177,7 @@ class _AddDesireFormState extends State<AddDesireForm> {
         saved == null ||
         _selectedDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Preenche nome, preço e data antes de guardar.'),
-        ),
+        SnackBar(content: Text(tr('desire.fill_fields'))),
       );
       return;
     }
@@ -189,9 +185,11 @@ class _AddDesireFormState extends State<AddDesireForm> {
     final desire = Desire(
       id: 0,
       name: _nameController.text.trim(),
-      price: price,
+      // Os valores escritos estão na moeda selecionada — converte para
+      // EUR (moeda-base guardada na BD) antes de guardar.
+      price: AppCurrency.toBase(price),
       date: _selectedDate!,
-      saved: saved,
+      saved: AppCurrency.toBase(saved),
     );
 
     setState(() {
@@ -214,9 +212,7 @@ class _AddDesireFormState extends State<AddDesireForm> {
     } on TimeoutException {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('A operação demorou demasiado. Tenta novamente.'),
-        ),
+        SnackBar(content: Text(tr('desire.operation_timeout'))),
       );
     } catch (e) {
       if (!mounted) return;
@@ -276,14 +272,14 @@ class _AddDesireFormState extends State<AddDesireForm> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Novo desejo",
+                          tr('desire.new_desire'),
                           style: AppTextStyles.headingMedium.copyWith(
                             fontSize: 20,
                           ),
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          "Cria um novo objetivo financeiro.",
+                          tr('desire.new_desire_subtitle'),
                           style: AppTextStyles.bodySmall.copyWith(
                             color: AppColors.textSecondary,
                           ),
@@ -317,7 +313,7 @@ class _AddDesireFormState extends State<AddDesireForm> {
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              "Adicionar imagem",
+                              tr('desire.add_image'),
                               style: AppTextStyles.bodyMedium.copyWith(
                                 fontWeight: FontWeight.w600,
                               ),
@@ -337,7 +333,7 @@ class _AddDesireFormState extends State<AddDesireForm> {
                 controller: _nameController,
                 enabled: !_isSaving,
                 decoration: InputDecoration(
-                  labelText: "Nome do desejo",
+                  labelText: tr('desire.desire_name_label'),
                   prefixIcon: Icon(
                     Icons.favorite_border_rounded,
                     color: AppColors.secondary,
@@ -354,7 +350,7 @@ class _AddDesireFormState extends State<AddDesireForm> {
                   decimal: true,
                 ),
                 decoration: InputDecoration(
-                  labelText: "Preço (${AppCurrency.symbol})",
+                  labelText: tr('desire.price_label', {'symbol': AppCurrency.symbol}),
                   prefixIcon: Icon(
                     AppCurrency.icon,
                     color: AppColors.secondary,
@@ -371,7 +367,7 @@ class _AddDesireFormState extends State<AddDesireForm> {
                   decimal: true,
                 ),
                 decoration: InputDecoration(
-                  labelText: "Já guardado (${AppCurrency.symbol})",
+                  labelText: tr('desire.saved_label', {'symbol': AppCurrency.symbol}),
                   hintText: "0",
                   prefixIcon: Icon(
                     Icons.savings_outlined,
@@ -387,7 +383,7 @@ class _AddDesireFormState extends State<AddDesireForm> {
                 onTap: _isSaving ? null : selectDate,
                 child: InputDecorator(
                   decoration: InputDecoration(
-                    labelText: "Data objetivo",
+                    labelText: tr('desire.goal_date_label'),
                     prefixIcon: Icon(
                       Icons.calendar_month_rounded,
                       color: AppColors.secondary,
@@ -395,7 +391,7 @@ class _AddDesireFormState extends State<AddDesireForm> {
                   ),
                   child: Text(
                     _selectedDate == null
-                        ? "Selecionar data"
+                        ? tr('common.select_date')
                         : "${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}",
                     style: AppTextStyles.bodyMedium,
                   ),
@@ -424,7 +420,7 @@ class _AddDesireFormState extends State<AddDesireForm> {
                         ),
                       )
                     : const Icon(Icons.save_outlined),
-                label: const Text("Guardar Desejo"),
+                label: Text(tr('desire.save_desire')),
               ),
             ],
           ),

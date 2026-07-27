@@ -1,3 +1,4 @@
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,7 @@ class ErrorCard extends StatelessWidget {
             const SizedBox(height: 16),
             TextButton(
               onPressed: onRetry,
-              child: const Text("Tentar novamente"),
+              child: Text(tr('common.retry')),
             ),
           ],
         ),

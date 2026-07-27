@@ -1,6 +1,7 @@
 import 'package:finsync/core/currency/app_currency.dart';
 import 'package:finsync/core/currency/currency_bloc.dart';
 import 'package:finsync/core/currency/currency_event.dart';
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/presentation/pages/profile/components/currency_option.dart';
@@ -35,12 +36,12 @@ class CurrencyPickerSheet extends StatelessWidget {
 
               const SizedBox(height: 24),
 
-              Text("Moeda", style: AppTextStyles.headingMedium),
+              Text(tr('profile.currency_title'), style: AppTextStyles.headingMedium),
 
               const SizedBox(height: 6),
 
               Text(
-                "Escolhe a moeda usada em toda a app.",
+                tr('profile.currency_subtitle'),
                 style: AppTextStyles.bodySmall.copyWith(
                   color: AppColors.textSecondary,
                 ),

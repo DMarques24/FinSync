@@ -1,3 +1,4 @@
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/presentation/pages/login/login_bloc.dart';
@@ -33,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Preenche o email e a password.")),
+        SnackBar(content: Text(tr('login.fill_fields'))),
       );
       return;
     }
@@ -93,7 +94,7 @@ class _LoginPageState extends State<LoginPage> {
                       const SizedBox(height: 28),
 
                       Text(
-                        "Bem-vindo de volta 👋",
+                        tr('login.title'),
                         textAlign: TextAlign.center,
                         style: AppTextStyles.headingLarge,
                       ),
@@ -101,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
                       const SizedBox(height: 8),
 
                       Text(
-                        "Entra na tua conta para continuar",
+                        tr('login.subtitle'),
                         textAlign: TextAlign.center,
                         style: AppTextStyles.bodyMedium.copyWith(
                           color: AppColors.textSecondary,
@@ -117,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                         textInputAction: TextInputAction.next,
                         style: AppTextStyles.bodyMedium,
                         decoration: InputDecoration(
-                          labelText: "Email",
+                          labelText: tr('login.email_label'),
                           prefixIcon: Icon(
                             Icons.email_outlined,
                             color: AppColors.secondary,
@@ -136,7 +137,7 @@ class _LoginPageState extends State<LoginPage> {
                         onFieldSubmitted: (_) =>
                             isLoading ? null : _submit(context),
                         decoration: InputDecoration(
-                          labelText: "Password",
+                          labelText: tr('login.password_label'),
                           prefixIcon: Icon(
                             Icons.lock_outline_rounded,
                             color: AppColors.secondary,
@@ -180,9 +181,9 @@ class _LoginPageState extends State<LoginPage> {
                                     color: Colors.white,
                                   ),
                                 )
-                              : const Text(
-                                  "Entrar",
-                                  style: TextStyle(
+                              : Text(
+                                  tr('login.submit'),
+                                  style: const TextStyle(
                                     fontSize: 17,
                                     fontWeight: FontWeight.w700,
                                   ),
@@ -196,7 +197,7 @@ class _LoginPageState extends State<LoginPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "Ainda não tens conta?",
+                            tr('login.no_account'),
                             style: AppTextStyles.bodySmall.copyWith(
                               color: AppColors.textSecondary,
                             ),
@@ -205,7 +206,7 @@ class _LoginPageState extends State<LoginPage> {
                             onPressed: isLoading
                                 ? null
                                 : () => context.go('/createAcount'),
-                            child: const Text("Criar conta"),
+                            child: Text(tr('login.create_account')),
                           ),
                         ],
                       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 
@@ -34,7 +35,7 @@ class ExpensesList extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Últimas Despesas",
+              tr('home.recent_expenses'),
               style: AppTextStyles.headingMedium.copyWith(fontSize: 22),
             ),
             const SizedBox(height: 24),
@@ -56,14 +57,14 @@ class ExpensesList extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    "Ainda não existem despesas",
+                    tr('home.no_expenses_title'),
                     style: AppTextStyles.bodyLarge.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    "Toca em \"+\" para adicionar a tua primeira despesa.",
+                    tr('home.no_expenses_subtitle'),
                     textAlign: TextAlign.center,
                     style: AppTextStyles.bodySmall.copyWith(
                       color: AppColors.textSecondary,

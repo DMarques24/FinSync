@@ -1,3 +1,4 @@
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/presentation/pages/createAcount/create_acount_bloc.dart';
@@ -46,21 +47,21 @@ class _CreateAcountState extends State<CreateAcountPage> {
         password.isEmpty ||
         confirm.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Preenche todos os campos.")),
+        SnackBar(content: Text(tr('create_account.fill_all_fields'))),
       );
       return;
     }
 
     if (!_emailRegex.hasMatch(email)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Indica um email válido.")),
+        SnackBar(content: Text(tr('create_account.invalid_email'))),
       );
       return;
     }
 
     if (password != confirm) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("As passwords não coincidem.")),
+        SnackBar(content: Text(tr('create_account.passwords_dont_match'))),
       );
       return;
     }
@@ -79,7 +80,7 @@ class _CreateAcountState extends State<CreateAcountPage> {
             if (state is CreateAcountLoadedState) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: const Text("Conta criada com sucesso!"),
+                  content: Text(tr('create_account.account_created')),
                   backgroundColor: AppColors.success,
                 ),
               );
@@ -122,7 +123,7 @@ class _CreateAcountState extends State<CreateAcountPage> {
                       const SizedBox(height: 28),
 
                       Text(
-                        "Criar conta 🚀",
+                        tr('create_account.title'),
                         textAlign: TextAlign.center,
                         style: AppTextStyles.headingLarge,
                       ),
@@ -130,7 +131,7 @@ class _CreateAcountState extends State<CreateAcountPage> {
                       const SizedBox(height: 8),
 
                       Text(
-                        "Cria a tua conta para começar",
+                        tr('create_account.subtitle'),
                         textAlign: TextAlign.center,
                         style: AppTextStyles.bodyMedium.copyWith(
                           color: AppColors.textSecondary,
@@ -148,7 +149,7 @@ class _CreateAcountState extends State<CreateAcountPage> {
                           LengthLimitingTextInputFormatter(25),
                         ],
                         decoration: InputDecoration(
-                          labelText: "Nome de utilizador",
+                          labelText: tr('create_account.username_label'),
                           counterText: "",
                           prefixIcon: Icon(
                             Icons.person_outline_rounded,
@@ -165,7 +166,7 @@ class _CreateAcountState extends State<CreateAcountPage> {
                         keyboardType: TextInputType.emailAddress,
                         style: AppTextStyles.bodyMedium,
                         decoration: InputDecoration(
-                          labelText: "Email",
+                          labelText: tr('create_account.email_label'),
                           prefixIcon: Icon(
                             Icons.email_outlined,
                             color: AppColors.secondary,
@@ -181,7 +182,7 @@ class _CreateAcountState extends State<CreateAcountPage> {
                         obscureText: _obscurePassword,
                         style: AppTextStyles.bodyMedium,
                         decoration: InputDecoration(
-                          labelText: "Password",
+                          labelText: tr('create_account.password_label'),
                           prefixIcon: Icon(
                             Icons.lock_outline_rounded,
                             color: AppColors.secondary,
@@ -212,7 +213,7 @@ class _CreateAcountState extends State<CreateAcountPage> {
                         onFieldSubmitted: (_) =>
                             isLoading ? null : _submit(context),
                         decoration: InputDecoration(
-                          labelText: "Confirmar password",
+                          labelText: tr('create_account.confirm_password_label'),
                           prefixIcon: Icon(
                             Icons.lock_outline_rounded,
                             color: AppColors.secondary,
@@ -257,9 +258,9 @@ class _CreateAcountState extends State<CreateAcountPage> {
                                     color: Colors.white,
                                   ),
                                 )
-                              : const Text(
-                                  "Criar conta",
-                                  style: TextStyle(
+                              : Text(
+                                  tr('create_account.submit'),
+                                  style: const TextStyle(
                                     fontSize: 17,
                                     fontWeight: FontWeight.w700,
                                   ),
@@ -273,7 +274,7 @@ class _CreateAcountState extends State<CreateAcountPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "Já tens conta?",
+                            tr('create_account.has_account'),
                             style: AppTextStyles.bodySmall.copyWith(
                               color: AppColors.textSecondary,
                             ),
@@ -282,7 +283,7 @@ class _CreateAcountState extends State<CreateAcountPage> {
                             onPressed: isLoading
                                 ? null
                                 : () => context.go('/login'),
-                            child: const Text("Fazer login"),
+                            child: Text(tr('create_account.login')),
                           ),
                         ],
                       ),

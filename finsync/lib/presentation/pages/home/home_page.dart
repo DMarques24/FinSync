@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/domain/entities/expense.dart';
@@ -36,18 +37,7 @@ class _HomePageState extends State<HomePage> {
 
     final months = [
       '',
-      'Janeiro',
-      'Fevereiro',
-      'Março',
-      'Abril',
-      'Maio',
-      'Junho',
-      'Julho',
-      'Agosto',
-      'Setembro',
-      'Outubro',
-      'Novembro',
-      'Dezembro',
+      for (var i = 1; i <= 12; i++) tr('common.month_$i'),
     ];
 
     return Scaffold(
@@ -86,7 +76,7 @@ class _HomePageState extends State<HomePage> {
                           GetAllExpensesEvent(),
                         ),
                         icon: const Icon(Icons.refresh_rounded),
-                        label: const Text("Tentar novamente"),
+                        label: Text(tr('home.retry')),
                       ),
                     ],
                   ),
@@ -128,7 +118,9 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    username.isNotEmpty ? "Olá, $username 👋" : "Olá 👋",
+                    username.isNotEmpty
+                        ? tr('home.greeting_named', {'name': username})
+                        : tr('home.greeting'),
                     style: AppTextStyles.headingLarge.copyWith(fontSize: 30),
                   ),
 

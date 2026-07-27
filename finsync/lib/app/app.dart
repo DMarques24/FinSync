@@ -18,6 +18,7 @@ import 'package:finsync/core/currency/currency_event.dart';
 import 'package:finsync/core/currency/currency_state.dart';
 import 'package:finsync/core/locale/locale_bloc.dart';
 import 'package:finsync/core/locale/locale_event.dart';
+import 'package:finsync/core/locale/locale_state.dart';
 import 'package:finsync/core/notifications/notification_prefs_bloc.dart';
 import 'package:finsync/core/notifications/notification_prefs_event.dart';
 import 'package:finsync/presentation/pages/home/home_bloc.dart';
@@ -57,12 +58,18 @@ class App extends StatelessWidget {
         builder: (context, themeState) {
           return BlocBuilder<CurrencyBloc, CurrencyState>(
             builder: (context, currencyState) {
-              return MaterialApp.router(
-                key: ValueKey('${themeState.mode}_${currencyState.type.code}'),
-                theme: AppTheme.lightTheme,
-                darkTheme: AppTheme.darkTheme,
-                themeMode: themeState.mode,
-                routerConfig: router,
+              return BlocBuilder<LocaleBloc, LocaleState>(
+                builder: (context, localeState) {
+                  return MaterialApp.router(
+                    key: ValueKey(
+                      '${themeState.mode}_${currencyState.type.code}_${localeState.type.code}',
+                    ),
+                    theme: AppTheme.lightTheme,
+                    darkTheme: AppTheme.darkTheme,
+                    themeMode: themeState.mode,
+                    routerConfig: router,
+                  );
+                },
               );
             },
           );

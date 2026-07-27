@@ -1,5 +1,6 @@
 import 'package:finsync/presentation/pages/analytics/analytics_page.dart';
 import 'package:flutter/material.dart';
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 
@@ -57,7 +58,7 @@ class _MainPageState extends State<MainPage> {
             ),
             const SizedBox(width: 10),
             Text(
-              "FinSync",
+              tr('main_nav.app_name'),
               style: AppTextStyles.headingMedium.copyWith(
                 color: AppColors.textPrimary,
                 fontWeight: FontWeight.w800,
@@ -117,25 +118,22 @@ class _MainPageState extends State<MainPage> {
             });
           },
 
-          items: const [
-            LiquidGlassBarItem(iconData: Icons.home_rounded, label: "Home"),
-            LiquidGlassBarItem(iconData: Icons.analytics, label: "Analytics"),
+          items: [
+            LiquidGlassBarItem(iconData: Icons.home_rounded, label: tr('main_nav.home')),
+            LiquidGlassBarItem(iconData: Icons.analytics, label: tr('main_nav.analytics')),
             LiquidGlassBarItem(
               iconData: Icons.favorite_rounded,
-              label: "Goals",
+              label: tr('main_nav.goals'),
             ),
             LiquidGlassBarItem(
               iconData: Icons.person_rounded,
-              label: "Profile",
+              label: tr('main_nav.profile'),
             ),
           ],
 
           style: LiquidGlassBarStyle(
             activeColor: AppColors.secondary,
             inactiveColor: AppColors.textSecondary,
-            // O package define um glassColor branco fixo por omissão, que
-            // não acompanha o tema escuro/claro da app — por isso definimos
-            // explicitamente com base em AppColors.isDark.
             liquidGlassSettings: LiquidGlassSettings(
               glassColor: AppColors.isDark
                   ? Colors.black.withValues(alpha: .35)

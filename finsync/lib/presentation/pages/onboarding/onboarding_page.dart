@@ -1,3 +1,5 @@
+import 'package:finsync/core/currency/app_currency.dart';
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/presentation/pages/onboarding/components/balance_step.dart';
 import 'package:finsync/presentation/pages/onboarding/components/features_step.dart';
@@ -42,13 +44,17 @@ class _OnboardingPageState extends State<OnboardingPage> {
     final balance = double.tryParse(raw);
 
     if (balance == null || balance < 0) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("Indica um saldo válido.")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(tr('onboarding.invalid_balance'))),
+      );
       return;
     }
 
-    context.read<OnboardingBloc>().add(OnboardingSubmitBalanceEvent(balance));
+    // O valor escrito está na moeda atualmente selecionada — converte para
+    // EUR (moeda-base guardada na BD) antes de submeter.
+    context.read<OnboardingBloc>().add(
+      OnboardingSubmitBalanceEvent(AppCurrency.toBase(balance)),
+    );
   }
 
   @override
@@ -181,8 +187,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                   )
                                 : Text(
                                     _currentPage < _totalPages - 1
-                                        ? "Seguinte"
-                                        : "Concluir",
+                                        ? tr('onboarding.next')
+                                        : tr('onboarding.finish'),
                                     style: const TextStyle(
                                       fontSize: 17,
                                       fontWeight: FontWeight.w700,

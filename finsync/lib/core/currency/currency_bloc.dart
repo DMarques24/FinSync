@@ -1,6 +1,7 @@
 import 'package:finsync/core/currency/app_currency.dart';
 import 'package:finsync/core/currency/currency_event.dart';
 import 'package:finsync/core/currency/currency_state.dart';
+import 'package:finsync/core/currency/exchange_rate_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,6 +21,7 @@ class CurrencyBloc extends Bloc<CurrencyEvent, CurrencyState> {
     final type = _typeFromCode(prefs.getString(_prefsKey));
 
     AppCurrency.type = type;
+    AppCurrency.updateRates(await ExchangeRateService.getRates());
     emit(CurrencyState(type));
   }
 
@@ -31,6 +33,7 @@ class CurrencyBloc extends Bloc<CurrencyEvent, CurrencyState> {
     await prefs.setString(_prefsKey, event.type.code);
 
     AppCurrency.type = event.type;
+    AppCurrency.updateRates(await ExchangeRateService.getRates());
     emit(CurrencyState(event.type));
   }
 

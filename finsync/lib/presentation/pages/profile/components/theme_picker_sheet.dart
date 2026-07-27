@@ -1,3 +1,4 @@
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/core/theme/theme_bloc.dart';
@@ -33,12 +34,12 @@ class ThemePickerSheet extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            Text("Tema", style: AppTextStyles.headingMedium),
+            Text(tr('profile.theme_title'), style: AppTextStyles.headingMedium),
 
             const SizedBox(height: 6),
 
             Text(
-              "Escolhe a aparência da app.",
+              tr('profile.theme_subtitle'),
               style: AppTextStyles.bodySmall.copyWith(
                 color: AppColors.textSecondary,
               ),
@@ -48,7 +49,7 @@ class ThemePickerSheet extends StatelessWidget {
 
             ThemeOption(
               icon: Icons.light_mode_outlined,
-              label: "Claro",
+              label: tr('profile.theme_light'),
               selected: currentMode == ThemeMode.light,
               onTap: () {
                 context.read<ThemeBloc>().add(
@@ -60,7 +61,7 @@ class ThemePickerSheet extends StatelessWidget {
 
             ThemeOption(
               icon: Icons.dark_mode_outlined,
-              label: "Escuro",
+              label: tr('profile.theme_dark'),
               selected: currentMode == ThemeMode.dark,
               onTap: () {
                 context.read<ThemeBloc>().add(
@@ -72,7 +73,7 @@ class ThemePickerSheet extends StatelessWidget {
 
             ThemeOption(
               icon: Icons.brightness_auto_outlined,
-              label: "Automático (sistema)",
+              label: tr('profile.theme_system'),
               selected: currentMode == ThemeMode.system,
               onTap: () {
                 context.read<ThemeBloc>().add(

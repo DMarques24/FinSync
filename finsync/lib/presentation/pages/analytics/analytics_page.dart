@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/domain/entities/calendar_event.dart';
@@ -22,21 +23,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sankey_flutter/sankey_helpers.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-const _months = [
-  '',
-  'Janeiro',
-  'Fevereiro',
-  'Março',
-  'Abril',
-  'Maio',
-  'Junho',
-  'Julho',
-  'Agosto',
-  'Setembro',
-  'Outubro',
-  'Novembro',
-  'Dezembro',
-];
+List<String> get _months => ['', for (var i = 1; i <= 12; i++) tr('common.month_$i')];
 
 class AnalyticsPage extends StatefulWidget {
   const AnalyticsPage({super.key});
@@ -61,16 +48,16 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Remover evento"),
-        content: Text('Tens a certeza que queres remover "${event.name}"?'),
+        title: Text(tr('analytics.remove_event_title')),
+        content: Text(tr('analytics.remove_event_confirm', {'name': event.name})),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text("Cancelar"),
+            child: Text(tr('common.cancel')),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: Text("Remover", style: TextStyle(color: AppColors.error)),
+            child: Text(tr('analytics.remove'), style: TextStyle(color: AppColors.error)),
           ),
         ],
       ),
@@ -123,15 +110,13 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
     } on TimeoutException {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('A exportacao demorou demasiado. Tenta novamente.'),
-        ),
+        SnackBar(content: Text(tr('analytics.export_timeout'))),
       );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Erro ao exportar PDF: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(tr('analytics.export_error', {'error': e.toString()}))),
+      );
     } finally {
       if (mounted) {
         setState(() {
@@ -183,14 +168,14 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Analytics",
+                    tr('analytics.title'),
                     style: AppTextStyles.headingLarge.copyWith(fontSize: 28),
                   ),
 
                   const SizedBox(height: 6),
 
                   Text(
-                    "O teu calendário e o fluxo das tuas finanças",
+                    tr('analytics.subtitle'),
                     style: AppTextStyles.bodyMedium.copyWith(
                       color: AppColors.textSecondary,
                     ),
@@ -200,7 +185,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
 
                   SectionCard(
                     icon: Icons.calendar_month_rounded,
-                    title: "Calendário",
+                    title: tr('analytics.calendar'),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -323,8 +308,11 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
 
                         Text(
                           _selectedDay == null
-                              ? "Seleciona um dia para ver os eventos"
-                              : "Eventos de ${_selectedDay!.day} ${_months[_selectedDay!.month]}",
+                              ? tr('analytics.select_day_prompt')
+                              : tr('analytics.events_of', {
+                                  'day': '${_selectedDay!.day}',
+                                  'month': _months[_selectedDay!.month],
+                                }),
                           style: AppTextStyles.bodyLarge.copyWith(
                             fontWeight: FontWeight.w700,
                           ),
@@ -333,9 +321,9 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                         const SizedBox(height: 12),
 
                         if (_selectedDay != null && dayEvents.isEmpty)
-                          const EmptyState(
+                          EmptyState(
                             icon: Icons.event_busy_rounded,
-                            message: "Sem eventos neste dia.",
+                            message: tr('analytics.no_events_today'),
                           )
                         else
                           ...dayEvents.map(
@@ -369,7 +357,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                       },
                       icon: Icon(Icons.add_rounded, color: AppColors.secondary),
                       label: Text(
-                        "Criar um evento",
+                        tr('analytics.create_event'),
                         style: TextStyle(
                           color: AppColors.secondary,
                           fontWeight: FontWeight.bold,
@@ -388,13 +376,12 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
 
                   SectionCard(
                     icon: Icons.account_tree_rounded,
-                    title: "Fluxo de Despesas",
-                    subtitle: "Como o teu salário se distribui pelas despesas",
+                    title: tr('analytics.expenses_flow'),
+                    subtitle: tr('analytics.expenses_flow_subtitle'),
                     child: loaded.nodes.isEmpty
-                        ? const EmptyState(
+                        ? EmptyState(
                             icon: Icons.bar_chart_rounded,
-                            message:
-                                "Ainda não há despesas suficientes para gerar o gráfico.",
+                            message: tr('analytics.not_enough_data'),
                           )
                         : Container(
                             width: double.infinity,
@@ -436,11 +423,11 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
 
                   SectionCard(
                     icon: Icons.donut_large_rounded,
-                    title: "Despesas por categoria",
+                    title: tr('analytics.expenses_by_category'),
                     child: categorySlices.isEmpty
-                        ? const EmptyState(
+                        ? EmptyState(
                             icon: Icons.pie_chart_outline_rounded,
-                            message: "Ainda não existem despesas para mostrar.",
+                            message: tr('analytics.no_expenses_chart'),
                           )
                         : CategoryPieChart(
                             slices: categorySlices,
@@ -452,7 +439,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
 
                   SectionCard(
                     icon: Icons.trending_up_rounded,
-                    title: "Categoria com maior gasto",
+                    title: tr('analytics.top_category'),
                     child: TopCategoryCard(slices: categorySlices),
                   ),
 
@@ -477,8 +464,8 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                             ),
                       label: Text(
                         _isExportingPdf
-                            ? "A gerar relatório..."
-                            : "Exportar relatório em PDF",
+                            ? tr('analytics.exporting_pdf')
+                            : tr('analytics.export_pdf'),
                         style: TextStyle(
                           color: AppColors.error,
                           fontWeight: FontWeight.bold,

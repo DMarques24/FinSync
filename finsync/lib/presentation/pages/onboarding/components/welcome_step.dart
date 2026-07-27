@@ -1,3 +1,4 @@
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:flutter/material.dart';
@@ -29,15 +30,14 @@ class WelcomeStep extends StatelessWidget {
           const SizedBox(height: 28),
 
           Text(
-            "Bem-vindo ao FinSync 👋",
+            tr('onboarding.welcome_title'),
             style: AppTextStyles.headingLarge,
           ),
 
           const SizedBox(height: 12),
 
           Text(
-            "A tua nova app para organizares as tuas finanças, controlares "
-            "despesas e alcançares os teus objetivos com mais clareza.",
+            tr('onboarding.welcome_subtitle'),
             style: AppTextStyles.bodyMedium.copyWith(
               color: AppColors.textSecondary,
               height: 1.5,

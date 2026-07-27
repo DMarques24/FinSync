@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/presentation/pages/profile/components/profile_stat_card.dart';
@@ -123,7 +124,7 @@ class ProfileHeader extends StatelessWidget {
             Column(
               children: [
                 Text(
-                  "Saldo",
+                  tr('profile.balance'),
                   style: AppTextStyles.bodyMedium.copyWith(
                     color: Colors.white70,
                   ),
@@ -143,9 +144,9 @@ class ProfileHeader extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              ProfileStatCard(title: "Despesas", value: expensesCount),
-              ProfileStatCard(title: "Desejos", value: desiresCount),
-              ProfileStatCard(title: "Poupado", value: savedAmount),
+              ProfileStatCard(title: tr('profile.expenses_stat'), value: expensesCount),
+              ProfileStatCard(title: tr('profile.desires_stat'), value: desiresCount),
+              ProfileStatCard(title: tr('profile.saved_stat'), value: savedAmount),
             ],
           ),
         ],

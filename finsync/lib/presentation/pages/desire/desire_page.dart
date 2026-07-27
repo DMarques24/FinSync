@@ -4,6 +4,7 @@ import 'package:finsync/presentation/pages/desire/desire_event.dart';
 import 'package:finsync/presentation/pages/desire/desire_state.dart';
 import 'package:flutter/material.dart';
 
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 
@@ -62,7 +63,7 @@ class _DesirePageState extends State<DesirePage> {
                         GetAllDesiresEvent(),
                       ),
                       icon: const Icon(Icons.refresh_rounded),
-                      label: const Text("Tentar novamente"),
+                      label: Text(tr('common.retry')),
                     ),
                   ],
                 ),
@@ -84,14 +85,14 @@ class _DesirePageState extends State<DesirePage> {
 
               children: [
                 Text(
-                  "Os teus desejos ✨",
+                  tr('desire.title'),
                   style: AppTextStyles.headingLarge.copyWith(fontSize: 30),
                 ),
 
                 const SizedBox(height: 8),
 
                 Text(
-                  "Define objetivos e acompanha aquilo que queres comprar.",
+                  tr('desire.subtitle'),
                   style: AppTextStyles.bodyMedium.copyWith(
                     color: AppColors.textSecondary,
                   ),
@@ -128,13 +129,13 @@ class _DesirePageState extends State<DesirePage> {
 
                     icon: const Icon(Icons.add_rounded),
 
-                    label: const Text("Adicionar desejo"),
+                    label: Text(tr('desire.add_desire')),
                   ),
                 ),
 
                 const SizedBox(height: 30),
 
-                Text("Os teus objetivos", style: AppTextStyles.headingMedium),
+                Text(tr('desire.your_goals'), style: AppTextStyles.headingMedium),
 
                 const SizedBox(height: 18),
 

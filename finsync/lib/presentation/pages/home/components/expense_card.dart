@@ -4,6 +4,7 @@ import 'package:finsync/core/currency/app_currency.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/domain/entities/expense.dart';
+import 'package:finsync/presentation/pages/home/components/category_labels.dart';
 
 class ExpenseCard extends StatelessWidget {
   final String name;
@@ -91,7 +92,7 @@ class ExpenseCard extends StatelessWidget {
                   ),
 
                   child: Text(
-                    category,
+                    categoryLabel(category),
                     style: AppTextStyles.bodySmall.copyWith(
                       color: AppColors.secondary,
                       fontWeight: FontWeight.w600,

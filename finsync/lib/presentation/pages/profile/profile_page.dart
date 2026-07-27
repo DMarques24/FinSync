@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:finsync/core/currency/app_currency.dart';
 import 'package:finsync/core/di/injection.dart';
 import 'package:finsync/core/errors/auth_error_translator.dart';
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/domain/usecases/sign_out_user.dart';
@@ -52,17 +53,17 @@ class _ProfilePageState extends State<ProfilePage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Terminar sessão"),
-        content: const Text("Tens a certeza que queres sair da tua conta?"),
+        title: Text(tr('profile.logout_confirm_title')),
+        content: Text(tr('profile.logout_confirm_message')),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text("Cancelar"),
+            child: Text(tr('common.cancel')),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             child: Text(
-              "Terminar Sessão",
+              tr('profile.logout'),
               style: TextStyle(color: AppColors.error),
             ),
           ),
@@ -207,7 +208,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   const SizedBox(height: 30),
 
                   Text(
-                    "Definições",
+                    tr('profile.settings'),
                     style: AppTextStyles.headingMedium.copyWith(fontSize: 22),
                   ),
 
@@ -224,7 +225,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       children: [
                         SettingsButton(
                           icon: Icons.person_outline_rounded,
-                          name: "Editar Perfil",
+                          name: tr('profile.edit_profile'),
                           onTap: () => _openSheet(
                             EditProfileForm(
                               currentUsername: displayName,
@@ -236,14 +237,14 @@ class _ProfilePageState extends State<ProfilePage> {
 
                         SettingsButton(
                           icon: Icons.notifications_outlined,
-                          name: "Notificações",
+                          name: tr('profile.notifications'),
                           onTap: () => _openSheet(const NotificationsSheet()),
                         ),
                         const Divider(height: 1),
 
                         SettingsButton(
                           icon: Icons.lock_outline_rounded,
-                          name: "Segurança",
+                          name: tr('profile.security'),
                           onTap: () =>
                               _openSheet(const ChangePasswordSheet()),
                         ),
@@ -251,7 +252,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
                         SettingsButton(
                           icon: Icons.dark_mode_outlined,
-                          name: "Tema",
+                          name: tr('profile.theme'),
                           onTap: () =>
                               _openSheet(const ThemePickerSheet(), isScrollControlled: false),
                         ),
@@ -259,7 +260,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
                         SettingsButton(
                           icon: Icons.attach_money_rounded,
-                          name: "Moeda",
+                          name: tr('profile.currency'),
                           onTap: () =>
                               _openSheet(const CurrencyPickerSheet()),
                         ),
@@ -267,7 +268,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
                         SettingsButton(
                           icon: Icons.language_outlined,
-                          name: "Idioma",
+                          name: tr('profile.language'),
                           onTap: () =>
                               _openSheet(const LanguagePickerSheet(), isScrollControlled: false),
                         ),
@@ -275,7 +276,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
                         SettingsButton(
                           icon: Icons.help_outline_rounded,
-                          name: "Ajuda",
+                          name: tr('profile.help'),
                           onTap: () => _openSheet(const HelpSheet()),
                         ),
                       ],
@@ -303,7 +304,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               color: AppColors.error,
                             ),
                       label: Text(
-                        "Terminar Sessão",
+                        tr('profile.logout'),
                         style: TextStyle(
                           color: AppColors.error,
                           fontWeight: FontWeight.bold,

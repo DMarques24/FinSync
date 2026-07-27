@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:finsync/core/currency/app_currency.dart';
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 
@@ -144,7 +145,10 @@ class DesireCard extends StatelessWidget {
                     const SizedBox(height: 6),
 
                     Text(
-                      "Guardado ${AppCurrency.format(saved)} de ${AppCurrency.format(price)}",
+                      tr('desire.saved_of', {
+                        'saved': AppCurrency.format(saved),
+                        'price': AppCurrency.format(price),
+                      }),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: AppTextStyles.bodySmall.copyWith(
@@ -155,7 +159,7 @@ class DesireCard extends StatelessWidget {
                     const SizedBox(height: 8),
 
                     Text(
-                      "Objetivo: $date",
+                      tr('desire.goal_date', {'date': date}),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: AppTextStyles.bodySmall.copyWith(

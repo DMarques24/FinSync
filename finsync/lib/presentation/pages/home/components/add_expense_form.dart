@@ -5,8 +5,10 @@ import 'package:finsync/domain/entities/expense.dart';
 import 'package:finsync/presentation/pages/home/home_bloc.dart';
 import 'package:finsync/presentation/pages/home/home_event.dart';
 import 'package:finsync/core/currency/app_currency.dart';
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
+import 'package:finsync/presentation/pages/home/components/category_labels.dart';
 
 class AddExpenseForm extends StatefulWidget {
   const AddExpenseForm({super.key});
@@ -62,9 +64,7 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
 
     if (name.isEmpty || price == null || selectedDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Preenche o nome e o valor antes de guardar.'),
-        ),
+        SnackBar(content: Text(tr('home.save_error'))),
       );
       return;
     }
@@ -72,7 +72,9 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
     final expense = Expense(
       id: 0,
       name: name,
-      price: price,
+      // O valor escrito está na moeda selecionada — converte para EUR
+      // (moeda-base guardada na BD) antes de guardar.
+      price: AppCurrency.toBase(price),
       category: selectedCategory,
       date: selectedDate!,
       type: selectedType,
@@ -110,12 +112,12 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
 
               const SizedBox(height: 24),
 
-              Text("Novo Movimento", style: AppTextStyles.headingMedium),
+              Text(tr('home.new_movement'), style: AppTextStyles.headingMedium),
 
               const SizedBox(height: 6),
 
               Text(
-                "Regista uma despesa, receita ou outro movimento.",
+                tr('home.new_movement_subtitle'),
                 style: AppTextStyles.bodySmall.copyWith(
                   color: AppColors.textSecondary,
                 ),
@@ -126,16 +128,16 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
               SizedBox(
                 width: double.infinity,
                 child: SegmentedButton<ExpenseType>(
-                  segments: const [
+                  segments: [
                     ButtonSegment(
                       value: ExpenseType.despesa,
-                      label: Text("Despesa"),
-                      icon: Icon(Icons.arrow_downward_rounded),
+                      label: Text(tr('home.expense_type')),
+                      icon: const Icon(Icons.arrow_downward_rounded),
                     ),
                     ButtonSegment(
                       value: ExpenseType.receita,
-                      label: Text("Receita"),
-                      icon: Icon(Icons.arrow_upward_rounded),
+                      label: Text(tr('home.income_type')),
+                      icon: const Icon(Icons.arrow_upward_rounded),
                     ),
                   ],
                   selected: {selectedType},
@@ -160,7 +162,7 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
                 controller: _nameController,
                 style: AppTextStyles.bodyMedium,
                 decoration: InputDecoration(
-                  labelText: "Nome",
+                  labelText: tr('home.name_label'),
                   prefixIcon: Icon(
                     Icons.shopping_bag_outlined,
                     color: AppColors.secondary,
@@ -177,7 +179,7 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
                 ),
                 style: AppTextStyles.bodyMedium,
                 decoration: InputDecoration(
-                  labelText: "Valor (${AppCurrency.symbol})",
+                  labelText: tr('home.value_label', {'symbol': AppCurrency.symbol}),
                   prefixIcon: Icon(AppCurrency.icon, color: AppColors.secondary),
                 ),
               ),
@@ -188,14 +190,14 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
                 initialValue: selectedCategory,
                 style: AppTextStyles.bodyMedium,
                 decoration: InputDecoration(
-                  labelText: "Categoria",
+                  labelText: tr('home.category_label'),
                   prefixIcon: Icon(
                     Icons.category_outlined,
                     color: AppColors.secondary,
                   ),
                 ),
                 items: categories
-                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                    .map((e) => DropdownMenuItem(value: e, child: Text(categoryLabel(e))))
                     .toList(),
                 onChanged: (value) {
                   setState(() {
@@ -211,7 +213,7 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
                 onTap: _selectDate,
                 child: InputDecorator(
                   decoration: InputDecoration(
-                    labelText: "Data",
+                    labelText: tr('home.date_label'),
                     prefixIcon: Icon(
                       Icons.calendar_month_rounded,
                       color: AppColors.secondary,
@@ -219,7 +221,7 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
                   ),
                   child: Text(
                     selectedDate == null
-                        ? "Selecionar data"
+                        ? tr('common.select_date')
                         : "${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}",
                     style: AppTextStyles.bodyMedium,
                   ),
@@ -239,7 +241,7 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
                 ),
                 onPressed: _saveExpense,
                 icon: const Icon(Icons.save_outlined),
-                label: const Text("Guardar"),
+                label: Text(tr('common.save')),
               ),
             ],
           ),

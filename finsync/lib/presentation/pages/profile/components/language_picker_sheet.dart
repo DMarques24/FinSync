@@ -1,3 +1,4 @@
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/locale/app_locale.dart';
 import 'package:finsync/core/locale/locale_bloc.dart';
 import 'package:finsync/core/locale/locale_event.dart';
@@ -34,12 +35,12 @@ class LanguagePickerSheet extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            Text("Idioma", style: AppTextStyles.headingMedium),
+            Text(tr('profile.language_title'), style: AppTextStyles.headingMedium),
 
             const SizedBox(height: 6),
 
             Text(
-              "Escolhe o idioma preferido.",
+              tr('profile.language_subtitle'),
               style: AppTextStyles.bodySmall.copyWith(
                 color: AppColors.textSecondary,
               ),
@@ -54,18 +55,6 @@ class LanguagePickerSheet extends StatelessWidget {
                 onTap: () {
                   context.read<LocaleBloc>().add(ChangeLocaleEvent(type));
                   Navigator.pop(context);
-
-                  if (type == AppLocaleType.en) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          "A tradução completa para inglês estará "
-                          "disponível brevemente. A app continua em "
-                          "português por agora.",
-                        ),
-                      ),
-                    );
-                  }
                 },
               ),
           ],

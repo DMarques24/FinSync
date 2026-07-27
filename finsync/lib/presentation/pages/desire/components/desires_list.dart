@@ -1,3 +1,4 @@
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/domain/entities/desire.dart';
@@ -37,14 +38,14 @@ class DesiresList extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              "Ainda não tens objetivos",
+              tr('desire.no_goals_title'),
               style: AppTextStyles.bodyLarge.copyWith(
                 fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 6),
             Text(
-              "Adiciona um desejo para começares a poupar para ele.",
+              tr('desire.no_goals_subtitle'),
               textAlign: TextAlign.center,
               style: AppTextStyles.bodySmall.copyWith(
                 color: AppColors.textSecondary,

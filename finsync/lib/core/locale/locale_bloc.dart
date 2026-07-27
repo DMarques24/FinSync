@@ -1,3 +1,4 @@
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/locale/app_locale.dart';
 import 'package:finsync/core/locale/locale_event.dart';
 import 'package:finsync/core/locale/locale_state.dart';
@@ -15,6 +16,7 @@ class LocaleBloc extends Bloc<LocaleEvent, LocaleState> {
   Future<void> _onLoad(LoadLocaleEvent event, Emitter<LocaleState> emit) async {
     final prefs = await SharedPreferences.getInstance();
     final type = _typeFromCode(prefs.getString(_prefsKey));
+    await AppTranslations.load(type);
     emit(LocaleState(type));
   }
 
@@ -24,6 +26,7 @@ class LocaleBloc extends Bloc<LocaleEvent, LocaleState> {
   ) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_prefsKey, event.type.code);
+    await AppTranslations.load(event.type);
     emit(LocaleState(event.type));
   }
 

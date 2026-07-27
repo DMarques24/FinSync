@@ -1,4 +1,5 @@
 import 'package:finsync/core/currency/app_currency.dart';
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:flutter/material.dart';
@@ -33,13 +34,12 @@ class BalanceStep extends StatelessWidget {
 
           const SizedBox(height: 28),
 
-          Text("Qual é o teu saldo atual? 💰", style: AppTextStyles.headingLarge),
+          Text(tr('onboarding.balance_title'), style: AppTextStyles.headingLarge),
 
           const SizedBox(height: 10),
 
           Text(
-            "Vamos usar este valor como ponto de partida para "
-            "acompanhares as tuas finanças.",
+            tr('onboarding.balance_subtitle'),
             style: AppTextStyles.bodyMedium.copyWith(
               color: AppColors.textSecondary,
             ),
@@ -56,7 +56,7 @@ class BalanceStep extends StatelessWidget {
               FilteringTextInputFormatter.allow(RegExp(r'^\d*[.,]?\d{0,2}')),
             ],
             decoration: InputDecoration(
-              labelText: "Saldo atual (${AppCurrency.symbol})",
+              labelText: tr('onboarding.balance_label', {'symbol': AppCurrency.symbol}),
               prefixIcon: Icon(AppCurrency.icon, color: AppColors.secondary),
             ),
           ),

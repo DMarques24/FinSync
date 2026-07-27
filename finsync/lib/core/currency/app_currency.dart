@@ -1,11 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// Moedas suportadas pela app.
-///
-/// Importante: isto só troca o símbolo/formato apresentado. A app não faz
-/// conversão real de valores entre moedas (isso exigiria taxas de câmbio em
-/// tempo real), por isso os números guardados na base de dados não mudam,
-/// só a forma como são apresentados.
 enum AppCurrencyType {
   eur('EUR', '€', 'Euro', false),
   usd('USD', '\$', 'Dólar Americano', true),
@@ -24,11 +18,22 @@ class AppCurrency {
   AppCurrency._();
 
   static AppCurrencyType type = AppCurrencyType.eur;
+  static Map<String, double> _ratesFromEur = const {'EUR': 1.0};
+
+  static void updateRates(Map<String, double> rates) {
+    _ratesFromEur = rates;
+  }
+
+  static double get _rate => _ratesFromEur[type.code] ?? 1.0;
+
+  static double convert(num valueInEur) => valueInEur * _rate;
+
+  static double toBase(num valueInSelectedCurrency) =>
+      _rate == 0 ? 0 : valueInSelectedCurrency / _rate;
 
   static String get symbol => type.symbol;
   static String get code => type.code;
 
-  /// Ícone aproximado para a moeda atual (usado em campos de formulário).
   static IconData get icon {
     switch (type) {
       case AppCurrencyType.eur:
@@ -42,11 +47,8 @@ class AppCurrency {
     }
   }
 
-  /// Formata um valor com o símbolo da moeda atual, respeitando se o
-  /// símbolo fica antes (ex: $12.34) ou depois (ex: 12.34 €) do número.
-  /// `sign`, se passado (ex: "+ " ou "- "), fica sempre à frente de tudo.
-  static String format(num value, {String sign = ''}) {
-    final amount = value.abs().toStringAsFixed(2);
+  static String format(num valueInEur, {String sign = ''}) {
+    final amount = convert(valueInEur).abs().toStringAsFixed(2);
 
     return type.symbolBefore
         ? '$sign${type.symbol}$amount'

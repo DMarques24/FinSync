@@ -1,3 +1,4 @@
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/presentation/pages/onboarding/components/feature_row.dart';
@@ -13,12 +14,12 @@ class FeaturesStep extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Como funciona 🚀", style: AppTextStyles.headingLarge),
+          Text(tr('onboarding.how_it_works_title'), style: AppTextStyles.headingLarge),
 
           const SizedBox(height: 8),
 
           Text(
-            "Tudo o que precisas está a um toque de distância.",
+            tr('onboarding.how_it_works_subtitle'),
             style: AppTextStyles.bodyMedium.copyWith(
               color: AppColors.textSecondary,
             ),
@@ -28,24 +29,24 @@ class FeaturesStep extends StatelessWidget {
 
           FeatureRow(
             icon: Icons.home_rounded,
-            title: "Home",
-            description: "Regista e acompanha as tuas despesas do dia a dia.",
+            title: tr('onboarding.feature_home_title'),
+            description: tr('onboarding.feature_home_desc'),
           ),
 
           const SizedBox(height: 24),
 
           FeatureRow(
             icon: Icons.favorite_rounded,
-            title: "Goals",
-            description: "Define objetivos de poupança e vê o progresso.",
+            title: tr('onboarding.feature_goals_title'),
+            description: tr('onboarding.feature_goals_desc'),
           ),
 
           const SizedBox(height: 24),
 
           FeatureRow(
             icon: Icons.person_rounded,
-            title: "Profile",
-            description: "Consulta o teu saldo e gere os dados da tua conta.",
+            title: tr('onboarding.feature_profile_title'),
+            description: tr('onboarding.feature_profile_desc'),
           ),
         ],
       ),

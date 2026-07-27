@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:finsync/core/currency/app_currency.dart';
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/domain/entities/calendar_event.dart';
@@ -64,9 +65,7 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
         price == null ||
         selectedDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Preenche nome, valor e data antes de guardar.'),
-        ),
+        SnackBar(content: Text(tr('analytics.fill_event_fields'))),
       );
       return;
     }
@@ -74,7 +73,7 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
     final calendarEvent = CalendarEventEntity(
       id: 0,
       name: _nameEventController.text.trim(),
-      price: price,
+      price: AppCurrency.toBase(price),
       date: selectedDate!,
       type: selectedType,
       repeatMonthly: repeatMonthly,
@@ -98,14 +97,12 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
       final messenger = ScaffoldMessenger.of(context);
       Navigator.pop(context);
       messenger.showSnackBar(
-        const SnackBar(content: Text('Evento guardado com sucesso.')),
+        SnackBar(content: Text(tr('analytics.event_saved'))),
       );
     } on TimeoutException {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('A operação demorou demasiado. Tenta novamente.'),
-        ),
+        SnackBar(content: Text(tr('analytics.operation_timeout'))),
       );
     } catch (e) {
       if (!mounted) return;
@@ -168,14 +165,14 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Novo evento",
+                          tr('analytics.new_event'),
                           style: AppTextStyles.headingMedium.copyWith(
                             fontSize: 20,
                           ),
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          "Adiciona um evento ao teu calendário.",
+                          tr('analytics.new_event_subtitle'),
                           style: AppTextStyles.bodySmall.copyWith(
                             color: AppColors.textSecondary,
                           ),
@@ -193,7 +190,7 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
                 enabled: !_isSaving,
                 style: AppTextStyles.bodyMedium,
                 decoration: InputDecoration(
-                  labelText: "Nome do evento",
+                  labelText: tr('analytics.event_name_label'),
                   prefixIcon: Icon(
                     Icons.title_rounded,
                     color: AppColors.secondary,
@@ -209,14 +206,14 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
                 ),
                 style: AppTextStyles.bodyMedium,
                 decoration: InputDecoration(
-                  labelText: "Valor (${AppCurrency.symbol})",
+                  labelText: tr('analytics.value_label', {'symbol': AppCurrency.symbol}),
                   prefixIcon: Icon(AppCurrency.icon, color: AppColors.secondary),
                 ),
               ),
               const SizedBox(height: 18),
 
               Text(
-                "Tipo",
+                tr('analytics.type_label'),
                 style: AppTextStyles.bodySmall.copyWith(
                   color: AppColors.textSecondary,
                 ),
@@ -225,16 +222,16 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
               SizedBox(
                 width: double.infinity,
                 child: SegmentedButton<CalendarEventType>(
-                  segments: const [
+                  segments: [
                     ButtonSegment(
                       value: CalendarEventType.despesa,
-                      label: Text("Despesa"),
-                      icon: Icon(Icons.arrow_downward_rounded),
+                      label: Text(tr('analytics.expense_type')),
+                      icon: const Icon(Icons.arrow_downward_rounded),
                     ),
                     ButtonSegment(
                       value: CalendarEventType.receita,
-                      label: Text("Receita"),
-                      icon: Icon(Icons.arrow_upward_rounded),
+                      label: Text(tr('analytics.income_type')),
+                      icon: const Icon(Icons.arrow_upward_rounded),
                     ),
                   ],
                   selected: {selectedType},
@@ -278,9 +275,9 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
                           });
                         },
                   activeThumbColor: AppColors.secondary,
-                  title: const Text("Repetir no próximo mês"),
+                  title: Text(tr('analytics.repeat_monthly')),
                   subtitle: Text(
-                    "Cria automaticamente o mesmo evento um mês depois.",
+                    tr('analytics.repeat_monthly_subtitle'),
                     style: AppTextStyles.bodySmall.copyWith(
                       color: AppColors.textSecondary,
                     ),
@@ -297,7 +294,7 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
 
                 child: InputDecorator(
                   decoration: InputDecoration(
-                    labelText: "Data",
+                    labelText: tr('analytics.date_label'),
                     prefixIcon: Icon(
                       Icons.calendar_month_rounded,
                       color: AppColors.secondary,
@@ -306,7 +303,7 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
 
                   child: Text(
                     selectedDate == null
-                        ? "Selecionar data"
+                        ? tr('common.select_date')
                         : "${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}",
                     style: selectedDate == null
                         ? AppTextStyles.bodyMedium.copyWith(
@@ -342,7 +339,7 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
                       )
                     : const Icon(Icons.save_outlined),
 
-                label: const Text("Guardar Evento"),
+                label: Text(tr('analytics.save_event')),
               ),
             ],
           ),

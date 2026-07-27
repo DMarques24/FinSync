@@ -3,6 +3,7 @@ import 'package:finsync/presentation/pages/home/home_event.dart';
 import 'package:flutter/material.dart';
 
 import 'package:finsync/core/currency/app_currency.dart';
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/presentation/pages/home/components/cash_flow_info_card.dart';
@@ -68,7 +69,7 @@ class CardCashFlow extends StatelessWidget {
 
               PopupMenuButton<TimeFilter>(
                 icon: const Icon(Icons.more_vert, color: Colors.white70),
-                tooltip: "Filtrar período",
+                tooltip: tr('home.filter_period'),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
@@ -77,22 +78,22 @@ class CardCashFlow extends StatelessWidget {
                     GetFilterTimeExpensesEvent(filter),
                   );
                 },
-                itemBuilder: (context) => const [
+                itemBuilder: (context) => [
                   PopupMenuItem(
                     value: TimeFilter.lastDay,
-                    child: Text('Último dia'),
+                    child: Text(tr('home.last_day')),
                   ),
                   PopupMenuItem(
                     value: TimeFilter.last7Days,
-                    child: Text('Últimos 7 dias'),
+                    child: Text(tr('home.last_7_days')),
                   ),
                   PopupMenuItem(
                     value: TimeFilter.last30Days,
-                    child: Text('Últimos 30 dias'),
+                    child: Text(tr('home.last_30_days')),
                   ),
                   PopupMenuItem(
                     value: TimeFilter.last5Months,
-                    child: Text('Últimos 5 meses'),
+                    child: Text(tr('home.last_5_months')),
                   ),
                 ],
               ),
@@ -101,9 +102,9 @@ class CardCashFlow extends StatelessWidget {
 
           const SizedBox(height: 30),
 
-          const Text(
-            "Saldo Atual",
-            style: TextStyle(color: Colors.white70, fontSize: 16),
+          Text(
+            tr('home.current_balance'),
+            style: const TextStyle(color: Colors.white70, fontSize: 16),
           ),
 
           const SizedBox(height: 8),
@@ -123,7 +124,7 @@ class CardCashFlow extends StatelessWidget {
               Expanded(
                 child: CashFlowInfoCard(
                   icon: Icons.arrow_upward_rounded,
-                  title: "Receitas",
+                  title: tr('home.income'),
                   value: cashIn,
                   color: AppColors.success,
                 ),
@@ -134,7 +135,7 @@ class CardCashFlow extends StatelessWidget {
               Expanded(
                 child: CashFlowInfoCard(
                   icon: Icons.arrow_downward_rounded,
-                  title: "Despesas",
+                  title: tr('home.expenses'),
                   value: cashOut,
                   color: AppColors.error,
                 ),
