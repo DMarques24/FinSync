@@ -21,6 +21,12 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
   }
 
   @override
+  Future<Expense> getTopExpenseCategory() async {
+    final model = await remoteDatasource.getTopExpenseCategory();
+    return model.toEntity();
+  }
+
+  @override
   Future<void> insertExpense(Expense expense) async {
     final model = ExpenseModel(
       id: expense.id,

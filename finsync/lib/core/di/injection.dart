@@ -7,6 +7,7 @@ import 'package:finsync/domain/usecases/complete_onboarding.dart';
 import 'package:finsync/domain/usecases/delete_calendar_event.dart';
 import 'package:finsync/domain/usecases/get_all_calendar_events.dart';
 import 'package:finsync/domain/usecases/get_filter_time_expenses.dart';
+import 'package:finsync/domain/usecases/get_top_expense_category.dart';
 import 'package:finsync/domain/usecases/insert_calendar_event.dart';
 import 'package:finsync/domain/usecases/insert_user.dart';
 import 'package:finsync/presentation/pages/analytics/analytics_bloc.dart';
@@ -53,7 +54,7 @@ import 'package:finsync/presentation/pages/home/home_bloc.dart';
 final sl = GetIt.instance;
 
 Future<void> initDependencies() async {
-  // DATASOURCES
+  // ? DATASOURCES
   sl.registerLazySingleton<AuthUserRemoteDatasource>(
     () => AuthUserRemoteDatasourceImpl(),
   );
@@ -130,6 +131,10 @@ Future<void> initDependencies() async {
 
   sl.registerLazySingleton<DeleteCalendarEvent>(
     () => DeleteCalendarEvent(sl()),
+  );
+
+  sl.registerLazySingleton<GetTopExpenseCategory>(
+    () => GetTopExpenseCategory(sl()),
   );
 
   // BLOCS

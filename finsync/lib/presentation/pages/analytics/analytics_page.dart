@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/domain/entities/calendar_event.dart';
+import 'package:finsync/domain/entities/expense.dart';
 import 'package:finsync/presentation/pages/analytics/analytics_bloc.dart';
 import 'package:finsync/presentation/pages/analytics/analytics_event.dart';
 import 'package:finsync/presentation/pages/analytics/analytics_state.dart';
@@ -16,6 +17,7 @@ import 'package:finsync/presentation/pages/profile/profile_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sankey_flutter/sankey_helpers.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 const _months = [
@@ -65,10 +67,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: Text(
-              "Remover",
-              style: TextStyle(color: AppColors.error),
-            ),
+            child: Text("Remover", style: TextStyle(color: AppColors.error)),
           ),
         ],
       ),
@@ -345,11 +344,6 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                                 "Ainda não há despesas suficientes para gerar o gráfico.",
                           )
                         : Container(
-                            // O SankeyDiagramWidget desenha as labels sempre a
-                            // preto e não expõe nenhuma opção de cor de texto,
-                            // por isso mantemos este cartão sempre claro (em
-                            // vez de seguir o AppColors.surface do tema) para
-                            // o texto continuar legível no modo escuro.
                             width: double.infinity,
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
@@ -378,8 +372,6 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                                   ),
                                   size: Size(width, height),
                                   showLabels: true,
-                                  // O texture overlay é o que desenha aquelas
-                                  // linhas horizontais por cima dos links.
                                   showTexture: false,
                                   onNodeSelected: (node) {},
                                 );
@@ -387,9 +379,48 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                             ),
                           ),
                   ),
+                  const SizedBox(height: 24),
+
+                  SectionCard(
+                    icon: Icons.account_tree_rounded,
+                    title: "Despesas por categoria",
+                    child: loaded.expenses.isEmpty
+                        ? const EmptyState(
+                            icon: Icons.pie_chart_outline_rounded,
+                            message: "Ainda não existem despesas para mostrar.",
+                          )
+                        : SfCircularChart(
+                            legend: Legend(
+                              isVisible: true,
+                              overflowMode: LegendItemOverflowMode.wrap,
+                            ),
+                            tooltipBehavior: TooltipBehavior(enable: true),
+                            series: <CircularSeries>[
+                              PieSeries<Expense, String>(
+                                dataSource: loaded.expenses,
+                                xValueMapper: (data, _) => data.category,
+                                yValueMapper: (data, _) => data.price,
+                                dataLabelMapper: (data, _) => data.category,
+                                dataLabelSettings: const DataLabelSettings(
+                                  isVisible: true,
+                                ),
+                              ),
+                            ],
+                          ),
+                  ),
 
                   const SizedBox(height: 24),
 
+                  SectionCard(
+                    icon: Icons.trending_up,
+                    title: "Categoria com maior gasto",
+                    child: Text(
+                      loaded.topExpenseCategory,
+                      style: AppTextStyles.bodyLarge,
+                    ),
+                  ),
+
+                  const SizedBox(height: 24),
                   SizedBox(
                     width: double.infinity,
                     height: 56,

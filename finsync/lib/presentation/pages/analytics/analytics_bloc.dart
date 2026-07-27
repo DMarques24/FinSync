@@ -64,11 +64,23 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
         );
       });
 
+      var topExpenseCategory = 'Sem despesas registadas';
+      if (byCategory.isNotEmpty) {
+        final topEntry = byCategory.entries.reduce(
+          (a, b) => a.value >= b.value ? a : b,
+        );
+        if (topEntry.key.trim().isNotEmpty) {
+          topExpenseCategory = topEntry.key;
+        }
+      }
+
       emit(
         AnalyticsLoadedState(
+          expenses: expenses,
           nodes: nodesById.values.toList(),
           links: links,
           event: calendarEvents,
+          topExpenseCategory: topExpenseCategory,
         ),
       );
     } catch (e) {
@@ -124,15 +136,10 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
     }
   }
 
-  /// Receita entra na conta (positivo), despesa sai (negativo).
   double _signedDelta(CalendarEventEntity event) {
-    return event.type == CalendarEventType.receita
-        ? event.price
-        : -event.price;
+    return event.type == CalendarEventType.receita ? event.price : -event.price;
   }
 
-  /// Avança um mês a partir de [date], ajustando o dia se o mês seguinte
-  /// tiver menos dias (ex: 31 de Janeiro -> 28/29 de Fevereiro).
   DateTime _addOneMonth(DateTime date) {
     final year = date.month == 12 ? date.year + 1 : date.year;
     final month = date.month == 12 ? 1 : date.month + 1;

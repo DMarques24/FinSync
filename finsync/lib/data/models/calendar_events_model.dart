@@ -20,9 +20,9 @@ class CalendarEventsModel {
   factory CalendarEventsModel.fromJson(Map<String, dynamic> json) {
     final rawDate = json['event_date'];
     return CalendarEventsModel(
-      id: json['id'] as int,
-      nameEvent: json['name'] as String,
-      price: (json['price'] as num).toDouble(),
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      nameEvent: json['name']?.toString() ?? '',
+      price: (json['price'] as num?)?.toDouble() ?? 0,
       dateEvent: rawDate is DateTime
           ? rawDate
           : DateTime.tryParse(rawDate?.toString() ?? '') ?? DateTime.now(),
