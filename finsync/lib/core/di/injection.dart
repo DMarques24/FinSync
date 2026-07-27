@@ -25,19 +25,24 @@ import 'package:finsync/data/datasources/desire_remote_datasource.dart';
 import 'package:finsync/data/datasources/desire_remote_datasource_impl.dart';
 import 'package:finsync/data/datasources/expense_remote_datasource.dart';
 import 'package:finsync/data/datasources/expense_remote_datasource_impl.dart';
+import 'package:finsync/data/datasources/pdf_remote_datasource.dart';
+import 'package:finsync/data/datasources/pdf_remote_datasource_impl.dart';
 import 'package:finsync/data/datasources/user_remote_datasource.dart';
 import 'package:finsync/data/datasources/user_remote_datasource_impl.dart';
 
 import 'package:finsync/data/repositories/auth_user_repository_impl.dart';
 import 'package:finsync/data/repositories/desire_repository_impl.dart';
 import 'package:finsync/data/repositories/expense_repository_impl.dart';
+import 'package:finsync/data/repositories/pdf_repository_impl.dart';
 import 'package:finsync/data/repositories/user_repository_impl.dart';
 
 import 'package:finsync/domain/repositories/auth_user_repository.dart';
 import 'package:finsync/domain/repositories/desire_repository.dart';
 import 'package:finsync/domain/repositories/expense_repository.dart';
+import 'package:finsync/domain/repositories/pdf_repository.dart';
 import 'package:finsync/domain/repositories/user_repository.dart';
 
+import 'package:finsync/domain/usecases/create_analytics_pdf.dart';
 import 'package:finsync/domain/usecases/get_all_desires.dart';
 import 'package:finsync/domain/usecases/get_all_expenses.dart';
 import 'package:finsync/domain/usecases/get_user.dart';
@@ -67,6 +72,10 @@ Future<void> initDependencies() async {
     () => DesireRemoteDatasourceImpl(),
   );
 
+  sl.registerLazySingleton<PdfRemoteDatasource>(
+    () => PdfRemoteDatasourceImpl(),
+  );
+
   sl.registerLazySingleton<UserRemoteDatasource>(
     () => UserRemoteDatasourceImpl(),
   );
@@ -85,6 +94,8 @@ Future<void> initDependencies() async {
   );
 
   sl.registerLazySingleton<DesireRepository>(() => DesireRepositoryImpl(sl()));
+
+  sl.registerLazySingleton<PdfRepository>(() => PdfRepositoryImpl(sl()));
 
   sl.registerLazySingleton<UserRepository>(() => UserRepositoryImpl(sl()));
 
@@ -108,6 +119,8 @@ Future<void> initDependencies() async {
   );
 
   sl.registerLazySingleton<InsertExpense>(() => InsertExpense(sl()));
+
+  sl.registerLazySingleton<CreateAnalyticsPdf>(() => CreateAnalyticsPdf(sl()));
 
   sl.registerLazySingleton<GetAllDesires>(() => GetAllDesires(sl()));
 
@@ -176,6 +189,7 @@ Future<void> initDependencies() async {
       sl<GetAllCalendarEvents>(),
       sl<AdjustBalance>(),
       sl<DeleteCalendarEvent>(),
+      sl<CreateAnalyticsPdf>(),
     ),
   );
 

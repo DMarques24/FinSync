@@ -46,6 +46,9 @@ dependencies:
   sankey_flutter: ^0.0.3
   shared_preferences: ^2.5.5
   syncfusion_flutter_charts: ^34.1.32
+  syncfusion_flutter_pdf: ^34.1.32
+  path_provider: ^2.1.6
+  share_plus: ^13.3.0
 
 dev_dependencies:
   flutter_test:

@@ -17,6 +17,7 @@ import 'package:finsync/presentation/pages/profile/profile_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sankey_flutter/sankey_helpers.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -47,6 +48,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   final now = DateTime.now();
+  bool _isExportingPdf = false;
 
   @override
   void initState() {
@@ -90,6 +92,50 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+  }
+
+  Future<void> _exportPdf() async {
+    if (_isExportingPdf) return;
+
+    setState(() {
+      _isExportingPdf = true;
+    });
+
+    try {
+      final completer = Completer<String>();
+      context.read<AnalyticsBloc>().add(
+        ExportAnalyticsPdfEvent(completer: completer),
+      );
+      final path = await completer.future.timeout(const Duration(seconds: 20));
+
+      if (!mounted) return;
+
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(path)],
+          text: 'Relatorio Financeiro FinSync',
+          subject: 'Relatorio Financeiro',
+        ),
+      );
+    } on TimeoutException {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('A exportacao demorou demasiado. Tenta novamente.'),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Erro ao exportar PDF: $e')));
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isExportingPdf = false;
+        });
+      }
     }
   }
 
@@ -425,21 +471,13 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                     width: double.infinity,
                     height: 56,
                     child: OutlinedButton.icon(
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              "Exportação de PDF disponível brevemente.",
-                            ),
-                          ),
-                        );
-                      },
+                      onPressed: _isExportingPdf ? null : _exportPdf,
                       icon: Icon(
                         Icons.picture_as_pdf_rounded,
                         color: AppColors.textSecondary,
                       ),
                       label: Text(
-                        "Exportar PDF",
+                        _isExportingPdf ? "A exportar..." : "Exportar PDF",
                         style: TextStyle(
                           color: AppColors.textSecondary,
                           fontWeight: FontWeight.bold,

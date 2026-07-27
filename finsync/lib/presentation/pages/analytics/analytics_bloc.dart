@@ -1,5 +1,6 @@
 import 'package:finsync/domain/entities/calendar_event.dart';
 import 'package:finsync/domain/usecases/adjust_balance.dart';
+import 'package:finsync/domain/usecases/create_analytics_pdf.dart';
 import 'package:finsync/domain/usecases/delete_calendar_event.dart';
 import 'package:finsync/domain/usecases/get_all_calendar_events.dart';
 import 'package:finsync/domain/usecases/get_all_expenses.dart';
@@ -16,6 +17,7 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
   final GetAllCalendarEvents getAllCalendarEvents;
   final AdjustBalance adjustBalance;
   final DeleteCalendarEvent deleteCalendarEvent;
+  final CreateAnalyticsPdf createAnalyticsPdf;
 
   AnalyticsBloc(
     this.getAllExpenses,
@@ -23,10 +25,12 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
     this.getAllCalendarEvents,
     this.adjustBalance,
     this.deleteCalendarEvent,
+    this.createAnalyticsPdf,
   ) : super(AnalyticsInitialState()) {
     on<LoadAnalyticsEvent>(_onLoadAnalytics);
     on<AddEventCalendarEvent>(_addCalendarEvent);
     on<DeleteEventCalendarEvent>(_deleteCalendarEvent);
+    on<ExportAnalyticsPdfEvent>(_exportAnalyticsPdf);
   }
   Future<void> _onLoadAnalytics(
     LoadAnalyticsEvent event,
@@ -133,6 +137,18 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
     } catch (e) {
       event.completer?.completeError(e);
       emit(AnalyticsErrorState(e.toString()));
+    }
+  }
+
+  Future<void> _exportAnalyticsPdf(
+    ExportAnalyticsPdfEvent event,
+    Emitter<AnalyticsState> emit,
+  ) async {
+    try {
+      final path = await createAnalyticsPdf();
+      event.completer?.complete(path);
+    } catch (e) {
+      event.completer?.completeError(e);
     }
   }
 

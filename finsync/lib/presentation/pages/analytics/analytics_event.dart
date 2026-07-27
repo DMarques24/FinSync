@@ -19,3 +19,9 @@ class DeleteEventCalendarEvent extends AnalyticsEvent {
 
   DeleteEventCalendarEvent(this.event, {this.completer});
 }
+
+class ExportAnalyticsPdfEvent extends AnalyticsEvent {
+  final Completer<String>? completer;
+
+  ExportAnalyticsPdfEvent({this.completer});
+}
