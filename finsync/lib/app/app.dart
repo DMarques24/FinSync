@@ -16,6 +16,10 @@ import 'package:finsync/core/theme/theme_state.dart';
 import 'package:finsync/core/currency/currency_bloc.dart';
 import 'package:finsync/core/currency/currency_event.dart';
 import 'package:finsync/core/currency/currency_state.dart';
+import 'package:finsync/core/locale/locale_bloc.dart';
+import 'package:finsync/core/locale/locale_event.dart';
+import 'package:finsync/core/notifications/notification_prefs_bloc.dart';
+import 'package:finsync/core/notifications/notification_prefs_event.dart';
 import 'package:finsync/presentation/pages/home/home_bloc.dart';
 import 'package:finsync/presentation/pages/desire/desire_bloc.dart';
 
@@ -41,17 +45,19 @@ class App extends StatelessWidget {
         BlocProvider<CurrencyBloc>(
           create: (_) => sl<CurrencyBloc>()..add(LoadCurrencyEvent()),
         ),
+        BlocProvider<LocaleBloc>(
+          create: (_) => sl<LocaleBloc>()..add(LoadLocaleEvent()),
+        ),
+        BlocProvider<NotificationPrefsBloc>(
+          create: (_) =>
+              sl<NotificationPrefsBloc>()..add(LoadNotificationPrefsEvent()),
+        ),
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(
         builder: (context, themeState) {
           return BlocBuilder<CurrencyBloc, CurrencyState>(
             builder: (context, currencyState) {
               return MaterialApp.router(
-                // Muda a key sempre que o tema ou a moeda mudam para forçar
-                // um remount completo da árvore de widgets — assim os
-                // valores monetários espalhados pela app (que não são
-                // recalculados automaticamente) voltam a ler o símbolo
-                // atual em AppCurrency.
                 key: ValueKey('${themeState.mode}_${currencyState.type.code}'),
                 theme: AppTheme.lightTheme,
                 darkTheme: AppTheme.darkTheme,

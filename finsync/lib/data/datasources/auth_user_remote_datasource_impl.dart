@@ -30,4 +30,22 @@ class AuthUserRemoteDatasourceImpl implements AuthUserRemoteDatasource {
   Future<void> signOut() async {
     await supabase.auth.signOut();
   }
+
+  @override
+  Future<void> updatePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    final email = supabase.auth.currentUser?.email;
+    if (email == null) {
+      throw Exception('Sessão inválida. Faz login novamente.');
+    }
+
+    await supabase.auth.signInWithPassword(
+      email: email,
+      password: currentPassword,
+    );
+
+    await supabase.auth.updateUser(UserAttributes(password: newPassword));
+  }
 }

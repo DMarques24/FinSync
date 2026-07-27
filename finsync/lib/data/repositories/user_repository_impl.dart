@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:finsync/data/datasources/user_remote_datasource.dart';
 import 'package:finsync/data/models/user_model.dart';
 import 'package:finsync/domain/entities/user.dart';
@@ -27,5 +29,21 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<void> adjustBalance(double delta) async {
     await remoteDatasource.adjustBalance(delta);
+  }
+
+  @override
+  Future<void> updateProfile({
+    required String username,
+    String? avatarUrl,
+  }) async {
+    await remoteDatasource.updateProfile(
+      username: username,
+      avatarUrl: avatarUrl,
+    );
+  }
+
+  @override
+  Future<String> uploadAvatar(File file) async {
+    return await remoteDatasource.uploadAvatar(file);
   }
 }

@@ -24,4 +24,15 @@ class AuthUserRepositoryImpl implements AuthUserRepository {
   Future<void> signOut() async {
     await remoteDatasource.signOut();
   }
+
+  @override
+  Future<void> updatePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    await remoteDatasource.updatePassword(
+      currentPassword: currentPassword,
+      newPassword: newPassword,
+    );
+  }
 }

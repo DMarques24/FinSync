@@ -17,6 +17,8 @@ import 'package:finsync/presentation/pages/onboarding/onboarding_bloc.dart';
 import 'package:finsync/presentation/pages/profile/profile_bloc.dart';
 import 'package:finsync/core/theme/theme_bloc.dart';
 import 'package:finsync/core/currency/currency_bloc.dart';
+import 'package:finsync/core/locale/locale_bloc.dart';
+import 'package:finsync/core/notifications/notification_prefs_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:finsync/data/datasources/auth_user_remote_datasource.dart';
@@ -42,11 +44,14 @@ import 'package:finsync/domain/repositories/expense_repository.dart';
 import 'package:finsync/domain/repositories/pdf_repository.dart';
 import 'package:finsync/domain/repositories/user_repository.dart';
 
+import 'package:finsync/domain/usecases/change_password.dart';
 import 'package:finsync/domain/usecases/create_analytics_pdf.dart';
 import 'package:finsync/domain/usecases/get_all_desires.dart';
 import 'package:finsync/domain/usecases/get_all_expenses.dart';
 import 'package:finsync/domain/usecases/get_user.dart';
 import 'package:finsync/domain/usecases/insert_desire.dart';
+import 'package:finsync/domain/usecases/update_user_profile.dart';
+import 'package:finsync/domain/usecases/upload_avatar_image.dart';
 import 'package:finsync/domain/usecases/upload_desire_image.dart';
 import 'package:finsync/domain/usecases/insert_expense.dart';
 import 'package:finsync/domain/usecases/sign_in_user.dart';
@@ -130,6 +135,12 @@ Future<void> initDependencies() async {
 
   sl.registerLazySingleton<GetUser>(() => GetUser(sl()));
 
+  sl.registerLazySingleton<UpdateUserProfile>(() => UpdateUserProfile(sl()));
+
+  sl.registerLazySingleton<UploadAvatarImage>(() => UploadAvatarImage(sl()));
+
+  sl.registerLazySingleton<ChangePassword>(() => ChangePassword(sl()));
+
   sl.registerLazySingleton<CompleteOnboarding>(() => CompleteOnboarding(sl()));
 
   sl.registerLazySingleton<AdjustBalance>(() => AdjustBalance(sl()));
@@ -176,7 +187,13 @@ Future<void> initDependencies() async {
     () => CreateAcountBloc(sl<SignUpUser>(), sl<InsertUser>()),
   );
 
-  sl.registerFactory<ProfileBloc>(() => ProfileBloc(sl<GetUser>()));
+  sl.registerFactory<ProfileBloc>(
+    () => ProfileBloc(
+      sl<GetUser>(),
+      sl<UpdateUserProfile>(),
+      sl<UploadAvatarImage>(),
+    ),
+  );
 
   sl.registerFactory<OnboardingBloc>(
     () => OnboardingBloc(sl<CompleteOnboarding>()),
@@ -195,4 +212,6 @@ Future<void> initDependencies() async {
 
   sl.registerFactory<ThemeBloc>(() => ThemeBloc());
   sl.registerFactory<CurrencyBloc>(() => CurrencyBloc());
+  sl.registerFactory<LocaleBloc>(() => LocaleBloc());
+  sl.registerFactory<NotificationPrefsBloc>(() => NotificationPrefsBloc());
 }

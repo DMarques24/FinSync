@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:finsync/data/datasources/user_remote_datasource.dart';
 import 'package:finsync/data/models/user_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UserRemoteDatasourceImpl implements UserRemoteDatasource {
   final supabase = Supabase.instance.client;
+
+  static const _avatarBucket = 'avatars';
 
   @override
   Future<List<UserModel>> getUser() async {
@@ -35,5 +39,37 @@ class UserRemoteDatasourceImpl implements UserRemoteDatasource {
   @override
   Future<void> adjustBalance(double delta) async {
     await supabase.rpc('adjust_profile_balance', params: {'p_delta': delta});
+  }
+
+  @override
+  Future<void> updateProfile({
+    required String username,
+    String? avatarUrl,
+  }) async {
+    final userId = supabase.auth.currentUser!.id;
+
+    final updates = <String, dynamic>{'username': username};
+    if (avatarUrl != null) {
+      updates['avatar_url'] = avatarUrl;
+    }
+
+    await supabase.from('profiles').update(updates).eq('user_id', userId);
+  }
+
+  @override
+  Future<String> uploadAvatar(File file) async {
+    final userId = supabase.auth.currentUser!.id;
+
+    final extension = file.path.contains('.')
+        ? file.path.split('.').last
+        : 'jpg';
+    final path = '$userId/avatar.$extension';
+
+    await supabase.storage
+        .from(_avatarBucket)
+        .upload(path, file, fileOptions: const FileOptions(upsert: true));
+
+    final publicUrl = supabase.storage.from(_avatarBucket).getPublicUrl(path);
+    return '$publicUrl?updated=${DateTime.now().millisecondsSinceEpoch}';
   }
 }

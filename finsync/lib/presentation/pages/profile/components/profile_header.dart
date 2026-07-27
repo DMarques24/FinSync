@@ -5,24 +5,30 @@ import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/presentation/pages/profile/components/profile_stat_card.dart';
 
 class ProfileHeader extends StatelessWidget {
-  final String imagePath;
+  final String? avatarUrl;
   final String name;
   final String userName;
   final String balance;
   final String expensesCount;
   final String desiresCount;
   final String savedAmount;
+  final VoidCallback? onEditAvatar;
 
   const ProfileHeader({
     super.key,
-    required this.imagePath,
+    this.avatarUrl,
     required this.name,
     required this.userName,
     this.balance = '',
     this.expensesCount = '0',
     this.desiresCount = '0',
     this.savedAmount = '0',
+    this.onEditAvatar,
   });
+
+  bool get _hasRemoteAvatar =>
+      avatarUrl != null &&
+      (avatarUrl!.startsWith('http://') || avatarUrl!.startsWith('https://'));
 
   @override
   Widget build(BuildContext context) {
@@ -51,54 +57,50 @@ class ProfileHeader extends StatelessWidget {
 
       child: Column(
         children: [
-          Stack(
-            children: [
-              CircleAvatar(
-                radius: 48,
-                backgroundColor: Colors.white,
+          GestureDetector(
+            onTap: onEditAvatar,
+            child: Stack(
+              children: [
+                CircleAvatar(
+                  radius: 48,
+                  backgroundColor: Colors.white,
+                  child: ClipOval(
+                    child: _hasRemoteAvatar
+                        ? Image.network(
+                            avatarUrl!,
+                            width: 88,
+                            height: 88,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                _buildInitials(),
+                          )
+                        : _buildInitials(),
+                  ),
+                ),
 
-                child: ClipOval(
-                  child: Image.asset(
-                    imagePath,
-                    width: 88,
-                    height: 88,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      width: 88,
-                      height: 88,
-                      alignment: Alignment.center,
-                      color: AppColors.secondary.withValues(alpha: .12),
-                      child: Text(
-                        _initials(name),
-                        style: TextStyle(
-                          color: AppColors.secondary,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 28,
-                        ),
-                      ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: Container(
+                    padding: const EdgeInsets.all(7),
+
+                    decoration: BoxDecoration(
+                      color: AppColors.secondary,
+
+                      shape: BoxShape.circle,
+
+                      border: Border.all(color: Colors.white, width: 2),
+                    ),
+
+                    child: const Icon(
+                      Icons.edit,
+                      size: 16,
+                      color: Colors.white,
                     ),
                   ),
                 ),
-              ),
-
-              Positioned(
-                bottom: 0,
-                right: 0,
-                child: Container(
-                  padding: const EdgeInsets.all(7),
-
-                  decoration: BoxDecoration(
-                    color: AppColors.secondary,
-
-                    shape: BoxShape.circle,
-
-                    border: Border.all(color: Colors.white, width: 2),
-                  ),
-
-                  child: const Icon(Icons.edit, size: 16, color: Colors.white),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
 
           const SizedBox(height: 18),
@@ -147,6 +149,23 @@ class ProfileHeader extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildInitials() {
+    return Container(
+      width: 88,
+      height: 88,
+      alignment: Alignment.center,
+      color: AppColors.secondary.withValues(alpha: .12),
+      child: Text(
+        _initials(name),
+        style: TextStyle(
+          color: AppColors.secondary,
+          fontWeight: FontWeight.bold,
+          fontSize: 28,
+        ),
       ),
     );
   }

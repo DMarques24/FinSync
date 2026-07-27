@@ -14,6 +14,11 @@ import 'package:finsync/presentation/pages/desire/desire_event.dart';
 import 'package:finsync/presentation/pages/desire/desire_state.dart';
 import 'package:finsync/presentation/pages/home/home_bloc.dart';
 import 'package:finsync/presentation/pages/home/home_state.dart';
+import 'package:finsync/presentation/pages/profile/components/change_password_sheet.dart';
+import 'package:finsync/presentation/pages/profile/components/edit_profile_form.dart';
+import 'package:finsync/presentation/pages/profile/components/help_sheet.dart';
+import 'package:finsync/presentation/pages/profile/components/language_picker_sheet.dart';
+import 'package:finsync/presentation/pages/profile/components/notifications_sheet.dart';
 import 'package:finsync/presentation/pages/profile/components/settings_button.dart';
 import 'package:finsync/presentation/pages/profile/components/profile_header.dart';
 import 'package:finsync/presentation/pages/profile/components/theme_picker_sheet.dart';
@@ -37,8 +42,6 @@ class _ProfilePageState extends State<ProfilePage> {
     super.initState();
     context.read<ProfileBloc>().add(LoadProfileEvent());
 
-    // Garante que as estatísticas do cabeçalho (desejos/poupado) aparecem
-    // mesmo que o utilizador ainda não tenha visitado o separador Goals.
     final desireState = context.read<DesireBloc>().state;
     if (desireState is! DesireLoadedState) {
       context.read<DesireBloc>().add(GetAllDesiresEvent());
@@ -70,6 +73,18 @@ class _ProfilePageState extends State<ProfilePage> {
     if (confirmed == true) {
       await _logout();
     }
+  }
+
+  Future<void> _openSheet(Widget child, {bool isScrollControlled = true}) {
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: isScrollControlled,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      builder: (_) => child,
+    );
   }
 
   Future<void> _logout() async {
@@ -105,11 +120,13 @@ class _ProfilePageState extends State<ProfilePage> {
             String displayName = '';
             String displayEmail = '';
             String displayBalance = '';
+            String? avatarUrl;
 
             if (state is ProfileLoadedState) {
               displayName = state.user.username;
               displayEmail = state.email;
               displayBalance = AppCurrency.format(state.user.balance);
+              avatarUrl = state.user.avatarUrl;
             }
 
             final homeState = context.watch<HomeBloc>().state;
@@ -172,13 +189,19 @@ class _ProfilePageState extends State<ProfilePage> {
                     )
                   else
                     ProfileHeader(
-                      imagePath: "assets/images/person.jpeg",
+                      avatarUrl: avatarUrl,
                       name: displayName,
                       userName: displayEmail,
                       balance: displayBalance,
                       expensesCount: expensesCount,
                       desiresCount: desiresCount,
                       savedAmount: savedAmount,
+                      onEditAvatar: () => _openSheet(
+                        EditProfileForm(
+                          currentUsername: displayName,
+                          currentAvatarUrl: avatarUrl,
+                        ),
+                      ),
                     ),
 
                   const SizedBox(height: 30),
@@ -202,66 +225,58 @@ class _ProfilePageState extends State<ProfilePage> {
                         SettingsButton(
                           icon: Icons.person_outline_rounded,
                           name: "Editar Perfil",
+                          onTap: () => _openSheet(
+                            EditProfileForm(
+                              currentUsername: displayName,
+                              currentAvatarUrl: avatarUrl,
+                            ),
+                          ),
                         ),
                         const Divider(height: 1),
 
                         SettingsButton(
                           icon: Icons.notifications_outlined,
                           name: "Notificações",
+                          onTap: () => _openSheet(const NotificationsSheet()),
                         ),
                         const Divider(height: 1),
 
                         SettingsButton(
                           icon: Icons.lock_outline_rounded,
                           name: "Segurança",
+                          onTap: () =>
+                              _openSheet(const ChangePasswordSheet()),
                         ),
                         const Divider(height: 1),
 
                         SettingsButton(
                           icon: Icons.dark_mode_outlined,
                           name: "Tema",
-                          onTap: () {
-                            showModalBottomSheet(
-                              context: context,
-                              backgroundColor: AppColors.surface,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(28),
-                                ),
-                              ),
-                              builder: (_) => const ThemePickerSheet(),
-                            );
-                          },
+                          onTap: () =>
+                              _openSheet(const ThemePickerSheet(), isScrollControlled: false),
                         ),
                         const Divider(height: 1),
 
                         SettingsButton(
                           icon: Icons.attach_money_rounded,
                           name: "Moeda",
-                          onTap: () {
-                            showModalBottomSheet(
-                              context: context,
-                              backgroundColor: AppColors.surface,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(28),
-                                ),
-                              ),
-                              builder: (_) => const CurrencyPickerSheet(),
-                            );
-                          },
+                          onTap: () =>
+                              _openSheet(const CurrencyPickerSheet()),
                         ),
                         const Divider(height: 1),
 
                         SettingsButton(
                           icon: Icons.language_outlined,
                           name: "Idioma",
+                          onTap: () =>
+                              _openSheet(const LanguagePickerSheet(), isScrollControlled: false),
                         ),
                         const Divider(height: 1),
 
                         SettingsButton(
                           icon: Icons.help_outline_rounded,
                           name: "Ajuda",
+                          onTap: () => _openSheet(const HelpSheet()),
                         ),
                       ],
                     ),

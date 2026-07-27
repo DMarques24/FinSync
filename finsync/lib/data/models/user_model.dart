@@ -4,11 +4,13 @@ class UserModel {
   final String username;
   final double balance;
   final bool isFirstLogin;
+  final String? avatarUrl;
 
   UserModel({
     required this.username,
     required this.balance,
     this.isFirstLogin = true,
+    this.avatarUrl,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -16,11 +18,17 @@ class UserModel {
       username: json['username'] as String? ?? '',
       balance: (json['balance'] as num?)?.toDouble() ?? 0.0,
       isFirstLogin: json['isFirstLogin'] as bool? ?? false,
+      avatarUrl: json['avatar_url'] as String?,
     );
   }
 
   Map<String, dynamic> toJson(String userId) {
-    return {'username': username, 'balance': balance, 'user_id': userId};
+    return {
+      'username': username,
+      'balance': balance,
+      'user_id': userId,
+      'avatar_url': avatarUrl,
+    };
   }
 
   User toEntity() {
@@ -28,6 +36,7 @@ class UserModel {
       username: username,
       balance: balance,
       isFirstLogin: isFirstLogin,
+      avatarUrl: avatarUrl,
     );
   }
 }
