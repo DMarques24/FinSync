@@ -129,10 +129,4 @@ class PdfRemoteDatasourceImpl implements PdfRemoteDatasource {
     if (value is num) return value.toDouble();
     return double.tryParse(value?.toString() ?? '') ?? 0;
   }
-
-  @override
-  Future<PdfAnalyticsPayload> getDataPayload() {
-    // TODO: implement getDataPayload
-    throw UnimplementedError();
-  }
 }

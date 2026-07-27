@@ -6,6 +6,4 @@ abstract class PdfRemoteDatasource {
     int upcomingEventsLimit = 10,
     String appName = 'FinSync',
   });
-
-  Future<PdfAnalyticsPayload> getDataPayload();
 }

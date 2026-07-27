@@ -3,22 +3,23 @@ import 'dart:async';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/domain/entities/calendar_event.dart';
-import 'package:finsync/domain/entities/expense.dart';
 import 'package:finsync/presentation/pages/analytics/analytics_bloc.dart';
 import 'package:finsync/presentation/pages/analytics/analytics_event.dart';
 import 'package:finsync/presentation/pages/analytics/analytics_state.dart';
 import 'package:finsync/presentation/pages/analytics/components/add_event_calendar.dart';
+import 'package:finsync/presentation/pages/analytics/components/category_pie_chart.dart';
+import 'package:finsync/presentation/pages/analytics/components/category_visuals.dart';
 import 'package:finsync/presentation/pages/analytics/components/empty_state.dart';
 import 'package:finsync/presentation/pages/analytics/components/error_card.dart';
 import 'package:finsync/presentation/pages/analytics/components/event_tile.dart';
+import 'package:finsync/presentation/pages/analytics/components/pdf_export_result_sheet.dart';
 import 'package:finsync/presentation/pages/analytics/components/section_card.dart';
+import 'package:finsync/presentation/pages/analytics/components/top_category_card.dart';
 import 'package:finsync/presentation/pages/profile/profile_bloc.dart';
 import 'package:finsync/presentation/pages/profile/profile_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sankey_flutter/sankey_helpers.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 const _months = [
@@ -111,12 +112,13 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
 
       if (!mounted) return;
 
-      await SharePlus.instance.share(
-        ShareParams(
-          files: [XFile(path)],
-          text: 'Relatorio Financeiro FinSync',
-          subject: 'Relatorio Financeiro',
+      await showModalBottomSheet(
+        context: context,
+        backgroundColor: AppColors.surface,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
         ),
+        builder: (_) => PdfExportResultSheet(filePath: path),
       );
     } on TimeoutException {
       if (!mounted) return;
@@ -169,6 +171,11 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                 : loaded.event
                       .where((event) => isSameDay(event.date, _selectedDay))
                       .toList();
+            final categorySlices = buildCategorySlices(loaded.expenses);
+            final categoryTotal = categorySlices.fold<double>(
+              0,
+              (sum, slice) => sum + slice.total,
+            );
 
             return SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 40),
@@ -428,42 +435,25 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                   const SizedBox(height: 24),
 
                   SectionCard(
-                    icon: Icons.account_tree_rounded,
+                    icon: Icons.donut_large_rounded,
                     title: "Despesas por categoria",
-                    child: loaded.expenses.isEmpty
+                    child: categorySlices.isEmpty
                         ? const EmptyState(
                             icon: Icons.pie_chart_outline_rounded,
                             message: "Ainda não existem despesas para mostrar.",
                           )
-                        : SfCircularChart(
-                            legend: Legend(
-                              isVisible: true,
-                              overflowMode: LegendItemOverflowMode.wrap,
-                            ),
-                            tooltipBehavior: TooltipBehavior(enable: true),
-                            series: <CircularSeries>[
-                              PieSeries<Expense, String>(
-                                dataSource: loaded.expenses,
-                                xValueMapper: (data, _) => data.category,
-                                yValueMapper: (data, _) => data.price,
-                                dataLabelMapper: (data, _) => data.category,
-                                dataLabelSettings: const DataLabelSettings(
-                                  isVisible: true,
-                                ),
-                              ),
-                            ],
+                        : CategoryPieChart(
+                            slices: categorySlices,
+                            total: categoryTotal,
                           ),
                   ),
 
                   const SizedBox(height: 24),
 
                   SectionCard(
-                    icon: Icons.trending_up,
+                    icon: Icons.trending_up_rounded,
                     title: "Categoria com maior gasto",
-                    child: Text(
-                      loaded.topExpenseCategory,
-                      style: AppTextStyles.bodyLarge,
-                    ),
+                    child: TopCategoryCard(slices: categorySlices),
                   ),
 
                   const SizedBox(height: 24),
@@ -472,19 +462,30 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                     height: 56,
                     child: OutlinedButton.icon(
                       onPressed: _isExportingPdf ? null : _exportPdf,
-                      icon: Icon(
-                        Icons.picture_as_pdf_rounded,
-                        color: AppColors.textSecondary,
-                      ),
+                      icon: _isExportingPdf
+                          ? SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: AppColors.error,
+                              ),
+                            )
+                          : Icon(
+                              Icons.picture_as_pdf_rounded,
+                              color: AppColors.error,
+                            ),
                       label: Text(
-                        _isExportingPdf ? "A exportar..." : "Exportar PDF",
+                        _isExportingPdf
+                            ? "A gerar relatório..."
+                            : "Exportar relatório em PDF",
                         style: TextStyle(
-                          color: AppColors.textSecondary,
+                          color: AppColors.error,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: AppColors.border),
+                        side: BorderSide(color: AppColors.error),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18),
                         ),
