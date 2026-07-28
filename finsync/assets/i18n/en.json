@@ -21,22 +21,35 @@
     "month_12": "December"
   },
   "onboarding": {
-    "welcome_title": "Welcome to FinSync 👋",
-    "welcome_subtitle": "Your new app to organize your finances, track expenses and reach your goals with more clarity.",
-    "how_it_works_title": "How it works 🚀",
-    "how_it_works_subtitle": "Everything you need is just a tap away.",
-    "feature_home_title": "Home",
-    "feature_home_desc": "Log and track your day-to-day expenses.",
+    "skip": "Skip",
+    "step_of": "Step {current} of {total}",
+
+    "welcome_badge": "Welcome",
+    "welcome_title": "Your money, finally clear",
+    "welcome_subtitle": "FinSync brings what you spend, what you earn and what you're saving for into one place. No spreadsheets, no mental maths.",
+    "welcome_point_1_title": "Takes under a minute",
+    "welcome_point_1_desc": "Three quick steps and you're up and running.",
+    "welcome_point_2_title": "Your data stays yours",
+    "welcome_point_2_desc": "It lives in your account and you can delete it whenever you want.",
+
+    "how_it_works_badge": "How it works",
+    "how_it_works_title": "Three tabs, that's it",
+    "how_it_works_subtitle": "Everything you need to know where your money is.",
+    "feature_home_title": "Expenses",
+    "feature_home_desc": "Log a spend in seconds and watch your balance update right away.",
     "feature_goals_title": "Goals",
-    "feature_goals_desc": "Set savings goals and watch your progress.",
+    "feature_goals_desc": "Set what you want to buy and track how much is left to save.",
     "feature_profile_title": "Profile",
-    "feature_profile_desc": "Check your balance and manage your account.",
-    "balance_title": "What's your current balance? 💰",
-    "balance_subtitle": "We'll use this value as a starting point to track your finances.",
+    "feature_profile_desc": "Change your language and currency, and import your bank statement.",
+
+    "balance_badge": "Last step",
+    "balance_title": "How much do you have right now?",
+    "balance_subtitle": "This is the starting point for your balance. You can change it later in your profile, so a rough number is fine.",
     "balance_label": "Current balance ({symbol})",
-    "invalid_balance": "Enter a valid balance.",
-    "next": "Next",
-    "finish": "Finish"
+    "balance_hint": "Not sure yet? Enter 0 and adjust it later.",
+    "invalid_balance": "Enter a value of 0 or more.",
+    "next": "Continue",
+    "finish": "Get started"
   },
   "login": {
     "title": "Welcome back 👋",

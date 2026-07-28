@@ -1,7 +1,7 @@
 import 'package:finsync/core/i18n/app_translations.dart';
-import 'package:finsync/core/theme/colors.dart';
-import 'package:finsync/core/theme/text_styles.dart';
-import 'package:finsync/presentation/pages/onboarding/components/feature_row.dart';
+import 'package:finsync/core/theme/dimensions.dart';
+import 'package:finsync/presentation/pages/onboarding/components/feature_card.dart';
+import 'package:finsync/presentation/pages/onboarding/components/step_header.dart';
 import 'package:flutter/material.dart';
 
 class FeaturesStep extends StatelessWidget {
@@ -10,40 +10,41 @@ class FeaturesStep extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(24, 40, 24, 20),
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.xxl,
+        AppSpacing.xxl,
+        AppSpacing.xxl,
+        AppSpacing.xl,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(tr('onboarding.how_it_works_title'), style: AppTextStyles.headingLarge),
-
-          const SizedBox(height: 8),
-
-          Text(
-            tr('onboarding.how_it_works_subtitle'),
-            style: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.textSecondary,
-            ),
+          StepHeader(
+            badge: tr('onboarding.how_it_works_badge'),
+            title: tr('onboarding.how_it_works_title'),
+            subtitle: tr('onboarding.how_it_works_subtitle'),
           ),
 
-          const SizedBox(height: 32),
+          const SizedBox(height: AppSpacing.xxxl),
 
-          FeatureRow(
-            icon: Icons.home_rounded,
+          
+          FeatureCard(
+            icon: Icons.receipt_long_rounded,
             title: tr('onboarding.feature_home_title'),
             description: tr('onboarding.feature_home_desc'),
           ),
 
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSpacing.md),
 
-          FeatureRow(
-            icon: Icons.favorite_rounded,
+          FeatureCard(
+            icon: Icons.flag_rounded,
             title: tr('onboarding.feature_goals_title'),
             description: tr('onboarding.feature_goals_desc'),
           ),
 
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSpacing.md),
 
-          FeatureRow(
+          FeatureCard(
             icon: Icons.person_rounded,
             title: tr('onboarding.feature_profile_title'),
             description: tr('onboarding.feature_profile_desc'),
