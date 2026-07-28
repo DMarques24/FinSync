@@ -1,4 +1,4 @@
-import 'package:finsync/core/errors/auth_error_translator.dart';
+import 'package:finsync/core/errors/app_error_translator.dart';
 import 'package:finsync/domain/entities/auth_user.dart';
 import 'package:finsync/domain/entities/user.dart';
 import 'package:finsync/domain/usecases/insert_user.dart';
@@ -30,7 +30,7 @@ class CreateAccountBloc extends Bloc<CreateAccountEvent, CreateAccountState> {
       await insertUser(User(username: event.username, balance: 0), userId);
       emit(CreateAccountLoadedState());
     } catch (e) {
-      emit(CreateAccountErrorState(AuthErrorTranslator.translate(e)));
+      emit(CreateAccountErrorState(AppErrorTranslator.translate(e)));
     }
   }
 }

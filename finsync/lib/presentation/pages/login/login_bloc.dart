@@ -1,4 +1,4 @@
-import 'package:finsync/core/errors/auth_error_translator.dart';
+import 'package:finsync/core/errors/app_error_translator.dart';
 import 'package:finsync/domain/entities/auth_user.dart';
 import 'package:finsync/domain/usecases/get_user.dart';
 import 'package:finsync/domain/usecases/sign_in_user.dart';
@@ -27,7 +27,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       final isFirstLogin = users.isNotEmpty ? users.first.isFirstLogin : false;
       emit(LoginLoadedState(isFirstLogin: isFirstLogin));
     } catch (e) {
-      emit(LoginErrorState(AuthErrorTranslator.translate(e)));
+      // Igual ao registo: depois de autenticar, este fluxo lê o perfil da
+      // base de dados, por isso pode falhar com erros que não são de auth.
+      emit(LoginErrorState(AppErrorTranslator.translate(e)));
     }
   }
 }
