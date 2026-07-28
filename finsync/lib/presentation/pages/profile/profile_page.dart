@@ -18,6 +18,7 @@ import 'package:finsync/presentation/pages/home/home_state.dart';
 import 'package:finsync/presentation/pages/profile/components/change_password_sheet.dart';
 import 'package:finsync/presentation/pages/profile/components/edit_profile_form.dart';
 import 'package:finsync/presentation/pages/profile/components/help_sheet.dart';
+import 'package:finsync/presentation/pages/profile/components/import_statement_sheet.dart';
 import 'package:finsync/presentation/pages/profile/components/language_picker_sheet.dart';
 import 'package:finsync/presentation/pages/profile/components/notifications_sheet.dart';
 import 'package:finsync/presentation/pages/profile/components/settings_button.dart';
@@ -232,6 +233,15 @@ class _ProfilePageState extends State<ProfilePage> {
                               currentAvatarUrl: avatarUrl,
                             ),
                           ),
+                        ),
+                        const Divider(height: 1),
+
+                        SettingsButton(
+                          icon: Icons.receipt_long_rounded,
+                          name: tr('profile.import_statement'),
+                          subtitle: tr('profile.import_statement_subtitle'),
+                          onTap: () =>
+                              _openSheet(const ImportStatementSheet()),
                         ),
                         const Divider(height: 1),
 

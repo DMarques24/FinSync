@@ -29,6 +29,8 @@ import 'package:finsync/data/datasources/expense_remote_datasource.dart';
 import 'package:finsync/data/datasources/expense_remote_datasource_impl.dart';
 import 'package:finsync/data/datasources/pdf_remote_datasource.dart';
 import 'package:finsync/data/datasources/pdf_remote_datasource_impl.dart';
+import 'package:finsync/data/datasources/statement_file_datasource.dart';
+import 'package:finsync/data/datasources/statement_file_datasource_impl.dart';
 import 'package:finsync/data/datasources/user_remote_datasource.dart';
 import 'package:finsync/data/datasources/user_remote_datasource_impl.dart';
 
@@ -36,12 +38,14 @@ import 'package:finsync/data/repositories/auth_user_repository_impl.dart';
 import 'package:finsync/data/repositories/desire_repository_impl.dart';
 import 'package:finsync/data/repositories/expense_repository_impl.dart';
 import 'package:finsync/data/repositories/pdf_repository_impl.dart';
+import 'package:finsync/data/repositories/statement_repository_impl.dart';
 import 'package:finsync/data/repositories/user_repository_impl.dart';
 
 import 'package:finsync/domain/repositories/auth_user_repository.dart';
 import 'package:finsync/domain/repositories/desire_repository.dart';
 import 'package:finsync/domain/repositories/expense_repository.dart';
 import 'package:finsync/domain/repositories/pdf_repository.dart';
+import 'package:finsync/domain/repositories/statement_repository.dart';
 import 'package:finsync/domain/repositories/user_repository.dart';
 
 import 'package:finsync/domain/usecases/change_password.dart';
@@ -49,7 +53,9 @@ import 'package:finsync/domain/usecases/create_analytics_pdf.dart';
 import 'package:finsync/domain/usecases/get_all_desires.dart';
 import 'package:finsync/domain/usecases/get_all_expenses.dart';
 import 'package:finsync/domain/usecases/get_user.dart';
+import 'package:finsync/domain/usecases/import_parsed_transactions.dart';
 import 'package:finsync/domain/usecases/insert_desire.dart';
+import 'package:finsync/domain/usecases/parse_bank_statement.dart';
 import 'package:finsync/domain/usecases/update_user_profile.dart';
 import 'package:finsync/domain/usecases/upload_avatar_image.dart';
 import 'package:finsync/domain/usecases/upload_desire_image.dart';
@@ -60,6 +66,7 @@ import 'package:finsync/domain/usecases/sign_up_user.dart';
 
 import 'package:finsync/presentation/pages/desire/desire_bloc.dart';
 import 'package:finsync/presentation/pages/home/home_bloc.dart';
+import 'package:finsync/presentation/pages/statement/statement_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -89,6 +96,10 @@ Future<void> initDependencies() async {
     () => CalendarEventsRemoteDatasourceImpl(),
   );
 
+  sl.registerLazySingleton<StatementFileDatasource>(
+    () => StatementFileDatasourceImpl(),
+  );
+
   // REPOSITORIES
   sl.registerLazySingleton<AuthUserRepository>(
     () => AuthUserRepositoryImpl(sl()),
@@ -106,6 +117,10 @@ Future<void> initDependencies() async {
 
   sl.registerLazySingleton<CalendarEventRepository>(
     () => CalendarEventsRepositoryImpl(sl()),
+  );
+
+  sl.registerLazySingleton<StatementRepository>(
+    () => StatementRepositoryImpl(sl()),
   );
 
   // USE CASES
@@ -161,6 +176,12 @@ Future<void> initDependencies() async {
     () => GetTopExpenseCategory(sl()),
   );
 
+  sl.registerLazySingleton<ParseBankStatement>(() => ParseBankStatement(sl()));
+
+  sl.registerLazySingleton<ImportParsedTransactions>(
+    () => ImportParsedTransactions(sl()),
+  );
+
   // BLOCS
   sl.registerFactory<HomeBloc>(
     () => HomeBloc(
@@ -208,6 +229,11 @@ Future<void> initDependencies() async {
       sl<DeleteCalendarEvent>(),
       sl<CreateAnalyticsPdf>(),
     ),
+  );
+
+  sl.registerFactory<StatementBloc>(
+    () =>
+        StatementBloc(sl<ParseBankStatement>(), sl<ImportParsedTransactions>()),
   );
 
   sl.registerFactory<ThemeBloc>(() => ThemeBloc());

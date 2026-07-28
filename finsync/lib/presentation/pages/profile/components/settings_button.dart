@@ -6,12 +6,14 @@ import 'package:finsync/core/theme/text_styles.dart';
 class SettingsButton extends StatelessWidget {
   final IconData icon;
   final String name;
+  final String? subtitle;
   final VoidCallback? onTap;
 
   const SettingsButton({
     super.key,
     required this.icon,
     required this.name,
+    this.subtitle,
     this.onTap,
   });
 
@@ -41,11 +43,26 @@ class SettingsButton extends StatelessWidget {
               const SizedBox(width: 18),
 
               Expanded(
-                child: Text(
-                  name,
-                  style: AppTextStyles.bodyLarge.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: AppTextStyles.bodyLarge.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    if (subtitle != null) ...[
+                      const SizedBox(height: 3),
+                      Text(
+                        subtitle!,
+                        style: AppTextStyles.bodySmall.copyWith(
+                          color: AppColors.textSecondary,
+                          fontSize: 12.5,
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               ),
 
