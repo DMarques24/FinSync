@@ -1,3 +1,5 @@
+import 'package:finsync/data/datasources/expense_remote_datasource.dart'
+    show kAnalyticsExpensesLimit;
 import 'package:finsync/domain/entities/calendar_event.dart';
 import 'package:finsync/domain/usecases/adjust_balance.dart';
 import 'package:finsync/domain/usecases/create_analytics_pdf.dart';
@@ -39,7 +41,7 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
     emit(AnalyticsLoadingState());
 
     try {
-      final expenses = await getAllExpenses();
+      final expenses = await getAllExpenses(limit: kAnalyticsExpensesLimit);
       final calendarEvents = await getAllCalendarEvents();
 
       final nodesById = <String, SankeyNode>{};
@@ -83,7 +85,7 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
           expenses: expenses,
           nodes: nodesById.values.toList(),
           links: links,
-          event: calendarEvents,
+          events: calendarEvents,
           topExpenseCategory: topExpenseCategory,
         ),
       );

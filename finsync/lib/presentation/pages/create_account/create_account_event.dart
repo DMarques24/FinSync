@@ -1,11 +1,11 @@
-abstract class CreateAcountEvent {}
+abstract class CreateAccountEvent {}
 
-class CreateAcountSubmitEvent extends CreateAcountEvent {
+class CreateAccountSubmitEvent extends CreateAccountEvent {
   final String username;
   final String email;
   final String password;
 
-  CreateAcountSubmitEvent({
+  CreateAccountSubmitEvent({
     required this.username,
     required this.email,
     required this.password,

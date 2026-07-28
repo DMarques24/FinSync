@@ -1,3 +1,4 @@
+import 'package:finsync/core/errors/app_error_translator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:finsync/domain/usecases/get_user.dart';
 import 'package:finsync/domain/usecases/update_user_profile.dart';
@@ -31,7 +32,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         emit(ProfileErrorState('Perfil não encontrado.'));
       }
     } catch (e) {
-      emit(ProfileErrorState(e.toString()));
+      emit(ProfileErrorState(AppErrorTranslator.translate(e)));
     }
   }
 

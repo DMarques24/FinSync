@@ -1,5 +1,7 @@
 import 'package:finsync/core/currency/app_currency.dart';
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
+import 'package:finsync/core/theme/dimensions.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/domain/entities/calendar_event.dart';
 import 'package:flutter/material.dart';
@@ -65,9 +67,17 @@ class EventTile extends StatelessWidget {
           ),
 
           if (onDelete != null)
+            // `tooltip` serve de rótulo para leitores de ecrã (senão o
+            // botão é anunciado apenas como "botão"), e as constraints
+            // garantem os 48px mínimos de área de toque mesmo com o
+            // ícone a 20px.
             IconButton(
               onPressed: onDelete,
-              splashRadius: 20,
+              tooltip: tr('analytics.remove'),
+              constraints: const BoxConstraints(
+                minWidth: AppSizes.minTouchTarget,
+                minHeight: AppSizes.minTouchTarget,
+              ),
               icon: Icon(
                 Icons.delete_outline_rounded,
                 color: AppColors.textSecondary,

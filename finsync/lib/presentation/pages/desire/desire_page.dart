@@ -140,7 +140,7 @@ class _DesirePageState extends State<DesirePage> {
                 const SizedBox(height: 18),
 
                 if (state is DesireLoadedState)
-                  DesiresList(desires: state.desire),
+                  DesiresList(desires: state.desires),
               ],
             ),
             ),

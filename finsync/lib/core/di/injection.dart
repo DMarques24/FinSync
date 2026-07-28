@@ -11,7 +11,7 @@ import 'package:finsync/domain/usecases/get_top_expense_category.dart';
 import 'package:finsync/domain/usecases/insert_calendar_event.dart';
 import 'package:finsync/domain/usecases/insert_user.dart';
 import 'package:finsync/presentation/pages/analytics/analytics_bloc.dart';
-import 'package:finsync/presentation/pages/createAcount/create_acount_bloc.dart';
+import 'package:finsync/presentation/pages/create_account/create_account_bloc.dart';
 import 'package:finsync/presentation/pages/login/login_bloc.dart';
 import 'package:finsync/presentation/pages/onboarding/onboarding_bloc.dart';
 import 'package:finsync/presentation/pages/profile/profile_bloc.dart';
@@ -204,8 +204,8 @@ Future<void> initDependencies() async {
     () => LoginBloc(sl<SignInUser>(), sl<GetUser>()),
   );
 
-  sl.registerFactory<CreateAcountBloc>(
-    () => CreateAcountBloc(sl<SignUpUser>(), sl<InsertUser>()),
+  sl.registerFactory<CreateAccountBloc>(
+    () => CreateAccountBloc(sl<SignUpUser>(), sl<InsertUser>()),
   );
 
   sl.registerFactory<ProfileBloc>(

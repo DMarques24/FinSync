@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:finsync/core/errors/app_error_translator.dart';
 import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
@@ -75,11 +76,56 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
 
       if (!mounted) return;
       context.read<ProfileBloc>().add(LoadProfileEvent());
+
+      // Dá hipótese de recuperar sem ter de reintroduzir tudo à mão.
+      // O evento é recriado com os mesmos dados (o id é novo, porque o
+      // original já foi apagado na base de dados).
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(tr('analytics.event_removed', {'name': event.name})),
+          duration: const Duration(seconds: 6),
+          action: SnackBarAction(
+            label: tr('common.undo'),
+            onPressed: () => _restoreEvent(event),
+          ),
+        ),
+      );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(e.toString())));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppErrorTranslator.translate(e))),
+      );
+    }
+  }
+
+  Future<void> _restoreEvent(CalendarEventEntity event) async {
+    try {
+      final completer = Completer<void>();
+      context.read<AnalyticsBloc>().add(
+        AddEventCalendarEvent(
+          CalendarEventEntity(
+            id: 0,
+            name: event.name,
+            price: event.price,
+            date: event.date,
+            type: event.type,
+            // Não repetimos ao restaurar: criaria um segundo evento no mês
+            // seguinte que o utilizador nunca pediu.
+            repeatMonthly: false,
+          ),
+          completer: completer,
+        ),
+      );
+
+      await completer.future.timeout(const Duration(seconds: 12));
+
+      if (!mounted) return;
+      context.read<ProfileBloc>().add(LoadProfileEvent());
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppErrorTranslator.translate(e))),
+      );
     }
   }
 
@@ -153,7 +199,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
             final loaded = state as AnalyticsLoadedState;
             final dayEvents = _selectedDay == null
                 ? const <CalendarEventEntity>[]
-                : loaded.event
+                : loaded.events
                       .where((event) => isSameDay(event.date, _selectedDay))
                       .toList();
             final categorySlices = buildCategorySlices(loaded.expenses);
@@ -214,7 +260,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                           },
 
                           eventLoader: (day) {
-                            return loaded.event
+                            return loaded.events
                                 .where((event) => isSameDay(event.date, day))
                                 .toList();
                           },

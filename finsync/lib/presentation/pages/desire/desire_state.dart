@@ -1,4 +1,4 @@
-import 'package:finsync/domain/entities/desire.dart' as desire_entity;
+import 'package:finsync/domain/entities/desire.dart';
 
 abstract class DesireState {}
 
@@ -7,9 +7,9 @@ class DesireInitialState extends DesireState {}
 class DesireLoadingState extends DesireState {}
 
 class DesireLoadedState extends DesireState {
-  final List<desire_entity.Desire> desire;
+  final List<Desire> desires;
 
-  DesireLoadedState(this.desire);
+  DesireLoadedState(this.desires);
 }
 
 class DesireErrorState extends DesireState {

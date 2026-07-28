@@ -1,3 +1,4 @@
+import 'package:finsync/core/errors/app_error_translator.dart';
 import 'package:finsync/domain/entities/desire.dart';
 import 'package:finsync/domain/usecases/adjust_balance.dart';
 import 'package:finsync/domain/usecases/get_all_desires.dart';
@@ -32,7 +33,7 @@ class DesireBloc extends Bloc<DesireEvent, DesireState> {
       final desire = await getAllDesires();
       emit(DesireLoadedState(desire));
     } catch (e) {
-      emit(DesireErrorState(e.toString()));
+      emit(DesireErrorState(AppErrorTranslator.translate(e)));
     }
   }
 
@@ -67,7 +68,7 @@ class DesireBloc extends Bloc<DesireEvent, DesireState> {
       event.completer?.complete();
     } catch (e) {
       event.completer?.completeError(e);
-      emit(DesireErrorState(e.toString()));
+      emit(DesireErrorState(AppErrorTranslator.translate(e)));
     }
   }
 }

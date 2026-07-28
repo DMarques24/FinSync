@@ -12,6 +12,8 @@ class GetFilterTimeExpensesEvent extends HomeEvent {
   GetFilterTimeExpensesEvent(this.filter);
 }
 
+class LoadMoreExpensesEvent extends HomeEvent {}
+
 class AddExpenseEvent extends HomeEvent {
   final Expense expense;
 

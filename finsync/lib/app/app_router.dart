@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:finsync/presentation/pages/createAcount/create_acount_page.dart';
+import 'package:finsync/presentation/pages/create_account/create_account_page.dart';
 import 'package:finsync/presentation/pages/login/login_page.dart';
 import 'package:finsync/presentation/pages/onboarding/onboarding_page.dart';
 import 'package:finsync/presentation/pages/statement/import_statement_page.dart';
@@ -15,8 +15,8 @@ final router = GoRouter(
   routes: [
     GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
     GoRoute(
-      path: '/createAcount',
-      builder: (context, state) => const CreateAcountPage(),
+      path: '/create-account',
+      builder: (context, state) => const CreateAccountPage(),
     ),
     GoRoute(
       path: '/onboarding',

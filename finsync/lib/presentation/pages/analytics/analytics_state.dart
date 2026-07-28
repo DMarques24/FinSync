@@ -13,14 +13,14 @@ class AnalyticsLoadedState extends AnalyticsState {
   final List<Expense> expenses;
   final List<SankeyNode> nodes;
   final List<SankeyLink> links;
-  final List<CalendarEventEntity> event;
+  final List<CalendarEventEntity> events;
   final String topExpenseCategory;
 
   AnalyticsLoadedState({
     required this.expenses,
     required this.nodes,
     required this.links,
-    required this.event,
+    required this.events,
     required this.topExpenseCategory,
   });
 }

@@ -140,8 +140,8 @@ class _ProfilePageState extends State<ProfilePage> {
             String desiresCount = '—';
             String savedAmount = '—';
             if (desireState is DesireLoadedState) {
-              desiresCount = desireState.desire.length.toString();
-              final totalSaved = desireState.desire.fold<double>(
+              desiresCount = desireState.desires.length.toString();
+              final totalSaved = desireState.desires.fold<double>(
                 0,
                 (sum, desire) => sum + desire.saved,
               );

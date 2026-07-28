@@ -143,6 +143,7 @@ class _LoginPageState extends State<LoginPage> {
                             color: AppColors.secondary,
                           ),
                           suffixIcon: IconButton(
+                            tooltip: tr('common.toggle_password'),
                             onPressed: () {
                               setState(() {
                                 _obscurePassword = !_obscurePassword;
@@ -205,7 +206,7 @@ class _LoginPageState extends State<LoginPage> {
                           TextButton(
                             onPressed: isLoading
                                 ? null
-                                : () => context.go('/createAcount'),
+                                : () => context.go('/create-account'),
                             child: Text(tr('login.create_account')),
                           ),
                         ],

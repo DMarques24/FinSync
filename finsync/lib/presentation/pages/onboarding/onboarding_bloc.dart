@@ -1,3 +1,4 @@
+import 'package:finsync/core/errors/app_error_translator.dart';
 import 'package:finsync/domain/usecases/complete_onboarding.dart';
 import 'package:finsync/presentation/pages/onboarding/onboarding_event.dart';
 import 'package:finsync/presentation/pages/onboarding/onboarding_state.dart';
@@ -24,7 +25,7 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
       await completeOnboarding(userId, event.balance);
       emit(OnboardingLoadedState());
     } catch (e) {
-      emit(OnboardingErrorState(e.toString()));
+      emit(OnboardingErrorState(AppErrorTranslator.translate(e)));
     }
   }
 }

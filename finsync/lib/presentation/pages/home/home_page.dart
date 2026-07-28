@@ -8,6 +8,7 @@ import 'package:finsync/domain/entities/expense.dart';
 
 import 'package:finsync/presentation/pages/home/components/card_cash_flow.dart';
 import 'package:finsync/presentation/pages/home/components/expenses_list.dart';
+import 'package:finsync/presentation/pages/home/components/home_skeleton.dart';
 
 import 'package:finsync/presentation/pages/home/home_bloc.dart';
 import 'package:finsync/presentation/pages/home/home_event.dart';
@@ -44,10 +45,11 @@ class _HomePageState extends State<HomePage> {
       body: SafeArea(
         child: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) {
-            if (state is HomeLoadingState) {
-              return Center(
-                child: CircularProgressIndicator(color: AppColors.secondary),
-              );
+            // Esqueleto em vez de um círculo a rodar: mostra desde logo a
+            // forma do conteúdo, por isso o ecrã não salta quando os
+            // dados chegam.
+            if (state is HomeLoadingState || state is HomeInitialState) {
+              return const HomeSkeleton();
             }
 
             if (state is HomeErrorState) {
@@ -144,7 +146,14 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(height: 30),
 
                   if (state is HomeLoadedState)
-                    ExpensesList(expenses: state.expenses),
+                    ExpensesList(
+                      expenses: state.expenses,
+                      hasMore: state.hasMore,
+                      isLoadingMore: state.isLoadingMore,
+                      onLoadMore: () => context.read<HomeBloc>().add(
+                        LoadMoreExpensesEvent(),
+                      ),
+                    ),
                 ],
               ),
               ),

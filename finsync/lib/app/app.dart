@@ -1,5 +1,5 @@
 import 'package:finsync/presentation/pages/analytics/analytics_bloc.dart';
-import 'package:finsync/presentation/pages/createAcount/create_acount_bloc.dart';
+import 'package:finsync/presentation/pages/create_account/create_account_bloc.dart';
 import 'package:finsync/presentation/pages/login/login_bloc.dart';
 import 'package:finsync/presentation/pages/onboarding/onboarding_bloc.dart';
 import 'package:finsync/presentation/pages/profile/profile_bloc.dart';
@@ -34,7 +34,7 @@ class App extends StatelessWidget {
         BlocProvider<HomeBloc>(create: (_) => sl<HomeBloc>()),
         BlocProvider<DesireBloc>(create: (_) => sl<DesireBloc>()),
         BlocProvider<LoginBloc>(create: (_) => sl<LoginBloc>()),
-        BlocProvider<CreateAcountBloc>(create: (_) => sl<CreateAcountBloc>()),
+        BlocProvider<CreateAccountBloc>(create: (_) => sl<CreateAccountBloc>()),
         BlocProvider<OnboardingBloc>(create: (_) => sl<OnboardingBloc>()),
         BlocProvider<ProfileBloc>(
           create: (_) => sl<ProfileBloc>()..add(LoadProfileEvent()),

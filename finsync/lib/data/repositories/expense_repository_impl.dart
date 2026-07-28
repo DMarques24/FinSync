@@ -9,14 +9,28 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
   ExpenseRepositoryImpl(this.remoteDatasource);
 
   @override
-  Future<List<Expense>> getAllExpenses() async {
-    final models = await remoteDatasource.getAllExpenses();
+  Future<List<Expense>> getAllExpenses({
+    int limit = kExpensesPageSize,
+    int offset = 0,
+  }) async {
+    final models = await remoteDatasource.getAllExpenses(
+      limit: limit,
+      offset: offset,
+    );
     return models.map((model) => model.toEntity()).toList();
   }
 
   @override
-  Future<List<Expense>> getFilterTimeExpenses(DateTime time) async {
-    final models = await remoteDatasource.getFilterTimeExpenses(time);
+  Future<List<Expense>> getFilterTimeExpenses(
+    DateTime time, {
+    int limit = kExpensesPageSize,
+    int offset = 0,
+  }) async {
+    final models = await remoteDatasource.getFilterTimeExpenses(
+      time,
+      limit: limit,
+      offset: offset,
+    );
     return models.map((model) => model.toEntity()).toList();
   }
 
@@ -28,14 +42,20 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
 
   @override
   Future<void> insertExpense(Expense expense) async {
-    final model = ExpenseModel(
-      id: expense.id,
-      name: expense.name,
-      price: expense.price,
-      category: expense.category,
-      date: expense.date,
-      type: expense.type,
-    );
-    await remoteDatasource.insertExpense(model);
+    await remoteDatasource.insertExpense(_toModel(expense));
   }
+
+  @override
+  Future<void> insertExpenses(List<Expense> expenses) async {
+    await remoteDatasource.insertExpenses(expenses.map(_toModel).toList());
+  }
+
+  ExpenseModel _toModel(Expense expense) => ExpenseModel(
+    id: expense.id,
+    name: expense.name,
+    price: expense.price,
+    category: expense.category,
+    date: expense.date,
+    type: expense.type,
+  );
 }

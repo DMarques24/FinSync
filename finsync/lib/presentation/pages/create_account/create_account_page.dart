@@ -1,22 +1,22 @@
 import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
-import 'package:finsync/presentation/pages/createAcount/create_acount_bloc.dart';
-import 'package:finsync/presentation/pages/createAcount/create_acount_event.dart';
-import 'package:finsync/presentation/pages/createAcount/create_acount_state.dart';
+import 'package:finsync/presentation/pages/create_account/create_account_bloc.dart';
+import 'package:finsync/presentation/pages/create_account/create_account_event.dart';
+import 'package:finsync/presentation/pages/create_account/create_account_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class CreateAcountPage extends StatefulWidget {
-  const CreateAcountPage({super.key});
+class CreateAccountPage extends StatefulWidget {
+  const CreateAccountPage({super.key});
 
   @override
-  State<CreateAcountPage> createState() => _CreateAcountState();
+  State<CreateAccountPage> createState() => _CreateAccountPageState();
 }
 
-class _CreateAcountState extends State<CreateAcountPage> {
+class _CreateAccountPageState extends State<CreateAccountPage> {
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passWordController = TextEditingController();
@@ -66,8 +66,8 @@ class _CreateAcountState extends State<CreateAcountPage> {
       return;
     }
 
-    context.read<CreateAcountBloc>().add(
-      CreateAcountSubmitEvent(username: username, email: email, password: password),
+    context.read<CreateAccountBloc>().add(
+      CreateAccountSubmitEvent(username: username, email: email, password: password),
     );
   }
 
@@ -75,9 +75,9 @@ class _CreateAcountState extends State<CreateAcountPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: BlocConsumer<CreateAcountBloc, CreateAcountState>(
+        child: BlocConsumer<CreateAccountBloc, CreateAccountState>(
           listener: (context, state) {
-            if (state is CreateAcountLoadedState) {
+            if (state is CreateAccountLoadedState) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(tr('create_account.account_created')),
@@ -86,7 +86,7 @@ class _CreateAcountState extends State<CreateAcountPage> {
               );
               context.go('/login');
             }
-            if (state is CreateAcountErrorState) {
+            if (state is CreateAccountErrorState) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(state.message),
@@ -96,7 +96,7 @@ class _CreateAcountState extends State<CreateAcountPage> {
             }
           },
           builder: (context, state) {
-            final isLoading = state is CreateAcountLoadingState;
+            final isLoading = state is CreateAccountLoadingState;
 
             return Center(
               child: SingleChildScrollView(
@@ -188,6 +188,7 @@ class _CreateAcountState extends State<CreateAcountPage> {
                             color: AppColors.secondary,
                           ),
                           suffixIcon: IconButton(
+                            tooltip: tr('common.toggle_password'),
                             onPressed: () {
                               setState(() {
                                 _obscurePassword = !_obscurePassword;
@@ -219,6 +220,7 @@ class _CreateAcountState extends State<CreateAcountPage> {
                             color: AppColors.secondary,
                           ),
                           suffixIcon: IconButton(
+                            tooltip: tr('common.toggle_password'),
                             onPressed: () {
                               setState(() {
                                 _obscureConfirmPassword =
