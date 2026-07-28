@@ -1,5 +1,6 @@
 import 'package:finsync/core/di/injection.dart';
 import 'package:finsync/core/errors/auth_error_translator.dart';
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/domain/usecases/change_password.dart';
@@ -177,6 +178,7 @@ class _ChangePasswordSheetState extends State<ChangePasswordSheet> {
                     color: AppColors.secondary,
                   ),
                   suffixIcon: IconButton(
+                    tooltip: tr('common.toggle_password'),
                     onPressed: () => setState(() {
                       _obscureCurrent = !_obscureCurrent;
                     }),
@@ -204,6 +206,7 @@ class _ChangePasswordSheetState extends State<ChangePasswordSheet> {
                     color: AppColors.secondary,
                   ),
                   suffixIcon: IconButton(
+                    tooltip: tr('common.toggle_password'),
                     onPressed: () => setState(() {
                       _obscureNew = !_obscureNew;
                     }),
@@ -232,6 +235,7 @@ class _ChangePasswordSheetState extends State<ChangePasswordSheet> {
                     color: AppColors.secondary,
                   ),
                   suffixIcon: IconButton(
+                    tooltip: tr('common.toggle_password'),
                     onPressed: () => setState(() {
                       _obscureConfirm = !_obscureConfirm;
                     }),
