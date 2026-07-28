@@ -2,6 +2,7 @@ import 'package:finsync/core/currency/app_currency.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/presentation/pages/analytics/components/category_visuals.dart';
+import 'package:finsync/presentation/pages/home/components/category_labels.dart';
 import 'package:flutter/material.dart';
 
 class TopCategoryCard extends StatelessWidget {
@@ -35,7 +36,7 @@ class TopCategoryCard extends StatelessWidget {
                 color: top.color.withValues(alpha: .14),
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: Icon(categoryIcon(top.category), color: top.color, size: 26),
+              child: Icon(top.category.icon, color: top.color, size: 26),
             ),
 
             const SizedBox(width: 16),
@@ -45,7 +46,7 @@ class TopCategoryCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    top.category,
+                    categoryLabel(top.category),
                     style: AppTextStyles.bodyLarge.copyWith(
                       fontWeight: FontWeight.w700,
                     ),

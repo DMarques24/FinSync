@@ -1,10 +1,11 @@
 import 'package:finsync/domain/entities/expense.dart';
+import 'package:finsync/domain/entities/expense_category.dart';
 
 class ExpenseModel {
   final int id;
   final String name;
   final double price;
-  final String category;
+  final ExpenseCategory category;
   final DateTime date;
   final ExpenseType type;
 
@@ -23,7 +24,9 @@ class ExpenseModel {
       id: (json['id'] as num?)?.toInt() ?? 0,
       name: json['name']?.toString() ?? '',
       price: (json['price'] as num?)?.toDouble() ?? 0,
-      category: json['category']?.toString() ?? '',
+      category:
+          ExpenseCategory.fromDb(json['category']?.toString()) ??
+          ExpenseCategory.lazer,
       date: rawDate is DateTime
           ? rawDate
           : DateTime.tryParse(rawDate?.toString() ?? '') ?? DateTime.now(),
@@ -38,7 +41,7 @@ class ExpenseModel {
     return {
       'name': name,
       'price': price,
-      'category': category,
+      'category': category.dbValue,
       'created_at': date.toIso8601String(),
       'user_id': userId,
       'type': type.name,

@@ -1,10 +1,11 @@
 import 'package:finsync/domain/entities/expense.dart';
+import 'package:finsync/domain/entities/expense_category.dart';
 
 class ParsedTransaction {
   final String name;
   final double price;
   final DateTime date;
-  final String category;
+  final ExpenseCategory? category;
   final ExpenseType type;
 
   final double confidence;
@@ -27,7 +28,7 @@ class ParsedTransaction {
     String? name,
     double? price,
     DateTime? date,
-    String? category,
+    ExpenseCategory? category,
     ExpenseType? type,
   }) {
     return ParsedTransaction(
@@ -47,7 +48,7 @@ class ParsedTransaction {
       id: 0,
       name: name,
       price: price,
-      category: category,
+      category: category!,
       date: date,
       type: type,
     );

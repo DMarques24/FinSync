@@ -1,5 +1,6 @@
 import 'package:finsync/data/datasources/expense_remote_datasource.dart';
 import 'package:finsync/data/models/expense_model.dart';
+import 'package:finsync/domain/entities/expense_category.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ExpenseRemoteDatasourceImpl extends ExpenseRemoteDatasource {
@@ -67,7 +68,7 @@ class ExpenseRemoteDatasourceImpl extends ExpenseRemoteDatasource {
       id: 0,
       name: '',
       price: 0,
-      category: '',
+      category: ExpenseCategory.lazer,
       date: DateTime.now(),
     );
   }

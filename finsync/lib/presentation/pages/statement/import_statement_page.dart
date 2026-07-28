@@ -21,15 +21,6 @@ class ImportStatementPage extends StatelessWidget {
 
   const ImportStatementPage({super.key, required this.file});
 
-  static const categories = [
-    "Alimentação",
-    "Transportes",
-    "Compras",
-    "Subscrições",
-    "Saúde",
-    "Lazer",
-  ];
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -207,7 +198,6 @@ class _ReviewList extends StatelessWidget {
               return ParsedTransactionTile(
                 transaction: state.transactions[index],
                 selected: state.selectedIndexes.contains(index),
-                categories: ImportStatementPage.categories,
                 onToggle: () => bloc.add(ToggleTransactionEvent(index)),
                 onCategoryChanged: (category) =>
                     bloc.add(UpdateTransactionCategoryEvent(index, category)),
@@ -227,8 +217,6 @@ class _ReviewList extends StatelessWidget {
           child: SafeArea(
             top: false,
             child: FilledButton.icon(
-              // Nada selecionado, ou linhas sem categoria, bloqueiam a
-              // gravação — evita entrar lixo na base de dados.
               onPressed: state.isImporting || !_canImport() ? null : onImport,
               style: FilledButton.styleFrom(
                 backgroundColor: AppColors.secondary,
@@ -263,7 +251,7 @@ class _ReviewList extends StatelessWidget {
   }
 
   bool _missingCategory() =>
-      state.selectedTransactions.any((t) => t.category.isEmpty);
+      state.selectedTransactions.any((t) => t.category == null);
 
   bool _canImport() => state.selectedCount > 0 && !_missingCategory();
 }

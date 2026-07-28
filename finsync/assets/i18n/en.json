@@ -86,13 +86,7 @@
     "value_label": "Amount ({symbol})",
     "category_label": "Category",
     "date_label": "Date",
-    "save_error": "Fill in the name and amount before saving.",
-    "category_food": "Food",
-    "category_transport": "Transport",
-    "category_shopping": "Shopping",
-    "category_subscriptions": "Subscriptions",
-    "category_health": "Health",
-    "category_leisure": "Leisure"
+    "save_error": "Fill in the name and amount before saving."
   },
   "analytics": {
     "title": "Analytics",
@@ -132,7 +126,8 @@
     "fill_event_fields": "Fill in the name, amount and date before saving.",
     "pdf_success_title": "Report generated successfully",
     "pdf_success_subtitle": "Your financial report PDF is ready.",
-    "share": "Share"
+    "share": "Share",
+    "no_expenses_recorded": "No expenses recorded"
   },
   "desire": {
     "title": "Your goals ✨",
@@ -212,6 +207,13 @@
     "missing_category": "Choose a category for the selected transactions",
     "imported_success": "{count} transactions imported successfully.",
     "import_timeout": "The import took too long. Please try again."
+  },
+  "category": {
+    "lazer": "Leisure",
+    "transporte": "Transport",
+    "alimentacao": "Food",
+    "investimentos": "Investments",
+    "poupanca": "Savings"
   },
   "main_nav": {
     "app_name": "FinSync",

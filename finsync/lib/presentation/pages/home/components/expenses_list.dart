@@ -73,8 +73,6 @@ class _ExpensesListState extends State<ExpensesList> {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 12),
                 child: ExpenseCard(
-                  // A chave evita que o Flutter reaproveite o cartão
-                  // errado quando a lista cresce.
                   key: ValueKey(expense.id),
                   name: expense.name,
                   category: expense.category,

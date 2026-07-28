@@ -3,6 +3,7 @@ import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/domain/entities/expense.dart';
+import 'package:finsync/domain/entities/expense_category.dart';
 import 'package:finsync/domain/entities/parsed_transaction.dart';
 import 'package:finsync/presentation/pages/home/components/category_labels.dart';
 import 'package:flutter/material.dart';
@@ -10,16 +11,14 @@ import 'package:flutter/material.dart';
 class ParsedTransactionTile extends StatelessWidget {
   final ParsedTransaction transaction;
   final bool selected;
-  final List<String> categories;
   final VoidCallback onToggle;
-  final ValueChanged<String> onCategoryChanged;
+  final ValueChanged<ExpenseCategory> onCategoryChanged;
   final ValueChanged<ExpenseType> onTypeChanged;
 
   const ParsedTransactionTile({
     super.key,
     required this.transaction,
     required this.selected,
-    required this.categories,
     required this.onToggle,
     required this.onCategoryChanged,
     required this.onTypeChanged,
@@ -30,7 +29,7 @@ class ParsedTransactionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final amountColor = _isIncome ? AppColors.success : AppColors.error;
-    final needsCategory = transaction.category.isEmpty;
+    final needsCategory = transaction.category == null;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -106,8 +105,8 @@ class ParsedTransactionTile extends StatelessWidget {
             children: [
               Expanded(
                 flex: 3,
-                child: DropdownButtonFormField<String>(
-                  initialValue: needsCategory ? null : transaction.category,
+                child: DropdownButtonFormField<ExpenseCategory>(
+                  initialValue: transaction.category,
                   isExpanded: true,
                   style: AppTextStyles.bodySmall.copyWith(
                     color: AppColors.textPrimary,
@@ -124,7 +123,7 @@ class ParsedTransactionTile extends StatelessWidget {
                     ),
                   ),
                   items: [
-                    for (final category in categories)
+                    for (final category in ExpenseCategory.values)
                       DropdownMenuItem(
                         value: category,
                         child: Text(

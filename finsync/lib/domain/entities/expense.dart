@@ -1,10 +1,12 @@
+import 'package:finsync/domain/entities/expense_category.dart';
+
 enum ExpenseType { despesa, receita }
 
 class Expense {
   final int id;
   final String name;
   final double price;
-  final String category;
+  final ExpenseCategory category;
   final DateTime date;
   final ExpenseType type;
 

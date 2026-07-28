@@ -1,5 +1,7 @@
 import 'package:finsync/data/datasources/pdf_remote_datasource.dart';
 import 'package:finsync/data/models/pdf_category_total_model.dart';
+import 'package:finsync/domain/entities/expense_category.dart';
+import 'package:finsync/presentation/pages/home/components/category_labels.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class PdfRemoteDatasourceImpl implements PdfRemoteDatasource {
@@ -67,10 +69,10 @@ class PdfRemoteDatasourceImpl implements PdfRemoteDatasource {
         totalIncome += value;
       } else {
         totalExpense += value;
-        final category =
-            (expense['category']?.toString().trim().isNotEmpty ?? false)
-            ? expense['category'].toString().trim()
-            : 'Sem categoria';
+        final parsed = ExpenseCategory.fromDb(expense['category']?.toString());
+        final category = parsed == null
+            ? 'Sem categoria'
+            : categoryLabel(parsed);
         byCategory[category] = (byCategory[category] ?? 0) + value;
       }
     }

@@ -4,11 +4,12 @@ import 'package:finsync/core/currency/app_currency.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/domain/entities/expense.dart';
+import 'package:finsync/domain/entities/expense_category.dart';
 import 'package:finsync/presentation/pages/home/components/category_labels.dart';
 
 class ExpenseCard extends StatelessWidget {
   final String name;
-  final String category;
+  final ExpenseCategory category;
   final String date;
   final double price;
   final ExpenseType type;
@@ -22,16 +23,7 @@ class ExpenseCard extends StatelessWidget {
     this.type = ExpenseType.despesa,
   });
 
-  static const _categoryIcons = <String, IconData>{
-    "Alimentação": Icons.restaurant_rounded,
-    "Transportes": Icons.directions_car_filled_rounded,
-    "Compras": Icons.shopping_bag_rounded,
-    "Subscrições": Icons.autorenew_rounded,
-    "Saúde": Icons.favorite_rounded,
-    "Lazer": Icons.sports_esports_rounded,
-  };
-
-  IconData get _icon => _categoryIcons[category] ?? Icons.payments_rounded;
+  IconData get _icon => category.icon;
 
   bool get _isIncome => type == ExpenseType.receita;
 

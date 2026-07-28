@@ -29,7 +29,7 @@ class StatementBloc extends Bloc<StatementEvent, StatementState> {
 
       final selected = <int>{
         for (var i = 0; i < transactions.length; i++)
-          if (transactions[i].isReliable && transactions[i].category.isNotEmpty)
+          if (transactions[i].isReliable && transactions[i].category != null)
             i,
       };
 

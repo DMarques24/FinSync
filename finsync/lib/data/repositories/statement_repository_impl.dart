@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:finsync/data/datasources/statement_file_datasource.dart';
 import 'package:finsync/domain/entities/expense.dart';
+import 'package:finsync/domain/entities/expense_category.dart';
 import 'package:finsync/domain/entities/parsed_transaction.dart';
 import 'package:finsync/domain/repositories/statement_repository.dart';
 
@@ -378,8 +379,12 @@ class StatementRepositoryImpl implements StatementRepository {
   // Categoria
   // =====================================================================
 
-  static const _categoryKeywords = <String, List<String>>{
-    'Alimentação': [
+  /// Palavras-chave por categoria, com os comerciantes mais comuns em
+  /// Portugal. Compras, saúde e subscrições — que já não são categorias
+  /// próprias — foram distribuídas por Lazer, por ser o destino mais
+  /// razoável para gastos de consumo geral.
+  static const _categoryKeywords = <ExpenseCategory, List<String>>{
+    ExpenseCategory.alimentacao: [
       'continente', 'pingo doce', 'lidl', 'aldi', 'mercadona', 'minipreco',
       'intermarche', 'auchan', 'jumbo', 'el corte ingles', 'froiz', 'meu super',
       'restaurante', 'restaur', 'cafe', 'snack', 'padaria', 'pastelaria',
@@ -387,43 +392,48 @@ class StatementRepositoryImpl implements StatementRepository {
       'kfc', 'pizza', 'telepizza', 'uber eats', 'ubereats', 'glovo',
       'bolt food', 'takeaway', 'starbucks', 'delta', 'churrasqueira',
     ],
-    'Transportes': [
+    ExpenseCategory.transporte: [
       'galp', 'bp ', 'repsol', 'cepsa', 'prio', 'combustivel', 'gasolina',
       'gasoleo', 'abastecimento', 'via verde', 'brisa', 'portagem',
       'estacionamento', 'parque', 'emel', 'cp ', 'comboios', 'metro',
       'carris', 'transtejo', 'rodoviaria', 'uber', 'bolt', 'taxi', 'freenow',
       'oficina', 'pneus', 'inspecao',
     ],
-    'Compras': [
-      'fnac', 'worten', 'amazon', 'aliexpress', 'ebay', 'zara', 'h&m',
-      'primark', 'bershka', 'pull&bear', 'stradivarius', 'mango', 'sport zone',
-      'decathlon', 'jd sports', 'nike', 'adidas', 'ikea', 'leroy merlin',
-      'aki', 'maxmat', 'conforama', 'radio popular', 'mediamarkt', 'shein',
-      'temu', 'sapataria', 'perfumaria', 'douglas',
+    ExpenseCategory.investimentos: [
+      'xtb', 'degiro', 'trading 212', 'trading212', 'etoro', 'revolut invest',
+      'interactive brokers', 'coinbase', 'binance', 'kraken', 'bison bank',
+      'certificados de aforro', 'obrigacoes', 'ppr', 'fundo de investimento',
+      'bolsa', 'corretora', 'dividendos',
     ],
-    'Subscrições': [
-      'netflix', 'spotify', 'hbo', 'max ', 'disney', 'youtube', 'prime video',
-      'apple.com', 'itunes', 'icloud', 'google', 'microsoft', 'office 365',
-      'dropbox', 'adobe', 'canva', 'chatgpt', 'openai', 'meo', 'nos ',
-      'vodafone', 'nowo', 'altice', 'mensalidade', 'subscricao', 'assinatura',
-      'seguro', 'seguros', 'fidelidade', 'tranquilidade', 'ageas',
+    ExpenseCategory.poupanca: [
+      'poupanca', 'deposito a prazo', 'conta poupanca', 'transferencia poupanca',
+      'aforro', 'mealheiro', 'reserva',
     ],
-    'Saúde': [
-      'farmacia', 'hospital', 'clinica', 'medico', 'dentista', 'dentaria',
-      'analises', 'laboratorio', 'consulta', 'fisioterapia', 'optica',
-      'oculista', 'wells', 'medicina', 'saude', 'cuf', 'luz saude',
-      'lusiadas', 'sns',
-    ],
-    'Lazer': [
+    ExpenseCategory.lazer: [
       'cinema', 'nos cinemas', 'ucicinemas', 'teatro', 'concerto', 'bilhete',
       'ticketline', 'blueticket', 'steam', 'playstation', 'xbox', 'nintendo',
       'ginasio', 'fitness', 'holmes place', 'solinca', 'phive', 'hotel',
       'booking', 'airbnb', 'ryanair', 'tap ', 'easyjet', 'viagem', 'bar ',
       'discoteca',
+      // Antigas "Compras"
+      'fnac', 'worten', 'amazon', 'aliexpress', 'ebay', 'zara', 'h&m',
+      'primark', 'bershka', 'pull&bear', 'stradivarius', 'mango', 'sport zone',
+      'decathlon', 'jd sports', 'nike', 'adidas', 'ikea', 'leroy merlin',
+      'aki', 'maxmat', 'conforama', 'radio popular', 'mediamarkt', 'shein',
+      'temu', 'sapataria', 'perfumaria', 'douglas',
+      'netflix', 'spotify', 'hbo', 'max ', 'disney', 'youtube', 'prime video',
+      'apple.com', 'itunes', 'icloud', 'google', 'microsoft', 'office 365',
+      'dropbox', 'adobe', 'canva', 'chatgpt', 'openai', 'meo', 'nos ',
+      'vodafone', 'nowo', 'altice', 'mensalidade', 'subscricao', 'assinatura',
+      'seguro', 'seguros', 'fidelidade', 'tranquilidade', 'ageas',
+      'farmacia', 'hospital', 'clinica', 'medico', 'dentista', 'dentaria',
+      'analises', 'laboratorio', 'consulta', 'fisioterapia', 'optica',
+      'oculista', 'wells', 'medicina', 'saude', 'cuf', 'luz saude',
+      'lusiadas', 'sns',
     ],
   };
 
-  String _inferCategory(String description) {
+  ExpenseCategory? _inferCategory(String description) {
     final normalized = _normalize(description);
 
     for (final entry in _categoryKeywords.entries) {
@@ -431,8 +441,7 @@ class StatementRepositoryImpl implements StatementRepository {
         if (normalized.contains(keyword)) return entry.key;
       }
     }
-
-    return '';
+    return null;
   }
 
   // =====================================================================

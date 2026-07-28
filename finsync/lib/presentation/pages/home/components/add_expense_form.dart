@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:finsync/domain/entities/expense.dart';
+import 'package:finsync/domain/entities/expense_category.dart';
 import 'package:finsync/presentation/pages/home/home_bloc.dart';
 import 'package:finsync/presentation/pages/home/home_event.dart';
 import 'package:finsync/core/currency/app_currency.dart';
@@ -23,18 +24,9 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
 
   DateTime? selectedDate = DateTime.now();
 
-  String selectedCategory = "Alimentação";
+  ExpenseCategory selectedCategory = ExpenseCategory.alimentacao;
 
   ExpenseType selectedType = ExpenseType.despesa;
-
-  final categories = const [
-    "Alimentação",
-    "Transportes",
-    "Compras",
-    "Subscrições",
-    "Saúde",
-    "Lazer",
-  ];
 
   @override
   void dispose() {
@@ -72,8 +64,6 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
     final expense = Expense(
       id: 0,
       name: name,
-      // O valor escrito está na moeda selecionada — converte para EUR
-      // (moeda-base guardada na BD) antes de guardar.
       price: AppCurrency.toBase(price),
       category: selectedCategory,
       date: selectedDate!,
@@ -186,7 +176,7 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
 
               const SizedBox(height: 18),
 
-              DropdownButtonFormField<String>(
+              DropdownButtonFormField<ExpenseCategory>(
                 initialValue: selectedCategory,
                 style: AppTextStyles.bodyMedium,
                 decoration: InputDecoration(
@@ -196,9 +186,23 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
                     color: AppColors.secondary,
                   ),
                 ),
-                items: categories
-                    .map((e) => DropdownMenuItem(value: e, child: Text(categoryLabel(e))))
-                    .toList(),
+                items: [
+                  for (final category in ExpenseCategory.values)
+                    DropdownMenuItem(
+                      value: category,
+                      child: Row(
+                        children: [
+                          Icon(
+                            category.icon,
+                            size: 18,
+                            color: AppColors.secondary,
+                          ),
+                          const SizedBox(width: 10),
+                          Text(categoryLabel(category)),
+                        ],
+                      ),
+                    ),
+                ],
                 onChanged: (value) {
                   setState(() {
                     selectedCategory = value!;

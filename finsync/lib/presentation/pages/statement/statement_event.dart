@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:finsync/domain/entities/expense.dart';
+import 'package:finsync/domain/entities/expense_category.dart';
 
 abstract class StatementEvent {}
 
@@ -25,7 +26,7 @@ class SelectAllTransactionsEvent extends StatementEvent {
 
 class UpdateTransactionCategoryEvent extends StatementEvent {
   final int index;
-  final String category;
+  final ExpenseCategory category;
 
   UpdateTransactionCategoryEvent(this.index, this.category);
 }

@@ -1,6 +1,9 @@
 import 'package:finsync/data/datasources/expense_remote_datasource.dart'
     show kAnalyticsExpensesLimit;
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/domain/entities/calendar_event.dart';
+import 'package:finsync/domain/entities/expense_category.dart';
+import 'package:finsync/presentation/pages/home/components/category_labels.dart';
 import 'package:finsync/domain/usecases/adjust_balance.dart';
 import 'package:finsync/domain/usecases/create_analytics_pdf.dart';
 import 'package:finsync/domain/usecases/delete_calendar_event.dart';
@@ -53,7 +56,7 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
 
       final links = <SankeyLink>[];
 
-      final byCategory = <String, double>{};
+      final byCategory = <ExpenseCategory, double>{};
 
       for (final expense in expenses) {
         byCategory[expense.category] =
@@ -64,20 +67,18 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
         links.add(
           SankeyLink(
             source: node("Salário"),
-            target: node(category),
+            target: node(categoryLabel(category)),
             value: total,
           ),
         );
       });
 
-      var topExpenseCategory = 'Sem despesas registadas';
+      var topExpenseCategory = tr('analytics.no_expenses_recorded');
       if (byCategory.isNotEmpty) {
         final topEntry = byCategory.entries.reduce(
           (a, b) => a.value >= b.value ? a : b,
         );
-        if (topEntry.key.trim().isNotEmpty) {
-          topExpenseCategory = topEntry.key;
-        }
+        topExpenseCategory = categoryLabel(topEntry.key);
       }
 
       emit(
