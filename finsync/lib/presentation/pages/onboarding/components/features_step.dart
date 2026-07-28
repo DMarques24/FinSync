@@ -5,7 +5,7 @@ import 'package:finsync/presentation/pages/onboarding/components/feature_row.dar
 import 'package:flutter/material.dart';
 
 class FeaturesStep extends StatelessWidget {
-  const FeaturesStep();
+  const FeaturesStep({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -4,7 +4,7 @@ import 'package:finsync/core/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeStep extends StatelessWidget {
-  const WelcomeStep();
+  const WelcomeStep({super.key});
 
   @override
   Widget build(BuildContext context) {

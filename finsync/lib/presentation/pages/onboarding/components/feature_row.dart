@@ -8,6 +8,7 @@ class FeatureRow extends StatelessWidget {
   final String description;
 
   const FeatureRow({
+    super.key,
     required this.icon,
     required this.title,
     required this.description,

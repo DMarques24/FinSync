@@ -9,6 +9,7 @@ class SectionCard extends StatelessWidget {
   final Widget child;
 
   const SectionCard({
+    super.key,
     required this.icon,
     required this.title,
     this.subtitle,

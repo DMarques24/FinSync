@@ -7,7 +7,7 @@ class ErrorCard extends StatelessWidget {
   final String message;
   final VoidCallback onRetry;
 
-  const ErrorCard({required this.message, required this.onRetry});
+  const ErrorCard({super.key, required this.message, required this.onRetry});
 
   @override
   Widget build(BuildContext context) {

@@ -6,7 +6,10 @@ import 'package:url_launcher/url_launcher.dart';
 class HelpSheet extends StatelessWidget {
   const HelpSheet({super.key});
 
-  static const _supportEmail = 'suporte@finsync.app'; // ! TODO: importante alterar
+  // Endereço de suporte provisório — tem de ser substituído pelo endereço
+  // real antes de publicar a app, senão os pedidos de ajuda não chegam a
+  // lado nenhum.
+  static const _supportEmail = 'suporte@finsync.app';
 
   static const _faqs = <(String, String)>[
     (

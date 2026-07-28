@@ -9,7 +9,11 @@ class BalanceStep extends StatelessWidget {
   final TextEditingController controller;
   final bool isLoading;
 
-  const BalanceStep({required this.controller, required this.isLoading});
+  const BalanceStep({
+    super.key,
+    required this.controller,
+    required this.isLoading,
+  });
 
   @override
   Widget build(BuildContext context) {

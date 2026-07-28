@@ -8,7 +8,7 @@ class EventTile extends StatelessWidget {
   final CalendarEventEntity event;
   final VoidCallback? onDelete;
 
-  const EventTile({required this.event, this.onDelete});
+  const EventTile({super.key, required this.event, this.onDelete});
 
   @override
   Widget build(BuildContext context) {
