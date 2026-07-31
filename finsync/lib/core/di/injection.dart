@@ -2,7 +2,10 @@ import 'package:finsync/data/datasources/calendar_events_remote_datasource.dart'
 import 'package:finsync/data/datasources/calendar_events_remote_datasource_impl.dart';
 import 'package:finsync/data/repositories/calendar_events_repository_impl.dart';
 import 'package:finsync/domain/repositories/calendar_event_repository.dart';
+import 'package:finsync/domain/usecases/add_desire_saving.dart';
 import 'package:finsync/domain/usecases/apply_due_calendar_events.dart';
+import 'package:finsync/domain/usecases/get_desire_savings.dart';
+import 'package:finsync/domain/usecases/register_desire_review.dart';
 import 'package:finsync/domain/usecases/adjust_balance.dart';
 import 'package:finsync/domain/usecases/complete_onboarding.dart';
 import 'package:finsync/domain/usecases/delete_calendar_event.dart';
@@ -173,6 +176,19 @@ Future<void> initDependencies() async {
     () => DeleteCalendarEvent(sl()),
   );
 
+  // Cruza os dois repositórios: regista a poupança e cria o movimento.
+  sl.registerLazySingleton<AddDesireSaving>(
+    () => AddDesireSaving(sl<DesireRepository>(), sl<ExpenseRepository>()),
+  );
+
+  sl.registerLazySingleton<GetDesireSavings>(
+    () => GetDesireSavings(sl<DesireRepository>()),
+  );
+
+  sl.registerLazySingleton<RegisterDesireReview>(
+    () => RegisterDesireReview(sl<DesireRepository>()),
+  );
+
   // Cruza os dois repositórios: lê os eventos, escreve os movimentos.
   sl.registerLazySingleton<ApplyDueCalendarEvents>(
     () => ApplyDueCalendarEvents(
@@ -205,7 +221,8 @@ Future<void> initDependencies() async {
     () => DesireBloc(
       sl<GetAllDesires>(),
       sl<InsertDesire>(),
-      sl<AdjustBalance>(),
+      sl<AddDesireSaving>(),
+      sl<RegisterDesireReview>(),
       sl<UploadDesireImage>(),
     ),
   );

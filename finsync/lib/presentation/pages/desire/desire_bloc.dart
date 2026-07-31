@@ -1,8 +1,9 @@
 import 'package:finsync/core/errors/app_error_translator.dart';
 import 'package:finsync/domain/entities/desire.dart';
-import 'package:finsync/domain/usecases/adjust_balance.dart';
+import 'package:finsync/domain/usecases/add_desire_saving.dart';
 import 'package:finsync/domain/usecases/get_all_desires.dart';
 import 'package:finsync/domain/usecases/insert_desire.dart';
+import 'package:finsync/domain/usecases/register_desire_review.dart';
 import 'package:finsync/domain/usecases/upload_desire_image.dart';
 import 'package:finsync/presentation/pages/desire/desire_event.dart';
 import 'package:finsync/presentation/pages/desire/desire_state.dart';
@@ -11,17 +12,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class DesireBloc extends Bloc<DesireEvent, DesireState> {
   final GetAllDesires getAllDesires;
   final InsertDesire insertDesire;
-  final AdjustBalance adjustBalance;
+  final AddDesireSaving addDesireSaving;
+  final RegisterDesireReview registerDesireReview;
   final UploadDesireImage uploadDesireImage;
 
   DesireBloc(
     this.getAllDesires,
     this.insertDesire,
-    this.adjustBalance,
+    this.addDesireSaving,
+    this.registerDesireReview,
     this.uploadDesireImage,
   ) : super(DesireInitialState()) {
     on<GetAllDesiresEvent>(_getAllDesires);
     on<AddDesireEvent>(_addDesire);
+    on<AddDesireSavingEvent>(_addSaving);
+    on<ReviewDesireEvent>(_review);
   }
 
   Future<void> _getAllDesires(
@@ -30,8 +35,7 @@ class DesireBloc extends Bloc<DesireEvent, DesireState> {
   ) async {
     emit(DesireLoadingState());
     try {
-      final desire = await getAllDesires();
-      emit(DesireLoadedState(desire));
+      emit(DesireLoadedState(await getAllDesires()));
     } catch (e) {
       emit(DesireErrorState(AppErrorTranslator.translate(e)));
     }
@@ -47,28 +51,83 @@ class DesireBloc extends Bloc<DesireEvent, DesireState> {
         imageUrl = await uploadDesireImage(event.imageFile!);
       }
 
-      final desireToInsert = Desire(
+      final desire = Desire(
         id: event.desire.id,
         name: event.desire.name,
         price: event.desire.price,
         date: event.desire.date,
         image: imageUrl,
-        saved: event.desire.saved,
+        // O valor inicial não entra aqui — entra a seguir, como poupança.
+        // Assim gera um movimento em Poupança como qualquer outro depósito;
+        // caso contrário seria o único valor a não aparecer no histórico
+        // nem nas despesas.
+        saved: 0,
+        reflection: event.desire.reflection,
+        reviewInterval: event.desire.reviewInterval,
       );
 
-      await insertDesire(desireToInsert);
+      await insertDesire(desire);
 
       if (event.desire.saved > 0) {
-        await adjustBalance(-event.desire.saved);
+        final created = _findCreated(await getAllDesires(), desire);
+        if (created != null) {
+          await addDesireSaving(desire: created, amount: event.desire.saved);
+        }
       }
 
-      final desire = await getAllDesires();
-      emit(DesireLoadedState(desire));
-
+      emit(DesireLoadedState(await getAllDesires()));
       event.completer?.complete();
     } catch (e) {
       event.completer?.completeError(e);
       emit(DesireErrorState(AppErrorTranslator.translate(e)));
     }
+  }
+
+  Future<void> _addSaving(
+    AddDesireSavingEvent event,
+    Emitter<DesireState> emit,
+  ) async {
+    try {
+      await addDesireSaving(desire: event.desire, amount: event.amount);
+
+      emit(DesireLoadedState(await getAllDesires()));
+      event.completer?.complete();
+    } catch (e) {
+      // Sem `DesireErrorState` aqui: a lista continua válida e trocá-la por
+      // um ecrã de erro por causa de um depósito falhado seria perder o
+      // que já estava no ecrã. Quem mostra o erro é a folha que o pediu.
+      event.completer?.completeError(e);
+    }
+  }
+
+  Future<void> _review(
+    ReviewDesireEvent event,
+    Emitter<DesireState> emit,
+  ) async {
+    try {
+      await registerDesireReview(
+        desire: event.desire,
+        stillWanted: event.stillWanted,
+      );
+
+      emit(DesireLoadedState(await getAllDesires()));
+      event.completer?.complete();
+    } catch (e) {
+      event.completer?.completeError(e);
+    }
+  }
+
+  /// O `insert` não devolve a linha criada, por isso o id só se conhece
+  /// depois de reler a lista. Sem nome único, o mais recente com os mesmos
+  /// dados é o melhor que dá para fazer.
+  Desire? _findCreated(List<Desire> desires, Desire inserted) {
+    final matches = desires.where(
+      (desire) =>
+          desire.name == inserted.name && desire.price == inserted.price,
+    );
+
+    if (matches.isEmpty) return null;
+
+    return matches.reduce((a, b) => a.id >= b.id ? a : b);
   }
 }

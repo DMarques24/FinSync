@@ -2,6 +2,9 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:finsync/domain/entities/desire.dart';
+import 'package:finsync/domain/entities/desire_reflection.dart';
+import 'package:finsync/domain/entities/desire_review.dart';
+import 'package:finsync/presentation/pages/desire/components/reflection_step.dart';
 import 'package:finsync/presentation/pages/desire/desire_bloc.dart';
 import 'package:finsync/presentation/pages/desire/desire_event.dart';
 import 'package:finsync/presentation/pages/profile/profile_bloc.dart';
@@ -14,6 +17,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:finsync/core/currency/app_currency.dart';
 import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
+import 'package:finsync/core/theme/dimensions.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 
 class AddDesireForm extends StatefulWidget {
@@ -34,6 +38,15 @@ class _AddDesireFormState extends State<AddDesireForm> {
 
   DateTime? _selectedDate;
   bool _isSaving = false;
+
+  DesireReflection _reflection = DesireReflection.empty;
+  ReviewInterval _reviewInterval = ReviewInterval.monthly;
+
+  void _answer(ReflectionQuestion question, bool answer) {
+    setState(() {
+      _reflection = _reflection.copyWith(question: question, answer: answer);
+    });
+  }
 
   Future<void> pickImage() async {
     final source = await showModalBottomSheet<ImageSource>(
@@ -186,6 +199,16 @@ class _AddDesireFormState extends State<AddDesireForm> {
       return;
     }
 
+    // Exigimos as cinco respostas, mas nunca julgamos o resultado: uma
+    // pontuação baixa não impede nada. O que se pede é que a pessoa pare
+    // um minuto, não que responda o que nós queremos ouvir.
+    if (!_reflection.isComplete) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(tr('desire.reflection_incomplete'))),
+      );
+      return;
+    }
+
     final desire = Desire(
       id: 0,
       name: _nameController.text.trim(),
@@ -194,6 +217,8 @@ class _AddDesireFormState extends State<AddDesireForm> {
       price: AppCurrency.toBase(price),
       date: _selectedDate!,
       saved: AppCurrency.toBase(saved),
+      reflection: _reflection.copyWith(answeredAt: DateTime.now()),
+      reviewInterval: _reviewInterval,
     );
 
     setState(() {
@@ -402,6 +427,28 @@ class _AddDesireFormState extends State<AddDesireForm> {
                 ),
               ),
 
+              const SizedBox(height: 28),
+
+              Divider(color: AppColors.border),
+
+              const SizedBox(height: 20),
+
+              ReflectionStep(
+                reflection: _reflection,
+                enabled: !_isSaving,
+                onAnswer: _answer,
+              ),
+
+              const SizedBox(height: 24),
+
+              _ReviewIntervalPicker(
+                selected: _reviewInterval,
+                enabled: !_isSaving,
+                onChanged: (interval) {
+                  setState(() => _reviewInterval = interval);
+                },
+              ),
+
               const SizedBox(height: 32),
 
               FilledButton.icon(
@@ -430,6 +477,69 @@ class _AddDesireFormState extends State<AddDesireForm> {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// De quanto em quanto tempo a app volta a perguntar se a compra ainda faz
+/// sentido. Poucas opções de propósito — um campo livre em dias obrigava a
+/// pessoa a inventar um número que não sabe justificar.
+class _ReviewIntervalPicker extends StatelessWidget {
+  final ReviewInterval selected;
+  final bool enabled;
+  final ValueChanged<ReviewInterval> onChanged;
+
+  const _ReviewIntervalPicker({
+    required this.selected,
+    required this.enabled,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          tr('desire.interval_title'),
+          style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w700),
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        Text(
+          tr('desire.interval_subtitle'),
+          style: AppTextStyles.bodySmall.copyWith(
+            color: AppColors.textSecondary,
+            height: 1.4,
+          ),
+        ),
+
+        const SizedBox(height: AppSpacing.md),
+
+        SizedBox(
+          width: double.infinity,
+          child: SegmentedButton<ReviewInterval>(
+            showSelectedIcon: false,
+            segments: [
+              for (final interval in ReviewInterval.values)
+                ButtonSegment(
+                  value: interval,
+                  label: Text(tr(interval.labelKey)),
+                ),
+            ],
+            selected: {selected},
+            onSelectionChanged: enabled
+                ? (selection) => onChanged(selection.first)
+                : null,
+            style: SegmentedButton.styleFrom(
+              selectedBackgroundColor: AppColors.secondary,
+              selectedForegroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: AppRadius.all(AppRadius.md),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

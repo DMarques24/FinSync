@@ -6,6 +6,7 @@ import 'package:finsync/core/theme/dimensions.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/domain/usecases/change_password.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' show AuthException;
 
 class ChangePasswordSheet extends StatefulWidget {
   const ChangePasswordSheet({super.key});
@@ -31,6 +32,18 @@ class _ChangePasswordSheetState extends State<ChangePasswordSheet> {
   /// letra é hostil.
   AutovalidateMode _autovalidate = AutovalidateMode.disabled;
 
+  /// Erro devolvido pelo servidor, guardado para ser mostrado por baixo do
+  /// campo da password atual.
+  ///
+  /// Antes ia num `SnackBar`, que aparece agarrado ao fundo do ecrã — ou
+  /// seja, por trás desta folha. A pessoa carregava em "Alterar password",
+  /// nada acontecia visivelmente, e a mensagem que explicava porquê estava
+  /// escondida por baixo da modal.
+  String? _currentPasswordError;
+
+  /// Erros que não pertencem a nenhum campo (rede, sessão expirada).
+  String? _generalError;
+
   @override
   void dispose() {
     _currentController.dispose();
@@ -43,7 +56,9 @@ class _ChangePasswordSheetState extends State<ChangePasswordSheet> {
     if ((value ?? '').trim().isEmpty) {
       return tr('security.error_current_required');
     }
-    return null;
+    // O servidor já disse que esta password não serve. O erro fica até a
+    // pessoa mexer no campo — foi ali que ela se enganou.
+    return _currentPasswordError;
   }
 
   String? _validateNew(String? value) {
@@ -87,7 +102,11 @@ class _ChangePasswordSheetState extends State<ChangePasswordSheet> {
 
     // A partir daqui os campos corrigem-se sozinhos à medida que a pessoa
     // escreve, sem ter de carregar no botão outra vez para ver se acertou.
-    setState(() => _autovalidate = AutovalidateMode.onUserInteraction);
+    setState(() {
+      _autovalidate = AutovalidateMode.onUserInteraction;
+      _currentPasswordError = null;
+      _generalError = null;
+    });
 
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
@@ -101,6 +120,8 @@ class _ChangePasswordSheetState extends State<ChangePasswordSheet> {
 
       if (!mounted) return;
 
+      // O sucesso pode ir num snackbar porque a folha fecha primeiro — o
+      // que ficou no ecrã é a página de perfil, e aí a mensagem vê-se.
       final messenger = ScaffoldMessenger.of(context);
       Navigator.pop(context);
       messenger.showSnackBar(
@@ -108,17 +129,33 @@ class _ChangePasswordSheetState extends State<ChangePasswordSheet> {
       );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AuthErrorTranslator.translate(e)),
-          backgroundColor: AppColors.error,
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.all(AppSpacing.lg),
-        ),
-      );
+      _showError(e);
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }
+  }
+
+  /// Encaminha o erro para o sítio certo: se é sobre a password atual, vai
+  /// para debaixo desse campo; o resto vai para a faixa no topo do
+  /// formulário. Em ambos os casos fica dentro da folha, à vista.
+  void _showError(Object error) {
+    final message = AuthErrorTranslator.translate(error);
+    final isWrongPassword =
+        error is AuthException &&
+        (error.code == 'invalid_credentials' ||
+            error.message.toLowerCase().contains('invalid login credentials'));
+
+    setState(() {
+      if (isWrongPassword) {
+        _currentPasswordError = tr('security.error_current_wrong');
+        _generalError = null;
+      } else {
+        _currentPasswordError = null;
+        _generalError = message;
+      }
+    });
+
+    _formKey.currentState?.validate();
   }
 
   @override
@@ -188,6 +225,11 @@ class _ChangePasswordSheetState extends State<ChangePasswordSheet> {
 
                 const SizedBox(height: 28),
 
+                if (_generalError != null) ...[
+                  _ErrorBanner(message: _generalError!),
+                  const SizedBox(height: 18),
+                ],
+
                 TextFormField(
                   controller: _currentController,
                   enabled: !_isSaving,
@@ -195,6 +237,12 @@ class _ChangePasswordSheetState extends State<ChangePasswordSheet> {
                   textInputAction: TextInputAction.next,
                   style: AppTextStyles.bodyMedium,
                   validator: _validateCurrent,
+                  // Mexer no campo apaga o erro que o servidor tinha dado:
+                  // a partir daqui é uma password nova, ainda por avaliar.
+                  onChanged: (_) {
+                    if (_currentPasswordError == null) return;
+                    setState(() => _currentPasswordError = null);
+                  },
                   decoration: InputDecoration(
                     labelText: tr('security.current_label'),
                     prefixIcon: Icon(
@@ -299,6 +347,40 @@ class _ChangePasswordSheetState extends State<ChangePasswordSheet> {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Faixa de erro no topo do formulário, para o que não pertence a nenhum
+/// campo em concreto — falta de rede, sessão expirada.
+class _ErrorBanner extends StatelessWidget {
+  final String message;
+
+  const _ErrorBanner({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: AppColors.error.withValues(alpha: .10),
+        borderRadius: AppRadius.all(AppRadius.sm),
+        border: Border.all(color: AppColors.error.withValues(alpha: .35)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.error_outline_rounded, size: 18, color: AppColors.error),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Text(
+              message,
+              style: AppTextStyles.bodySmall.copyWith(color: AppColors.error),
+            ),
+          ),
+        ],
       ),
     );
   }

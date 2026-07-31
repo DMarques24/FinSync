@@ -1,3 +1,4 @@
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:flutter/material.dart';
@@ -11,41 +12,25 @@ class HelpSheet extends StatelessWidget {
   // lado nenhum.
   static const _supportEmail = 'suporte@finsync.app';
 
-  static const _faqs = <(String, String)>[
-    (
-      "Como mudo a moeda usada na app?",
-      "Vai a Perfil > Moeda e escolhe entre EUR, USD, GBP ou BRL. Todos os "
-          "valores da app passam a mostrar-se nessa moeda.",
-    ),
-    (
-      "Como mudo entre modo claro e escuro?",
-      "Vai a Perfil > Tema e escolhe Claro, Escuro ou Automático (segue o "
-          "tema do sistema).",
-    ),
-    (
-      "As notificações enviam avisos reais?",
-      "Por agora não — as preferências em Perfil > Notificações ficam "
-          "guardadas apenas no dispositivo. O envio de notificações push "
-          "chega numa atualização futura.",
-    ),
-    (
-      "Como funciona o dinheiro guardado num desejo?",
-      "Ao criares ou editares um desejo podes indicar quanto já guardaste "
-          "para esse objetivo. Esse valor é descontado automaticamente do "
-          "teu saldo.",
-    ),
-    (
-      "Como troco a password da minha conta?",
-      "Vai a Perfil > Segurança, introduz a password atual e a nova "
-          "password para confirmar a alteração.",
-    ),
+  /// Só os sufixos das chaves: o texto vive no ficheiro de traduções.
+  /// Guardar aqui as perguntas em texto fixo era o que fazia esta folha
+  /// aparecer sempre em português, mesmo com a app em inglês.
+  static const _faqKeys = <String>[
+    'currency',
+    'theme',
+    'language',
+    'notifications',
+    'desire',
+    'events',
+    'statement',
+    'password',
   ];
 
   Future<void> _contactSupport(BuildContext context) async {
     final uri = Uri(
       scheme: 'mailto',
       path: _supportEmail,
-      query: 'subject=Suporte FinSync',
+      query: 'subject=${Uri.encodeComponent(tr('help.email_subject'))}',
     );
 
     final launched = await launchUrl(uri);
@@ -54,7 +39,7 @@ class HelpSheet extends StatelessWidget {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Não foi possível abrir o email. Contacta-nos em $_supportEmail.',
+            tr('help.email_failed', {'email': _supportEmail}),
           ),
         ),
       );
@@ -88,12 +73,12 @@ class HelpSheet extends StatelessWidget {
 
                 const SizedBox(height: 24),
 
-                Text("Ajuda", style: AppTextStyles.headingMedium),
+                Text(tr('help.title'), style: AppTextStyles.headingMedium),
 
                 const SizedBox(height: 6),
 
                 Text(
-                  "Perguntas frequentes e formas de contacto.",
+                  tr('help.subtitle'),
                   style: AppTextStyles.bodySmall.copyWith(
                     color: AppColors.textSecondary,
                   ),
@@ -105,7 +90,7 @@ class HelpSheet extends StatelessWidget {
                   child: ListView(
                     controller: scrollController,
                     children: [
-                      for (final (question, answer) in _faqs)
+                      for (final key in _faqKeys)
                         // `Material` e não `Container`: o `ExpansionTile`
                         // constrói um `ListTile` por dentro, e este pinta o
                         // fundo e a onda do toque no Material mais próximo
@@ -139,7 +124,7 @@ class HelpSheet extends StatelessWidget {
                                 iconColor: AppColors.secondary,
                                 collapsedIconColor: AppColors.textSecondary,
                                 title: Text(
-                                  question,
+                                  tr('help.faq_${key}_q'),
                                   style: AppTextStyles.bodyMedium.copyWith(
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -148,7 +133,7 @@ class HelpSheet extends StatelessWidget {
                                   Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                      answer,
+                                      tr('help.faq_${key}_a'),
                                       style: AppTextStyles.bodySmall.copyWith(
                                         color: AppColors.textSecondary,
                                         height: 1.4,
@@ -177,7 +162,7 @@ class HelpSheet extends StatelessWidget {
                           color: AppColors.secondary,
                         ),
                         label: Text(
-                          "Contactar suporte",
+                          tr('help.contact_support'),
                           style: TextStyle(
                             color: AppColors.secondary,
                             fontWeight: FontWeight.bold,

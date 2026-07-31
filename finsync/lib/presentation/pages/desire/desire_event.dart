@@ -14,3 +14,21 @@ class AddDesireEvent extends DesireEvent {
 
   AddDesireEvent(this.desire, {this.imageFile, this.completer});
 }
+
+/// Guardar dinheiro para um desejo.
+class AddDesireSavingEvent extends DesireEvent {
+  final Desire desire;
+  final double amount;
+  final Completer<void>? completer;
+
+  AddDesireSavingEvent(this.desire, this.amount, {this.completer});
+}
+
+/// Resposta à pergunta periódica "isto ainda faz sentido?".
+class ReviewDesireEvent extends DesireEvent {
+  final Desire desire;
+  final bool stillWanted;
+  final Completer<void>? completer;
+
+  ReviewDesireEvent(this.desire, this.stillWanted, {this.completer});
+}

@@ -3,7 +3,9 @@ import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/domain/entities/desire.dart';
 import 'package:finsync/presentation/pages/desire/components/desire_card.dart';
+import 'package:finsync/presentation/pages/desire/components/review_prompt_card.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class DesiresList extends StatelessWidget {
   final List<Desire> desires;
@@ -56,9 +58,19 @@ class DesiresList extends StatelessWidget {
       );
     }
 
+    // Só o primeiro por reavaliar. Empilhar cinco cartões amarelos de uma
+    // vez faz com que sejam todos ignorados; um de cada vez ainda é lido.
+    final pending = desires.where((desire) => desire.needsReview()).toList();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (pending.isNotEmpty)
+          ReviewPromptCard(
+            key: ValueKey('review-${pending.first.id}'),
+            desire: pending.first,
+          ),
+
         ...desires.map(
           (desire) => Padding(
             padding: const EdgeInsets.only(bottom: 12),
@@ -68,6 +80,7 @@ class DesiresList extends StatelessWidget {
               price: desire.price,
               saved: desire.saved,
               date: _formatDate(desire.date),
+              onTap: () => context.push('/desire/${desire.id}'),
             ),
           ),
         ),

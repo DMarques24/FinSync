@@ -49,7 +49,10 @@ class StatementRepositoryImpl implements StatementRepository {
       final description = _cleanDescription(line, dateMatch, amounts);
       if (description.isEmpty) continue;
 
-      final isIncome = _looksLikeIncome(line, amount);
+      // A marca D/C do banco tem prioridade; só quando não existe é que
+      // vamos adivinhar pela descrição.
+      final isIncome =
+          _debitCreditMarker(line, amount) ?? _looksLikeIncome(line, amount);
 
       result.add(
         ParsedTransaction(
@@ -311,12 +314,21 @@ class StatementRepositoryImpl implements StatementRepository {
   // Valores monetários
   // =====================================================================
 
+  /// O `(?![.,/\-]\d)` no fim é o que impede uma data de ser lida como um
+  /// valor. Numa linha que comece por `01.03.2026`, o `01.03` encaixava em
+  /// `\d+[.,]\d{2}` e era escolhido como o valor do movimento, porque vem
+  /// antes do valor verdadeiro. Todos os movimentos de bancos que escrevem
+  /// datas com pontos eram importados com um ou dois euros.
+  ///
+  /// Com esta condição, `01.03` é rejeitado por vir seguido de `.2026`,
+  /// enquanto `45,20   1.234,56` continua a passar — o que vem a seguir são
+  /// espaços, não um separador colado a dígitos.
   static final _amountRegex = RegExp(
     r'(-|\+)?\s*(?:€|EUR)?\s*('
     r'\d{1,3}(?:[.\s]\d{3})+,\d{2}'
     r'|\d{1,3}(?:[,\s]\d{3})+\.\d{2}'
     r'|\d+[.,]\d{2}'
-    r')(?!\d)\s*(-)?\s*(?:€|EUR)?',
+    r')(?!\d)(?![.,/\-]\d)\s*(-)?\s*(?:€|EUR)?',
   );
 
   List<_Amount> _findAmounts(String line) {
@@ -381,6 +393,25 @@ class StatementRepositoryImpl implements StatementRepository {
     return _incomeKeywords.any(normalized.contains);
   }
 
+  /// Muitos extratos marcam a natureza do movimento com uma letra a seguir
+  /// ao valor: `52,37 D` para débito, `1.450,00 C` para crédito. Quando
+  /// está lá, é informação do banco e vale mais do que qualquer palavra
+  /// que tentemos adivinhar na descrição.
+  static final _debitCreditRegex = RegExp(
+    r'^\s*(DB|CR|D|C)\b',
+    caseSensitive: false,
+  );
+
+  bool? _debitCreditMarker(String line, _Amount amount) {
+    if (amount.end >= line.length) return null;
+
+    final match = _debitCreditRegex.firstMatch(line.substring(amount.end));
+    if (match == null) return null;
+
+    final marker = match.group(1)!.toUpperCase();
+    return marker == 'C' || marker == 'CR';
+  }
+
   // =====================================================================
   // Categoria
   // =====================================================================
@@ -389,65 +420,177 @@ class StatementRepositoryImpl implements StatementRepository {
   /// Portugal. Compras, saúde e subscrições — que já não são categorias
   /// próprias — foram distribuídas por Lazer, por ser o destino mais
   /// razoável para gastos de consumo geral.
+  ///
+  /// Já não é preciso o truque do espaço no fim (`'bp '`, `'cp '`) para
+  /// evitar falsos positivos: a comparação passou a ser por palavra
+  /// inteira. Esse truque, além de frágil, falhava sempre que a palavra
+  /// era a última da descrição.
   static const _categoryKeywords = <ExpenseCategory, List<String>>{
     ExpenseCategory.alimentacao: [
+      // Supermercados
       'continente', 'pingo doce', 'lidl', 'aldi', 'mercadona', 'minipreco',
-      'intermarche', 'auchan', 'jumbo', 'el corte ingles', 'froiz', 'meu super',
-      'restaurante', 'restaur', 'cafe', 'snack', 'padaria', 'pastelaria',
-      'talho', 'peixaria', 'supermercado', 'mercado', 'mcdonald', 'burger',
-      'kfc', 'pizza', 'telepizza', 'uber eats', 'ubereats', 'glovo',
-      'bolt food', 'takeaway', 'starbucks', 'delta', 'churrasqueira',
+      'intermarche', 'auchan', 'jumbo', 'el corte ingles', 'froiz',
+      'meu super', 'amanhecer', 'coviran', 'spar', 'supercor',
+      'supermercado', 'mercado', 'mini mercado', 'talho', 'peixaria',
+      'frutaria', 'charcutaria', 'mercearia', 'celeiro', 'go natural',
+      // Restauração
+      'restaurante', 'restaur', 'cafe', 'cafetaria', 'snack', 'snack bar',
+      'padaria', 'pastelaria', 'confeitaria', 'gelataria', 'churrasqueira',
+      'cervejaria', 'marisqueira', 'tasca', 'cantina', 'catering',
+      'mcdonald', 'burger king', 'burger', 'kfc', 'pizza hut', 'pizza',
+      'telepizza', 'dominos', 'subway', 'vitaminas', 'h3', 'nandos',
+      'starbucks', 'delta cafes', 'sical', 'buondi', 'a padaria portuguesa',
+      'wok', 'sushi', 'kebab', 'pans', 'chicken',
+      // Entregas
+      'uber eats', 'ubereats', 'glovo', 'bolt food', 'takeaway', 'takeway',
+      'deliveroo', 'noocity',
     ],
     ExpenseCategory.transporte: [
-      'galp', 'bp ', 'repsol', 'cepsa', 'prio', 'combustivel', 'gasolina',
-      'gasoleo', 'abastecimento', 'via verde', 'brisa', 'portagem',
-      'estacionamento', 'parque', 'emel', 'cp ', 'comboios', 'metro',
-      'carris', 'transtejo', 'rodoviaria', 'uber', 'bolt', 'taxi', 'freenow',
-      'oficina', 'pneus', 'inspecao',
+      // Combustível
+      'galp', 'bp', 'repsol', 'cepsa', 'prio', 'intermarche combustivel',
+      'combustivel', 'gasolina', 'gasoleo', 'abastecimento', 'posto',
+      'estacao de servico', 'area de servico',
+      // Portagens e estacionamento
+      'via verde', 'viaverde', 'brisa', 'portagem', 'portagens', 'ascendi',
+      'estacionamento', 'parquimetro', 'parque', 'emel', 'saba', 'empark',
+      // Transportes públicos
+      'cp', 'comboios', 'comboios de portugal', 'metro', 'metropolitano',
+      'carris', 'transtejo', 'soflusa', 'rodoviaria', 'flixbus', 'rede expressos',
+      'navegante', 'andante', 'passe',
+      // Táxis e partilhados
+      'uber', 'bolt', 'taxi', 'freenow', 'free now', 'cooltra', 'lime',
+      // Manutenção
+      'oficina', 'pneus', 'norauto', 'midas', 'feuvert', 'inspecao',
+      'ipo automovel', 'lavagem auto', 'imt',
     ],
     ExpenseCategory.investimentos: [
       'xtb', 'degiro', 'trading 212', 'trading212', 'etoro', 'revolut invest',
-      'interactive brokers', 'coinbase', 'binance', 'kraken', 'bison bank',
-      'certificados de aforro', 'obrigacoes', 'ppr', 'fundo de investimento',
-      'bolsa', 'corretora', 'dividendos',
+      'interactive brokers', 'ibkr', 'coinbase', 'binance', 'kraken',
+      'bison bank', 'lightyear', 'trade republic', 'saxo',
+      'certificados de aforro', 'certificados do tesouro', 'obrigacoes',
+      'ppr', 'plano poupanca reforma', 'fundo de investimento', 'fundos',
+      'bolsa', 'corretora', 'dividendos', 'etf', 'acoes',
     ],
     ExpenseCategory.poupanca: [
-      'poupanca', 'deposito a prazo', 'conta poupanca', 'transferencia poupanca',
-      'aforro', 'mealheiro', 'reserva',
+      'poupanca', 'deposito a prazo', 'conta poupanca',
+      'transferencia poupanca', 'aforro', 'mealheiro', 'reserva',
+      'conta ordenado poupanca', 'aplicacao financeira',
     ],
     ExpenseCategory.lazer: [
-      'cinema', 'nos cinemas', 'ucicinemas', 'teatro', 'concerto', 'bilhete',
-      'ticketline', 'blueticket', 'steam', 'playstation', 'xbox', 'nintendo',
-      'ginasio', 'fitness', 'holmes place', 'solinca', 'phive', 'hotel',
-      'booking', 'airbnb', 'ryanair', 'tap ', 'easyjet', 'viagem', 'bar ',
-      'discoteca',
+      // Cultura e espetáculos
+      'cinema', 'nos cinemas', 'ucicinemas', 'cinemas nos', 'teatro',
+      'concerto', 'bilhete', 'bilheteira', 'ticketline', 'blueticket',
+      'bol', 'museu', 'zoo', 'oceanario', 'feira',
+      // Jogos
+      'steam', 'playstation', 'xbox', 'nintendo', 'epic games', 'riot',
+      'blizzard', 'ea games', 'twitch',
+      // Desporto e bem-estar
+      'ginasio', 'fitness', 'holmes place', 'solinca', 'phive', 'fitness hut',
+      'crossfit', 'piscina', 'padel', 'spa',
+      // Viagens
+      'hotel', 'hostel', 'booking', 'airbnb', 'ryanair', 'tap', 'easyjet',
+      'vueling', 'wizz air', 'lufthansa', 'iberia', 'viagem', 'agencia viagens',
+      'abreu', 'edreams', 'skyscanner', 'trivago', 'pousada',
+      // Bares
+      'bar', 'discoteca', 'pub', 'lounge',
       // Antigas "Compras"
       'fnac', 'worten', 'amazon', 'aliexpress', 'ebay', 'zara', 'h&m',
-      'primark', 'bershka', 'pull&bear', 'stradivarius', 'mango', 'sport zone',
-      'decathlon', 'jd sports', 'nike', 'adidas', 'ikea', 'leroy merlin',
-      'aki', 'maxmat', 'conforama', 'radio popular', 'mediamarkt', 'shein',
-      'temu', 'sapataria', 'perfumaria', 'douglas',
-      'netflix', 'spotify', 'hbo', 'max ', 'disney', 'youtube', 'prime video',
-      'apple.com', 'itunes', 'icloud', 'google', 'microsoft', 'office 365',
-      'dropbox', 'adobe', 'canva', 'chatgpt', 'openai', 'meo', 'nos ',
-      'vodafone', 'nowo', 'altice', 'mensalidade', 'subscricao', 'assinatura',
+      'primark', 'bershka', 'pull&bear', 'stradivarius', 'mango',
+      'sport zone', 'decathlon', 'jd sports', 'nike', 'adidas', 'sportsdirect',
+      'ikea', 'leroy merlin', 'aki', 'maxmat', 'conforama', 'jysk',
+      'radio popular', 'mediamarkt', 'shein', 'temu', 'wallapop', 'vinted',
+      'sapataria', 'perfumaria', 'douglas', 'sephora', 'normal', 'flying tiger',
+      // Antigas "Subscrições"
+      'netflix', 'spotify', 'hbo', 'max', 'disney', 'youtube', 'prime video',
+      'apple.com', 'itunes', 'icloud', 'apple', 'google', 'microsoft',
+      'office 365', 'dropbox', 'adobe', 'canva', 'chatgpt', 'openai',
+      'meo', 'nos', 'vodafone', 'nowo', 'altice', 'digi', 'mensalidade',
+      'subscricao', 'assinatura', 'renovacao',
+      // Seguros
       'seguro', 'seguros', 'fidelidade', 'tranquilidade', 'ageas',
+      'allianz', 'zurich', 'generali', 'lusitania', 'una seguros',
+      // Antigas "Saúde"
       'farmacia', 'hospital', 'clinica', 'medico', 'dentista', 'dentaria',
       'analises', 'laboratorio', 'consulta', 'fisioterapia', 'optica',
       'oculista', 'wells', 'medicina', 'saude', 'cuf', 'luz saude',
-      'lusiadas', 'sns',
+      'lusiadas', 'sns', 'multiopticas', 'alain afflelou', 'medis',
+      'advancecare',
     ],
   };
 
+  /// Escolhe a categoria pela palavra-chave **mais específica** que
+  /// aparecer na descrição, não pela primeira que calhar.
+  ///
+  /// A diferença importa: `uber eats` e `uber` estão os dois na lista, em
+  /// categorias diferentes. Com a regra antiga, quem ganhava dependia da
+  /// ordem em que o mapa estivesse escrito — uma ida ao supermercado podia
+  /// ir parar a Transporte por causa de uma palavra que calhava vir antes.
   ExpenseCategory? _inferCategory(String description) {
     final normalized = _normalize(description);
 
+    ExpenseCategory? best;
+    var bestLength = 0;
+
     for (final entry in _categoryKeywords.entries) {
       for (final keyword in entry.value) {
-        if (normalized.contains(keyword)) return entry.key;
+        // Só vale a pena testar se for mais específica do que a que já temos.
+        if (keyword.length <= bestLength) continue;
+
+        if (_containsWord(normalized, keyword)) {
+          best = entry.key;
+          bestLength = keyword.length;
+        }
       }
     }
-    return null;
+
+    return best;
+  }
+
+  /// Comprimento a partir do qual a palavra-chave pode ser só o princípio
+  /// da palavra. Abaixo disto exigimos a palavra exata.
+  static const _prefixMatchMinLength = 4;
+
+  /// Procura a palavra-chave respeitando fronteiras de palavra.
+  ///
+  /// Sem isto, `bp` apanhava `BPI`, `cp` apanhava `COMPRA` e `nos` apanhava
+  /// qualquer descrição com "nossos" — o `contains` simples é demasiado
+  /// permissivo para nomes curtos.
+  ///
+  /// Mas exigir fronteira nos dois lados também falha: `mcdonald` não
+  /// apanhava `MCDONALDS`, e os bancos escrevem os comerciantes como lhes
+  /// apetece. O meio-termo é exigir fronteira sempre no início e, no fim,
+  /// só nas palavras curtas — as que dão falsos positivos.
+  bool _containsWord(String haystack, String keyword) {
+    final requireEndBoundary = keyword.length < _prefixMatchMinLength;
+
+    var index = haystack.indexOf(keyword);
+
+    while (index != -1) {
+      final before = index == 0 ? null : haystack.codeUnitAt(index - 1);
+      final afterIndex = index + keyword.length;
+      final after = afterIndex >= haystack.length
+          ? null
+          : haystack.codeUnitAt(afterIndex);
+
+      final startsCleanly = !_isWordChar(before);
+      final endsCleanly = !requireEndBoundary || !_isWordChar(after);
+
+      if (startsCleanly && endsCleanly) return true;
+
+      index = haystack.indexOf(keyword, index + 1);
+    }
+
+    return false;
+  }
+
+  bool _isWordChar(int? code) {
+    if (code == null) return false;
+
+    final isDigit = code >= 0x30 && code <= 0x39;
+    final isLower = code >= 0x61 && code <= 0x7a;
+    final isUpper = code >= 0x41 && code <= 0x5a;
+
+    return isDigit || isLower || isUpper;
   }
 
   // =====================================================================

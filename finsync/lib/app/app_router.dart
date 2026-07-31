@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:finsync/presentation/pages/create_account/create_account_page.dart';
+import 'package:finsync/presentation/pages/desire/desire_detail_page.dart';
 import 'package:finsync/presentation/pages/login/login_page.dart';
 import 'package:finsync/presentation/pages/onboarding/onboarding_page.dart';
 import 'package:finsync/presentation/pages/startup/startup_page.dart';
@@ -28,6 +29,12 @@ final router = GoRouter(
       builder: (context, state) => const OnboardingPage(),
     ),
     GoRoute(path: '/home', builder: (context, state) => const MainPage()),
+    GoRoute(
+      path: '/desire/:id',
+      builder: (context, state) => DesireDetailPage(
+        desireId: int.tryParse(state.pathParameters['id'] ?? '') ?? 0,
+      ),
+    ),
     GoRoute(
       path: '/import-statement',
       builder: (context, state) =>
