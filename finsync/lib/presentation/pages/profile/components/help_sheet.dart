@@ -106,47 +106,57 @@ class HelpSheet extends StatelessWidget {
                     controller: scrollController,
                     children: [
                       for (final (question, answer) in _faqs)
-                        Container(
-                          margin: const EdgeInsets.only(bottom: 10),
-                          decoration: BoxDecoration(
+                        // `Material` e não `Container`: o `ExpansionTile`
+                        // constrói um `ListTile` por dentro, e este pinta o
+                        // fundo e a onda do toque no Material mais próximo
+                        // acima dele. Um Container colorido pelo meio
+                        // esconde esse efeito — é o aviso "ink splashes may
+                        // be invisible". O `clipBehavior` recorta a onda aos
+                        // cantos arredondados do cartão.
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: Material(
                             color: AppColors.background,
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: AppColors.border),
-                          ),
-                          child: Theme(
-                            data: Theme.of(
-                              context,
-                            ).copyWith(dividerColor: Colors.transparent),
-                            child: ExpansionTile(
-                              tilePadding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                              ),
-                              childrenPadding: const EdgeInsets.fromLTRB(
-                                16,
-                                0,
-                                16,
-                                16,
-                              ),
-                              iconColor: AppColors.secondary,
-                              collapsedIconColor: AppColors.textSecondary,
-                              title: Text(
-                                question,
-                                style: AppTextStyles.bodyMedium.copyWith(
-                                  fontWeight: FontWeight.w600,
+                            clipBehavior: Clip.antiAlias,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              side: BorderSide(color: AppColors.border),
+                            ),
+                            child: Theme(
+                              data: Theme.of(
+                                context,
+                              ).copyWith(dividerColor: Colors.transparent),
+                              child: ExpansionTile(
+                                tilePadding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
                                 ),
-                              ),
-                              children: [
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    answer,
-                                    style: AppTextStyles.bodySmall.copyWith(
-                                      color: AppColors.textSecondary,
-                                      height: 1.4,
-                                    ),
+                                childrenPadding: const EdgeInsets.fromLTRB(
+                                  16,
+                                  0,
+                                  16,
+                                  16,
+                                ),
+                                iconColor: AppColors.secondary,
+                                collapsedIconColor: AppColors.textSecondary,
+                                title: Text(
+                                  question,
+                                  style: AppTextStyles.bodyMedium.copyWith(
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                              ],
+                                children: [
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      answer,
+                                      style: AppTextStyles.bodySmall.copyWith(
+                                        color: AppColors.textSecondary,
+                                        height: 1.4,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),

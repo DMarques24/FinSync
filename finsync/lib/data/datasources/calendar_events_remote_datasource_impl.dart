@@ -37,6 +37,27 @@ class CalendarEventsRemoteDatasourceImpl
   }
 
   @override
+  Future<bool> markCalendarEventApplied(int id) async {
+    try {
+      // O `isFilter('applied_at', null)` é o que torna isto seguro: a
+      // condição é avaliada pela base de dados no momento do UPDATE, por
+      // isso duas chamadas simultâneas nunca marcam a mesma linha. Sem o
+      // `select()` não saberíamos quantas linhas foram afetadas.
+      final List<dynamic> updated = await supabase
+          .from('calendar_events')
+          .update({'applied_at': DateTime.now().toUtc().toIso8601String()})
+          .eq('id', id)
+          .eq('user_id', userId)
+          .isFilter('applied_at', null)
+          .select('id');
+
+      return updated.isNotEmpty;
+    } on PostgrestException catch (e) {
+      throw Exception('Erro ao lançar evento: ${e.message}');
+    }
+  }
+
+  @override
   Future<void> deleteCalendarEvent(int id) async {
     try {
       await supabase
@@ -46,6 +67,24 @@ class CalendarEventsRemoteDatasourceImpl
           .eq('user_id', userId);
     } on PostgrestException catch (e) {
       throw Exception('Erro ao remover evento: ${e.message}');
+    }
+  }
+
+  @override
+  Future<int> deleteCalendarEventSeries(String seriesId) async {
+    try {
+      // Um único DELETE apaga todas as repetições de uma vez. Fazê-lo
+      // linha a linha deixaria a série meio apagada se falhasse a meio.
+      final List<dynamic> deleted = await supabase
+          .from('calendar_events')
+          .delete()
+          .eq('series_id', seriesId)
+          .eq('user_id', userId)
+          .select('id');
+
+      return deleted.length;
+    } on PostgrestException catch (e) {
+      throw Exception('Erro ao remover eventos repetidos: ${e.message}');
     }
   }
 }

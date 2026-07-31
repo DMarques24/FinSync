@@ -28,6 +28,14 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
 
   ExpenseType selectedType = ExpenseType.despesa;
 
+  bool get _isIncome => selectedType == ExpenseType.receita;
+
+  /// Numa receita não há categoria a escolher — o dinheiro entrou, ponto.
+  /// A categoria fica sempre `rendimento` para a base de dados continuar a
+  /// ter um valor válido em todas as linhas.
+  ExpenseCategory get _categoryToSave =>
+      _isIncome ? ExpenseCategory.income : selectedCategory;
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -65,7 +73,7 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
       id: 0,
       name: name,
       price: AppCurrency.toBase(price),
-      category: selectedCategory,
+      category: _categoryToSave,
       date: selectedDate!,
       type: selectedType,
     );
@@ -174,40 +182,55 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
                 ),
               ),
 
-              const SizedBox(height: 18),
-
-              DropdownButtonFormField<ExpenseCategory>(
-                initialValue: selectedCategory,
-                style: AppTextStyles.bodyMedium,
-                decoration: InputDecoration(
-                  labelText: tr('home.category_label'),
-                  prefixIcon: Icon(
-                    Icons.category_outlined,
-                    color: AppColors.secondary,
-                  ),
-                ),
-                items: [
-                  for (final category in ExpenseCategory.values)
-                    DropdownMenuItem(
-                      value: category,
-                      child: Row(
+              // A categoria só faz sentido numa despesa. Numa receita o
+              // campo desaparece em vez de ficar desativado: um campo
+              // cinzento que não se mexe levanta mais dúvidas do que campo
+              // nenhum.
+              AnimatedSize(
+                duration: const Duration(milliseconds: 220),
+                curve: Curves.easeOut,
+                alignment: Alignment.topCenter,
+                child: _isIncome
+                    ? const SizedBox(width: double.infinity)
+                    : Column(
                         children: [
-                          Icon(
-                            category.icon,
-                            size: 18,
-                            color: AppColors.secondary,
+                          const SizedBox(height: 18),
+                          DropdownButtonFormField<ExpenseCategory>(
+                            initialValue: selectedCategory,
+                            style: AppTextStyles.bodyMedium,
+                            decoration: InputDecoration(
+                              labelText: tr('home.category_label'),
+                              prefixIcon: Icon(
+                                Icons.category_outlined,
+                                color: AppColors.secondary,
+                              ),
+                            ),
+                            items: [
+                              for (final category
+                                  in ExpenseCategory.selectable)
+                                DropdownMenuItem(
+                                  value: category,
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        category.icon,
+                                        size: 18,
+                                        color: AppColors.secondary,
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Text(categoryLabel(category)),
+                                    ],
+                                  ),
+                                ),
+                            ],
+                            onChanged: (value) {
+                              setState(() {
+                                selectedCategory = value!;
+                              });
+                            },
                           ),
-                          const SizedBox(width: 10),
-                          Text(categoryLabel(category)),
                         ],
                       ),
-                    ),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    selectedCategory = value!;
-                  });
-                },
               ),
 
               const SizedBox(height: 18),

@@ -30,12 +30,16 @@ class ParsedTransaction {
     DateTime? date,
     ExpenseCategory? category,
     ExpenseType? type,
+    // Com `category ?? this.category` não há forma de voltar a "sem
+    // categoria". É preciso quando um movimento deixa de ser receita e a
+    // categoria `rendimento` que tinha passa a não servir.
+    bool clearCategory = false,
   }) {
     return ParsedTransaction(
       name: name ?? this.name,
       price: price ?? this.price,
       date: date ?? this.date,
-      category: category ?? this.category,
+      category: clearCategory ? null : (category ?? this.category),
       type: type ?? this.type,
       confidence: confidence,
       rawLine: rawLine,

@@ -46,11 +46,22 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
   }
 
   Future<void> _deleteEvent(CalendarEventEntity event) async {
+    // Quantas linhas isto vai apagar. Numa série é mais do que a que o
+    // utilizador tocou, por isso a confirmação tem de o dizer.
+    final occurrences = _occurrencesOf(event);
+
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(tr('analytics.remove_event_title')),
-        content: Text(tr('analytics.remove_event_confirm', {'name': event.name})),
+        content: Text(
+          occurrences > 1
+              ? tr('analytics.remove_series_confirm', {
+                  'name': event.name,
+                  'count': '$occurrences',
+                })
+              : tr('analytics.remove_event_confirm', {'name': event.name}),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -67,26 +78,35 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
     if (confirmed != true || !mounted) return;
 
     try {
-      final completer = Completer<void>();
+      final completer = Completer<List<CalendarEventEntity>>();
       context.read<AnalyticsBloc>().add(
         DeleteEventCalendarEvent(event, completer: completer),
       );
 
-      await completer.future.timeout(const Duration(seconds: 12));
+      final removed = await completer.future.timeout(
+        const Duration(seconds: 12),
+      );
 
       if (!mounted) return;
       context.read<ProfileBloc>().add(LoadProfileEvent());
 
       // Dá hipótese de recuperar sem ter de reintroduzir tudo à mão.
-      // O evento é recriado com os mesmos dados (o id é novo, porque o
-      // original já foi apagado na base de dados).
+      // Os eventos são recriados com os mesmos dados (os ids são novos,
+      // porque os originais já foram apagados na base de dados).
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(tr('analytics.event_removed', {'name': event.name})),
+          content: Text(
+            removed.length > 1
+                ? tr('analytics.series_removed', {
+                    'name': event.name,
+                    'count': '${removed.length}',
+                  })
+                : tr('analytics.event_removed', {'name': event.name}),
+          ),
           duration: const Duration(seconds: 6),
           action: SnackBarAction(
             label: tr('common.undo'),
-            onPressed: () => _restoreEvent(event),
+            onPressed: () => _restoreEvents(removed),
           ),
         ),
       );
@@ -98,21 +118,32 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
     }
   }
 
-  Future<void> _restoreEvent(CalendarEventEntity event) async {
+  /// Quantas linhas o evento representa: numa série, todas as repetições.
+  int _occurrencesOf(CalendarEventEntity event) {
+    final state = context.read<AnalyticsBloc>().state;
+    final seriesId = event.seriesId;
+
+    if (seriesId == null || state is! AnalyticsLoadedState) return 1;
+
+    final count = state.events
+        .where((other) => other.seriesId == seriesId)
+        .length;
+
+    return count == 0 ? 1 : count;
+  }
+
+  Future<void> _restoreEvents(List<CalendarEventEntity> events) async {
     try {
       final completer = Completer<void>();
       context.read<AnalyticsBloc>().add(
-        AddEventCalendarEvent(
-          CalendarEventEntity(
-            id: 0,
-            name: event.name,
-            price: event.price,
-            date: event.date,
-            type: event.type,
-            // Não repetimos ao restaurar: criaria um segundo evento no mês
-            // seguinte que o utilizador nunca pediu.
-            repeatMonthly: false,
-          ),
+        RestoreEventsCalendarEvent(
+          // Cada um volta com a sua data, a sua série e o seu estado de
+          // lançamento. O `repeatMonthly` fica a `false` porque as
+          // repetições já estão todas aqui — deixá-lo ligado faria o
+          // bloco criar mais uma por cima destas.
+          events
+              .map((event) => event.copyWith(id: 0, repeatMonthly: false))
+              .toList(),
           completer: completer,
         ),
       );

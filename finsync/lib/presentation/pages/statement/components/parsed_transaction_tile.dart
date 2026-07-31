@@ -29,7 +29,6 @@ class ParsedTransactionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final amountColor = _isIncome ? AppColors.success : AppColors.error;
-    final needsCategory = transaction.category == null;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -103,39 +102,43 @@ class ParsedTransactionTile extends StatelessWidget {
 
           Row(
             children: [
+              // Numa receita não há categoria a escolher: mostra-se o
+              // rótulo fixo em vez de um seletor que só teria uma opção.
               Expanded(
                 flex: 3,
-                child: DropdownButtonFormField<ExpenseCategory>(
-                  initialValue: transaction.category,
-                  isExpanded: true,
-                  style: AppTextStyles.bodySmall.copyWith(
-                    color: AppColors.textPrimary,
-                  ),
-                  decoration: InputDecoration(
-                    isDense: true,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 10,
-                    ),
-                    hintText: tr('statement.choose_category'),
-                    hintStyle: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.error,
-                    ),
-                  ),
-                  items: [
-                    for (final category in ExpenseCategory.values)
-                      DropdownMenuItem(
-                        value: category,
-                        child: Text(
-                          categoryLabel(category),
-                          overflow: TextOverflow.ellipsis,
+                child: _isIncome
+                    ? const _IncomeCategoryChip()
+                    : DropdownButtonFormField<ExpenseCategory>(
+                        initialValue: transaction.category,
+                        isExpanded: true,
+                        style: AppTextStyles.bodySmall.copyWith(
+                          color: AppColors.textPrimary,
                         ),
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 10,
+                          ),
+                          hintText: tr('statement.choose_category'),
+                          hintStyle: AppTextStyles.bodySmall.copyWith(
+                            color: AppColors.error,
+                          ),
+                        ),
+                        items: [
+                          for (final category in ExpenseCategory.selectable)
+                            DropdownMenuItem(
+                              value: category,
+                              child: Text(
+                                categoryLabel(category),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                        ],
+                        onChanged: (value) {
+                          if (value != null) onCategoryChanged(value);
+                        },
                       ),
-                  ],
-                  onChanged: (value) {
-                    if (value != null) onCategoryChanged(value);
-                  },
-                ),
               ),
 
               const SizedBox(width: 8),
@@ -209,5 +212,42 @@ class ParsedTransactionTile extends StatelessWidget {
     final day = date.day.toString().padLeft(2, '0');
     final month = date.month.toString().padLeft(2, '0');
     return '$day/$month/${date.year}';
+  }
+}
+
+/// Ocupa o lugar do seletor de categoria nas receitas, com a mesma altura
+/// para as linhas da lista não ficarem desalinhadas.
+class _IncomeCategoryChip extends StatelessWidget {
+  const _IncomeCategoryChip();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: AppColors.success.withValues(alpha: .10),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            ExpenseCategory.income.icon,
+            size: 15,
+            color: AppColors.success,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              categoryLabel(ExpenseCategory.income),
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.bodySmall.copyWith(
+                color: AppColors.success,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

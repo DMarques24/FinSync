@@ -5,6 +5,8 @@ import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/domain/entities/calendar_event.dart';
+import 'package:finsync/domain/entities/expense_category.dart';
+import 'package:finsync/presentation/pages/home/components/category_labels.dart';
 import 'package:finsync/presentation/pages/analytics/analytics_bloc.dart';
 import 'package:finsync/presentation/pages/analytics/analytics_event.dart';
 import 'package:finsync/presentation/pages/profile/profile_bloc.dart';
@@ -27,7 +29,15 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
   bool _isSaving = false;
 
   CalendarEventType selectedType = CalendarEventType.despesa;
+  ExpenseCategory selectedCategory = ExpenseCategory.alimentacao;
   bool repeatMonthly = false;
+
+  bool get _isIncome => selectedType == CalendarEventType.receita;
+
+  /// Mesma regra do formulário de movimentos: uma receita não se
+  /// categoriza, fica sempre em `rendimento`.
+  ExpenseCategory get _categoryToSave =>
+      _isIncome ? ExpenseCategory.income : selectedCategory;
 
   @override
   void dispose() {
@@ -76,6 +86,7 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
       price: AppCurrency.toBase(price),
       date: selectedDate!,
       type: selectedType,
+      category: _categoryToSave,
       repeatMonthly: repeatMonthly,
     );
 
@@ -252,34 +263,91 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
                 ),
               ),
 
+              // Só as despesas têm categoria. Numa receita o campo
+              // desaparece, tal como no formulário de movimentos.
+              AnimatedSize(
+                duration: const Duration(milliseconds: 220),
+                curve: Curves.easeOut,
+                alignment: Alignment.topCenter,
+                child: _isIncome
+                    ? const SizedBox(width: double.infinity)
+                    : Column(
+                        children: [
+                          const SizedBox(height: 18),
+                          DropdownButtonFormField<ExpenseCategory>(
+                            initialValue: selectedCategory,
+                            style: AppTextStyles.bodyMedium,
+                            decoration: InputDecoration(
+                              labelText: tr('analytics.category_label'),
+                              prefixIcon: Icon(
+                                Icons.category_outlined,
+                                color: AppColors.secondary,
+                              ),
+                            ),
+                            items: [
+                              for (final category
+                                  in ExpenseCategory.selectable)
+                                DropdownMenuItem(
+                                  value: category,
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        category.icon,
+                                        size: 18,
+                                        color: AppColors.secondary,
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Text(categoryLabel(category)),
+                                    ],
+                                  ),
+                                ),
+                            ],
+                            onChanged: _isSaving
+                                ? null
+                                : (value) {
+                                    setState(() {
+                                      selectedCategory = value!;
+                                    });
+                                  },
+                          ),
+                        ],
+                      ),
+              ),
+
               const SizedBox(height: 18),
 
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 4,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.background,
+              // `Material` e não `Container`: o ListTile pinta o fundo e a
+              // onda do toque no Material mais próximo acima dele, e um
+              // Container colorido pelo meio esconde-o.
+              Material(
+                color: AppColors.background,
+                clipBehavior: Clip.antiAlias,
+                shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppColors.border),
+                  side: BorderSide(color: AppColors.border),
                 ),
-                child: SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  value: repeatMonthly,
-                  onChanged: _isSaving
-                      ? null
-                      : (value) {
-                          setState(() {
-                            repeatMonthly = value;
-                          });
-                        },
-                  activeThumbColor: AppColors.secondary,
-                  title: Text(tr('analytics.repeat_monthly')),
-                  subtitle: Text(
-                    tr('analytics.repeat_monthly_subtitle'),
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.textSecondary,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 4,
+                  ),
+                  child: SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    value: repeatMonthly,
+                    onChanged: _isSaving
+                        ? null
+                        : (value) {
+                            setState(() {
+                              repeatMonthly = value;
+                            });
+                          },
+                    activeThumbColor: AppColors.secondary,
+                    title: Text(tr('analytics.repeat_monthly')),
+                    subtitle: Text(
+                      tr('analytics.repeat_monthly_subtitle'),
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
                     ),
                   ),
                 ),
@@ -315,7 +383,33 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 16),
+
+              // Sem esta frase, criar um evento para daqui a um mês e ver o
+              // saldo na mesma parece um bug. É a regra menos óbvia do ecrã.
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.schedule_rounded,
+                    size: 15,
+                    color: AppColors.textSecondary,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      tr('analytics.event_scheduled_note'),
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: AppColors.textSecondary,
+                        fontSize: 12,
+                        height: 1.4,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 22),
 
               FilledButton.icon(
                 style: FilledButton.styleFrom(

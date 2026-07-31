@@ -3,7 +3,6 @@ import 'package:finsync/presentation/pages/create_account/create_account_bloc.da
 import 'package:finsync/presentation/pages/login/login_bloc.dart';
 import 'package:finsync/presentation/pages/onboarding/onboarding_bloc.dart';
 import 'package:finsync/presentation/pages/profile/profile_bloc.dart';
-import 'package:finsync/presentation/pages/profile/profile_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -36,9 +35,11 @@ class App extends StatelessWidget {
         BlocProvider<LoginBloc>(create: (_) => sl<LoginBloc>()),
         BlocProvider<CreateAccountBloc>(create: (_) => sl<CreateAccountBloc>()),
         BlocProvider<OnboardingBloc>(create: (_) => sl<OnboardingBloc>()),
-        BlocProvider<ProfileBloc>(
-          create: (_) => sl<ProfileBloc>()..add(LoadProfileEvent()),
-        ),
+        // Sem evento de carregamento aqui: quem decide se há perfil para
+        // ler é o `StartupPage`, que corre depois de a sessão estar
+        // resolvida. Pedi-lo no arranque deixava o bloco em erro quando
+        // ainda não havia sessão, e esse erro sobrevivia ao login inteiro.
+        BlocProvider<ProfileBloc>(create: (_) => sl<ProfileBloc>()),
         BlocProvider(create: (_) => sl<AnalyticsBloc>()),
         BlocProvider<ThemeBloc>(
           create: (_) => sl<ThemeBloc>()..add(LoadThemeEvent()),

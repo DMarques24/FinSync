@@ -30,6 +30,15 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     context.read<HomeBloc>().add(GetAllExpensesEvent());
+
+    // A Home mostra o saldo do perfil mas nunca o pedia — dependia de o
+    // bloco global já o ter. Se por alguma razão não estiver carregado
+    // (arranque sem sessão, erro anterior, regresso do onboarding), pede-o
+    // aqui. A condição evita um pedido extra sempre que se troca de
+    // separador.
+    if (context.read<ProfileBloc>().state is! ProfileLoadedState) {
+      context.read<ProfileBloc>().add(LoadProfileEvent());
+    }
   }
 
   @override

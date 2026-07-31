@@ -25,11 +25,10 @@ class FeaturesStep extends StatelessWidget {
             subtitle: tr('onboarding.how_it_works_subtitle'),
           ),
 
-          const SizedBox(height: AppSpacing.xxxl),
+          const SizedBox(height: AppSpacing.xxl),
 
-          
           FeatureCard(
-            icon: Icons.receipt_long_rounded,
+            icon: Icons.home_rounded,
             title: tr('onboarding.feature_home_title'),
             description: tr('onboarding.feature_home_desc'),
           ),
@@ -37,7 +36,15 @@ class FeaturesStep extends StatelessWidget {
           const SizedBox(height: AppSpacing.md),
 
           FeatureCard(
-            icon: Icons.flag_rounded,
+            icon: Icons.analytics_rounded,
+            title: tr('onboarding.feature_analytics_title'),
+            description: tr('onboarding.feature_analytics_desc'),
+          ),
+
+          const SizedBox(height: AppSpacing.md),
+
+          FeatureCard(
+            icon: Icons.favorite_rounded,
             title: tr('onboarding.feature_goals_title'),
             description: tr('onboarding.feature_goals_desc'),
           ),

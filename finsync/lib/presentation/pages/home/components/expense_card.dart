@@ -31,6 +31,10 @@ class ExpenseCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final amountColor = _isIncome ? AppColors.success : AppColors.error;
 
+    // Numa receita a categoria é sempre "Rendimento". Pintá-la de verde,
+    // como o valor, deixa claro à primeira vista que é dinheiro a entrar.
+    final categoryColor = _isIncome ? AppColors.success : AppColors.secondary;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
 
@@ -50,11 +54,11 @@ class ExpenseCard extends StatelessWidget {
             height: 52,
 
             decoration: BoxDecoration(
-              color: AppColors.secondary.withValues(alpha: .10),
+              color: categoryColor.withValues(alpha: .10),
               borderRadius: BorderRadius.circular(16),
             ),
 
-            child: Icon(_icon, color: AppColors.secondary, size: 26),
+            child: Icon(_icon, color: categoryColor, size: 26),
           ),
 
           const SizedBox(width: 16),
@@ -79,14 +83,14 @@ class ExpenseCard extends StatelessWidget {
                   ),
 
                   decoration: BoxDecoration(
-                    color: AppColors.secondary.withValues(alpha: .08),
+                    color: categoryColor.withValues(alpha: .08),
                     borderRadius: BorderRadius.circular(20),
                   ),
 
                   child: Text(
                     categoryLabel(category),
                     style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.secondary,
+                      color: categoryColor,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

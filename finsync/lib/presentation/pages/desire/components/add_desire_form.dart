@@ -85,9 +85,13 @@ class _AddDesireFormState extends State<AddDesireForm> {
     final granted = await _ensurePermission(permission);
     if (!granted || !mounted) return;
 
+    // Redimensionada antes de sair do telemóvel: a imagem do desejo é
+    // mostrada num cartão, não precisa da resolução original da câmara.
     final XFile? file = await picker.pickImage(
       source: source,
       imageQuality: 85,
+      maxWidth: 1440,
+      maxHeight: 1440,
     );
 
     if (file != null) {

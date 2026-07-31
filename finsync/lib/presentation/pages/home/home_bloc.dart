@@ -1,5 +1,6 @@
 import 'package:finsync/data/datasources/expense_remote_datasource.dart'
     show kExpensesPageSize;
+import 'package:finsync/domain/usecases/apply_due_calendar_events.dart';
 import 'package:finsync/domain/usecases/get_filter_time_expenses.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:finsync/domain/usecases/get_all_expenses.dart';
@@ -11,9 +12,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final GetAllExpenses getAllExpenses;
   final GetFilterTimeExpenses getFilterTimeExpenses;
   final InsertExpense insertExpense;
+  final ApplyDueCalendarEvents applyDueCalendarEvents;
 
-  HomeBloc(this.getAllExpenses, this.getFilterTimeExpenses, this.insertExpense)
-    : super(HomeInitialState()) {
+  HomeBloc(
+    this.getAllExpenses,
+    this.getFilterTimeExpenses,
+    this.insertExpense,
+    this.applyDueCalendarEvents,
+  ) : super(HomeInitialState()) {
     on<GetAllExpensesEvent>(_getAllExpenses);
     on<GetFilterTimeExpensesEvent>(_getFilterTimeExpenses);
     on<LoadMoreExpensesEvent>(_loadMoreExpenses);
@@ -27,6 +33,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(HomeLoadingState());
 
     try {
+      // Os eventos do calendário cujo dia já chegou entram aqui como
+      // movimentos. É por isto que abrir a app é suficiente para o saldo
+      // ficar em dia — não há nada agendado do lado do servidor.
+      await _applyDueEvents();
+
       final expenses = await getAllExpenses();
       emit(
         HomeLoadedState(
@@ -36,6 +47,17 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       );
     } catch (e) {
       emit(HomeErrorState(e.toString()));
+    }
+  }
+
+  /// Uma falha a lançar eventos não pode impedir a Home de abrir: os
+  /// movimentos que já existem continuam a ser mostrados, e na próxima
+  /// tentativa os eventos em atraso são apanhados na mesma.
+  Future<void> _applyDueEvents() async {
+    try {
+      await applyDueCalendarEvents();
+    } catch (_) {
+      // Silenciado de propósito — ver comentário acima.
     }
   }
 

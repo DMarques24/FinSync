@@ -1,3 +1,5 @@
+import 'package:finsync/domain/entities/expense.dart';
+import 'package:finsync/domain/entities/expense_category.dart';
 import 'package:finsync/domain/usecases/import_parsed_transactions.dart';
 import 'package:finsync/domain/usecases/parse_bank_statement.dart';
 import 'package:finsync/presentation/pages/statement/statement_event.dart';
@@ -95,7 +97,23 @@ class StatementBloc extends Bloc<StatementEvent, StatementState> {
     if (current is! StatementReviewState) return;
 
     final updated = [...current.transactions];
-    updated[event.index] = updated[event.index].copyWith(type: event.type);
+    final transaction = updated[event.index];
+
+    if (event.type == ExpenseType.receita) {
+      // Passou a receita: a categoria é `rendimento` e deixa de haver
+      // escolha a fazer.
+      updated[event.index] = transaction.copyWith(
+        type: event.type,
+        category: ExpenseCategory.income,
+      );
+    } else {
+      // Voltou a despesa: `rendimento` não serve, e obrigar a escolher é
+      // melhor do que arriscar uma categoria errada.
+      updated[event.index] = transaction.copyWith(
+        type: event.type,
+        clearCategory: transaction.category?.isIncome ?? false,
+      );
+    }
 
     emit(current.copyWith(transactions: updated));
   }

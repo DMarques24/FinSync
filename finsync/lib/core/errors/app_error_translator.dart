@@ -12,9 +12,7 @@ class AppErrorTranslator {
 
     if (error is PostgrestException) return _fromPostgrest(error);
 
-    if (error is StorageException) {
-      return 'Não foi possível carregar o ficheiro. Tenta novamente.';
-    }
+    if (error is StorageException) return _fromStorage(error);
 
     if (error is SocketException) {
       return 'Sem ligação à internet. Verifica a tua rede e tenta novamente.';
@@ -41,6 +39,36 @@ class AppErrorTranslator {
     }
 
     return 'Ocorreu um erro inesperado. Tenta novamente.';
+  }
+
+  static String _fromStorage(StorageException error) {
+    final message = error.message.toLowerCase();
+
+    // "Tenta novamente" era a resposta para tudo, e em metade destes casos
+    // tentar outra vez nunca vai resultar — o bucket não aparece sozinho e
+    // a foto não encolhe. Cada um destes diz o que fazer a seguir.
+    if (error.statusCode == '404' || message.contains('bucket not found')) {
+      return 'O armazenamento de imagens ainda não está configurado nesta '
+          'aplicação.';
+    }
+
+    if (error.statusCode == '413' ||
+        message.contains('maximum allowed size') ||
+        message.contains('payload too large')) {
+      return 'A imagem é demasiado grande. Escolhe outra ou tira uma nova.';
+    }
+
+    if (message.contains('mime type') || message.contains('invalid file')) {
+      return 'Formato de imagem não suportado. Usa JPG ou PNG.';
+    }
+
+    if (error.statusCode == '403' ||
+        message.contains('row-level security') ||
+        message.contains('unauthorized')) {
+      return 'Não tens permissão para guardar esta imagem.';
+    }
+
+    return 'Não foi possível carregar a imagem. Tenta novamente.';
   }
 
   static String _fromPostgrest(PostgrestException error) {

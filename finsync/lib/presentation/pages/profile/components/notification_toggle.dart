@@ -21,35 +21,44 @@ class NotificationToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      decoration: BoxDecoration(
-        color: AppColors.background,
+    // `Material` e não `Container`: o ListTile pinta o fundo e a onda do
+    // toque no Material mais próximo acima dele. Com um Container colorido
+    // pelo meio, o Material fica escondido por trás e o toque não se vê —
+    // é isso que o aviso "ink splashes may be invisible" está a dizer.
+    return Material(
+      color: AppColors.background,
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
+        side: BorderSide(color: AppColors.border),
       ),
-      child: SwitchListTile(
-        contentPadding: EdgeInsets.zero,
-        value: value,
-        onChanged: onChanged,
-        activeThumbColor: AppColors.secondary,
-        secondary: Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: AppColors.secondary.withValues(alpha: .10),
-            borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        child: SwitchListTile(
+          contentPadding: EdgeInsets.zero,
+          value: value,
+          onChanged: onChanged,
+          activeThumbColor: AppColors.secondary,
+          secondary: Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: AppColors.secondary.withValues(alpha: .10),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, color: AppColors.secondary, size: 20),
           ),
-          child: Icon(icon, color: AppColors.secondary, size: 20),
-        ),
-        title: Text(
-          title,
-          style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w600),
-        ),
-        subtitle: Text(
-          subtitle,
-          style: AppTextStyles.bodySmall.copyWith(
-            color: AppColors.textSecondary,
+          title: Text(
+            title,
+            style: AppTextStyles.bodyMedium.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          subtitle: Text(
+            subtitle,
+            style: AppTextStyles.bodySmall.copyWith(
+              color: AppColors.textSecondary,
+            ),
           ),
         ),
       ),

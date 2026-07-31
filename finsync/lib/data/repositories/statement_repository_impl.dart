@@ -56,7 +56,11 @@ class StatementRepositoryImpl implements StatementRepository {
           name: description,
           price: amount.value,
           date: dateMatch?.date ?? DateTime.now(),
-          category: _inferCategory(description),
+          // Uma entrada de dinheiro não precisa de ser adivinhada: a
+          // categoria é `rendimento` e não há nada a rever.
+          category: isIncome
+              ? ExpenseCategory.income
+              : _inferCategory(description),
           type: isIncome ? ExpenseType.receita : ExpenseType.despesa,
           confidence: _confidence(dateMatch, description),
           rawLine: line,
@@ -179,7 +183,9 @@ class StatementRepositoryImpl implements StatementRepository {
           name: description,
           price: amount.value,
           date: dateMatch?.date ?? DateTime.now(),
-          category: _inferCategory(description),
+          category: isIncome
+              ? ExpenseCategory.income
+              : _inferCategory(description),
           type: isIncome ? ExpenseType.receita : ExpenseType.despesa,
           confidence: dateMatch == null ? 0.7 : 0.95,
           rawLine: line,

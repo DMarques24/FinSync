@@ -2,6 +2,7 @@ import 'package:finsync/data/datasources/calendar_events_remote_datasource.dart'
 import 'package:finsync/data/datasources/calendar_events_remote_datasource_impl.dart';
 import 'package:finsync/data/repositories/calendar_events_repository_impl.dart';
 import 'package:finsync/domain/repositories/calendar_event_repository.dart';
+import 'package:finsync/domain/usecases/apply_due_calendar_events.dart';
 import 'package:finsync/domain/usecases/adjust_balance.dart';
 import 'package:finsync/domain/usecases/complete_onboarding.dart';
 import 'package:finsync/domain/usecases/delete_calendar_event.dart';
@@ -172,6 +173,14 @@ Future<void> initDependencies() async {
     () => DeleteCalendarEvent(sl()),
   );
 
+  // Cruza os dois repositórios: lê os eventos, escreve os movimentos.
+  sl.registerLazySingleton<ApplyDueCalendarEvents>(
+    () => ApplyDueCalendarEvents(
+      sl<CalendarEventRepository>(),
+      sl<ExpenseRepository>(),
+    ),
+  );
+
   sl.registerLazySingleton<GetTopExpenseCategory>(
     () => GetTopExpenseCategory(sl()),
   );
@@ -188,6 +197,7 @@ Future<void> initDependencies() async {
       sl<GetAllExpenses>(),
       sl<GetFilterTimeExpenses>(),
       sl<InsertExpense>(),
+      sl<ApplyDueCalendarEvents>(),
     ),
   );
 
@@ -225,7 +235,7 @@ Future<void> initDependencies() async {
       sl<GetAllExpenses>(),
       sl<InsertCalendarEvent>(),
       sl<GetAllCalendarEvents>(),
-      sl<AdjustBalance>(),
+      sl<ApplyDueCalendarEvents>(),
       sl<DeleteCalendarEvent>(),
       sl<CreateAnalyticsPdf>(),
     ),

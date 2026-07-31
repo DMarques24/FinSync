@@ -4,8 +4,11 @@ import 'package:finsync/domain/entities/expense_category.dart';
 import 'package:flutter/material.dart';
 
 
-Color categoryColor(ExpenseCategory category) =>
-    AppColors.chartPalette[category.index % AppColors.chartPalette.length];
+Color categoryColor(ExpenseCategory category) => category.isIncome
+    // Rendimento é dinheiro a entrar: usa o verde de sucesso em vez de uma
+    // cor da paleta de despesas, para nunca ser confundido com um gasto.
+    ? AppColors.success
+    : AppColors.chartPalette[category.index % AppColors.chartPalette.length];
 
 class CategorySlice {
   final ExpenseCategory category;

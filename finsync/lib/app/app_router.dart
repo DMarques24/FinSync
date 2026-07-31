@@ -3,16 +3,21 @@ import 'dart:io';
 import 'package:finsync/presentation/pages/create_account/create_account_page.dart';
 import 'package:finsync/presentation/pages/login/login_page.dart';
 import 'package:finsync/presentation/pages/onboarding/onboarding_page.dart';
+import 'package:finsync/presentation/pages/startup/startup_page.dart';
 import 'package:finsync/presentation/pages/statement/import_statement_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:finsync/presentation/pages/main_page.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
-final session = Supabase.instance.client.auth.currentSession;
-
+/// A app abre sempre em `/`, que é o `StartupPage`.
+///
+/// Antes o destino inicial era decidido aqui — sessão existe, vai para a
+/// Home — mas isso ignorava se a conta estava pronta a ser usada. Essa
+/// decisão precisa de ler o perfil da base de dados, o que é assíncrono e
+/// não cabe num `initialLocation`.
 final router = GoRouter(
-  initialLocation: session != null ? '/' : '/login',
+  initialLocation: '/',
   routes: [
+    GoRoute(path: '/', builder: (context, state) => const StartupPage()),
     GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
     GoRoute(
       path: '/create-account',
@@ -22,7 +27,7 @@ final router = GoRouter(
       path: '/onboarding',
       builder: (context, state) => const OnboardingPage(),
     ),
-    GoRoute(path: '/', builder: (context, state) => const MainPage()),
+    GoRoute(path: '/home', builder: (context, state) => const MainPage()),
     GoRoute(
       path: '/import-statement',
       builder: (context, state) =>

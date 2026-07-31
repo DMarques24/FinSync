@@ -101,9 +101,14 @@ class _EditProfileFormState extends State<EditProfileForm> {
     final granted = await _ensurePermission(permission);
     if (!granted || !mounted) return;
 
+    // Um avatar nunca é mostrado a mais de 110px. Redimensionar aqui evita
+    // enviar os 8 MB que uma câmara moderna produz — e evita bater no
+    // limite de tamanho do bucket.
     final XFile? file = await _picker.pickImage(
       source: source,
       imageQuality: 85,
+      maxWidth: 1080,
+      maxHeight: 1080,
     );
 
     if (file != null) {

@@ -4,6 +4,10 @@ import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/presentation/pages/login/login_bloc.dart';
 import 'package:finsync/presentation/pages/login/login_event.dart';
 import 'package:finsync/presentation/pages/login/login_state.dart';
+import 'package:finsync/presentation/pages/home/home_bloc.dart';
+import 'package:finsync/presentation/pages/home/home_event.dart';
+import 'package:finsync/presentation/pages/profile/profile_bloc.dart';
+import 'package:finsync/presentation/pages/profile/profile_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -51,10 +55,16 @@ class _LoginPageState extends State<LoginPage> {
         child: BlocConsumer<LoginBloc, LoginState>(
           listener: (context, state) {
             if (state is LoginLoadedState) {
+              // Os blocos globais foram criados no arranque, quando ainda
+              // não havia sessão. Agora que há, os dados deste utilizador
+              // têm de ser carregados de raiz.
+              context.read<ProfileBloc>().add(LoadProfileEvent());
+              context.read<HomeBloc>().add(GetAllExpensesEvent());
+
               if (state.isFirstLogin) {
                 context.go('/onboarding');
               } else {
-                context.go('/');
+                context.go('/home');
               }
             }
             if (state is LoginErrorState) {

@@ -9,6 +9,8 @@ import 'package:finsync/presentation/pages/onboarding/components/welcome_step.da
 import 'package:finsync/presentation/pages/onboarding/onboarding_bloc.dart';
 import 'package:finsync/presentation/pages/onboarding/onboarding_event.dart';
 import 'package:finsync/presentation/pages/onboarding/onboarding_state.dart';
+import 'package:finsync/presentation/pages/profile/profile_bloc.dart';
+import 'package:finsync/presentation/pages/profile/profile_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -102,7 +104,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
           child: BlocConsumer<OnboardingBloc, OnboardingState>(
             listener: (context, state) {
               if (state is OnboardingLoadedState) {
-                context.go('/');
+                // O saldo acabou de ser escrito na base de dados. O perfil
+                // em memória ainda é o de antes do onboarding, por isso tem
+                // de ser relido antes de a Home o ir buscar.
+                context.read<ProfileBloc>().add(LoadProfileEvent());
+                context.go('/home');
               }
               if (state is OnboardingErrorState) {
                 _showMessage(context, state.message);

@@ -9,10 +9,19 @@ class UserRemoteDatasourceImpl implements UserRemoteDatasource {
 
   static const _avatarBucket = 'avatars';
 
+  // Antes isto era `currentUser!.id` espalhado pelos métodos. Quando a app
+  // arranca sem sessão, esse `!` rebentava com um erro de null que não dizia
+  // nada a ninguém. Agora falha com uma frase legível.
+  String get userId {
+    final user = supabase.auth.currentUser;
+    if (user == null) {
+      throw Exception('Utilizador não autenticado.');
+    }
+    return user.id;
+  }
+
   @override
   Future<List<UserModel>> getUser() async {
-    final userId = supabase.auth.currentUser!.id;
-
     final List<dynamic> result = await supabase
         .from('profiles')
         .select()
@@ -46,8 +55,6 @@ class UserRemoteDatasourceImpl implements UserRemoteDatasource {
     required String username,
     String? avatarUrl,
   }) async {
-    final userId = supabase.auth.currentUser!.id;
-
     final updates = <String, dynamic>{'username': username};
     if (avatarUrl != null) {
       updates['avatar_url'] = avatarUrl;
@@ -58,8 +65,6 @@ class UserRemoteDatasourceImpl implements UserRemoteDatasource {
 
   @override
   Future<String> uploadAvatar(File file) async {
-    final userId = supabase.auth.currentUser!.id;
-
     final extension = file.path.contains('.')
         ? file.path.split('.').last
         : 'jpg';
