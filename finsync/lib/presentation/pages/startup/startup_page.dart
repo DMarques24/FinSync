@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:finsync/core/di/injection.dart';
 import 'package:finsync/core/errors/app_error_translator.dart';
 import 'package:finsync/core/i18n/app_translations.dart';
@@ -5,6 +7,7 @@ import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/dimensions.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/domain/usecases/get_user.dart';
+import 'package:finsync/domain/usecases/reschedule_notifications.dart';
 import 'package:finsync/domain/usecases/sign_out_user.dart';
 import 'package:finsync/presentation/pages/profile/profile_bloc.dart';
 import 'package:finsync/presentation/pages/profile/profile_event.dart';
@@ -71,9 +74,22 @@ class _StartupPageState extends State<StartupPage> {
 
       context.read<ProfileBloc>().add(LoadProfileEvent());
       _goTo('/home');
+
+      // Depois de navegar, sem esperar: os avisos não podem atrasar a
+      // entrada na app, e falhar a agendá-los não é motivo para bloquear
+      // ninguém à porta.
+      unawaited(_rescheduleNotifications());
     } catch (e) {
       if (!mounted) return;
       setState(() => _error = AppErrorTranslator.translate(e));
+    }
+  }
+
+  Future<void> _rescheduleNotifications() async {
+    try {
+      await sl<RescheduleNotifications>()();
+    } catch (_) {
+      // Sem rede ou sem autorização, fica para a próxima abertura.
     }
   }
 

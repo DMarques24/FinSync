@@ -5,7 +5,10 @@ import 'package:finsync/domain/repositories/calendar_event_repository.dart';
 import 'package:finsync/domain/usecases/add_desire_saving.dart';
 import 'package:finsync/domain/usecases/apply_due_calendar_events.dart';
 import 'package:finsync/domain/usecases/get_desire_savings.dart';
+import 'package:finsync/domain/usecases/recover_password.dart';
 import 'package:finsync/domain/usecases/register_desire_review.dart';
+import 'package:finsync/domain/usecases/resend_confirmation_email.dart';
+import 'package:finsync/domain/usecases/reschedule_notifications.dart';
 import 'package:finsync/domain/usecases/adjust_balance.dart';
 import 'package:finsync/domain/usecases/complete_onboarding.dart';
 import 'package:finsync/domain/usecases/delete_calendar_event.dart';
@@ -160,6 +163,12 @@ Future<void> initDependencies() async {
 
   sl.registerLazySingleton<ChangePassword>(() => ChangePassword(sl()));
 
+  sl.registerLazySingleton<RecoverPassword>(() => RecoverPassword(sl()));
+
+  sl.registerLazySingleton<ResendConfirmationEmail>(
+    () => ResendConfirmationEmail(sl()),
+  );
+
   sl.registerLazySingleton<CompleteOnboarding>(() => CompleteOnboarding(sl()));
 
   sl.registerLazySingleton<AdjustBalance>(() => AdjustBalance(sl()));
@@ -174,6 +183,14 @@ Future<void> initDependencies() async {
 
   sl.registerLazySingleton<DeleteCalendarEvent>(
     () => DeleteCalendarEvent(sl()),
+  );
+
+  sl.registerLazySingleton<RescheduleNotifications>(
+    () => RescheduleNotifications(
+      sl<CalendarEventRepository>(),
+      sl<DesireRepository>(),
+      sl<ExpenseRepository>(),
+    ),
   );
 
   // Cruza os dois repositórios: regista a poupança e cria o movimento.
@@ -232,7 +249,7 @@ Future<void> initDependencies() async {
   );
 
   sl.registerFactory<CreateAccountBloc>(
-    () => CreateAccountBloc(sl<SignUpUser>(), sl<InsertUser>()),
+    () => CreateAccountBloc(sl<SignUpUser>()),
   );
 
   sl.registerFactory<ProfileBloc>(

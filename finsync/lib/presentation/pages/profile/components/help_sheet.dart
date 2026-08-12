@@ -1,16 +1,16 @@
+import 'dart:io';
+
 import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HelpSheet extends StatelessWidget {
   const HelpSheet({super.key});
 
-  // Endereço de suporte provisório — tem de ser substituído pelo endereço
-  // real antes de publicar a app, senão os pedidos de ajuda não chegam a
-  // lado nenhum.
-  static const _supportEmail = 'suporte@finsync.app';
+  static const _supportEmail = 'diogodemouramarques2004@gmail.com';
 
   /// Só os sufixos das chaves: o texto vive no ficheiro de traduções.
   /// Guardar aqui as perguntas em texto fixo era o que fazia esta folha
@@ -27,23 +27,54 @@ class HelpSheet extends StatelessWidget {
   ];
 
   Future<void> _contactSupport(BuildContext context) async {
+    // O corpo já vai com o sistema e a versão preenchidos. Sem isso, o
+    // primeiro email de resposta é sempre a perguntar em que telemóvel é
+    // que o problema aconteceu.
+    final body = tr('help.email_body', {
+      'platform': _platformName(),
+      'version': _appVersion,
+    });
+
     final uri = Uri(
       scheme: 'mailto',
       path: _supportEmail,
-      query: 'subject=${Uri.encodeComponent(tr('help.email_subject'))}',
+      query:
+          'subject=${Uri.encodeComponent(tr('help.email_subject'))}'
+          '&body=${Uri.encodeComponent(body)}',
     );
 
-    final launched = await launchUrl(uri);
-
-    if (!launched && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            tr('help.email_failed', {'email': _supportEmail}),
-          ),
-        ),
-      );
+    var launched = false;
+    try {
+      launched = await launchUrl(uri);
+    } catch (_) {
+      // Sem app de email configurada, o sistema devolve erro em vez de
+      // false. O tratamento é o mesmo.
+      launched = false;
     }
+
+    if (launched || !context.mounted) return;
+
+    // Sem forma de abrir o email, ao menos que o endereço fique na área de
+    // transferência — dizer "escreve-nos para X" e obrigar a copiar à mão
+    // de um snackbar que desaparece não serve de nada.
+    await Clipboard.setData(const ClipboardData(text: _supportEmail));
+
+    if (!context.mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(tr('help.email_copied', {'email': _supportEmail})),
+        duration: const Duration(seconds: 6),
+      ),
+    );
+  }
+
+  static const _appVersion = '1.0.0';
+
+  String _platformName() {
+    if (Platform.isIOS) return 'iOS';
+    if (Platform.isAndroid) return 'Android';
+    return Platform.operatingSystem;
   }
 
   @override

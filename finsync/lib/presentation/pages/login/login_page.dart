@@ -202,7 +202,19 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
 
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 8),
+
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                          onPressed: isLoading
+                              ? null
+                              : () => context.push('/forgot-password'),
+                          child: Text(tr('login.forgot_password')),
+                        ),
+                      ),
+
+                      const SizedBox(height: 8),
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,

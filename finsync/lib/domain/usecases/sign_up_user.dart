@@ -6,7 +6,10 @@ class SignUpUser {
 
   SignUpUser(this.authRepository);
 
-  Future<String> call(AuthUserEntity user) async {
-    return await authRepository.signUp(user);
+  Future<SignUpResult> call(
+    AuthUserEntity user, {
+    required String username,
+  }) {
+    return authRepository.signUp(user, username: username);
   }
 }

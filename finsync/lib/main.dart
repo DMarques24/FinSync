@@ -2,6 +2,7 @@ import 'package:finsync/app/app.dart';
 import 'package:finsync/core/di/injection.dart';
 import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/locale/app_locale.dart';
+import 'package:finsync/core/notifications/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -15,6 +16,8 @@ void main() async {
   );
 
   await initDependencies();
+
+  await NotificationService.initialize();
 
   final prefs = await SharedPreferences.getInstance();
   final localeCode = prefs.getString('locale_code');

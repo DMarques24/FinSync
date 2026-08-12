@@ -2,14 +2,30 @@ abstract class NotificationPrefsEvent {}
 
 class LoadNotificationPrefsEvent extends NotificationPrefsEvent {}
 
-class ToggleGoalCompletedEvent extends NotificationPrefsEvent {
+/// Alterar uma preferência. Um evento só, com a chave a dizer qual — cinco
+/// eventos praticamente iguais não acrescentavam nada.
+class ToggleNotificationPrefEvent extends NotificationPrefsEvent {
+  final NotificationPref pref;
   final bool value;
 
-  ToggleGoalCompletedEvent(this.value);
+  ToggleNotificationPrefEvent(this.pref, this.value);
 }
 
-class ToggleExpenseReminderEvent extends NotificationPrefsEvent {
-  final bool value;
+class SetDailyLogTimeEvent extends NotificationPrefsEvent {
+  final int minutesSinceMidnight;
 
-  ToggleExpenseReminderEvent(this.value);
+  SetDailyLogTimeEvent(this.minutesSinceMidnight);
+}
+
+enum NotificationPref {
+  goalCompleted,
+  eventReminder,
+  dailyLog,
+  overspend,
+  goalSaving;
+
+  String get storageKey => 'notif_$name';
+
+  String get titleKey => 'notifications.${name}_title';
+  String get subtitleKey => 'notifications.${name}_subtitle';
 }

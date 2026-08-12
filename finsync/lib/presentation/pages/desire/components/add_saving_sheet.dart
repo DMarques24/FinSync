@@ -200,8 +200,8 @@ class _AddSavingSheetState extends State<AddSavingSheet> {
                       color: AppColors.secondary,
                     ),
                     label: Text(
-                      tr('desire.detail_remaining') +
-                          ': ${AppCurrency.format(remaining)}',
+                      '${tr('desire.detail_remaining')}: '
+                      '${AppCurrency.format(remaining)}',
                       style: AppTextStyles.bodySmall.copyWith(
                         color: AppColors.secondary,
                         fontWeight: FontWeight.w600,

@@ -752,7 +752,9 @@ class _Card extends StatelessWidget {
               Expanded(
                 child: Text(title, style: AppTextStyles.headingSmall),
               ),
-              if (trailing != null) trailing!,
+              // `?trailing` é o elemento anulável do Dart: só entra na
+              // lista se não for nulo, sem precisar do `!` a seguir.
+              ?trailing,
             ],
           ),
           const SizedBox(height: AppSpacing.lg),

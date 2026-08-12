@@ -10,6 +10,11 @@ android {
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
+        // Exigido pelo flutter_local_notifications: os avisos agendados
+        // usam classes de data/hora do Java 8 que não existem nas versões
+        // mais antigas do Android. Sem isto, a compilação falha com
+        // "Call requires API level 26".
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
@@ -32,6 +37,10 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+}
+
+dependencies {
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }
 
 kotlin {

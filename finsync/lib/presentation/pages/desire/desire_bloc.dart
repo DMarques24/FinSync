@@ -1,4 +1,6 @@
 import 'package:finsync/core/errors/app_error_translator.dart';
+import 'package:finsync/core/notifications/notification_prefs_store.dart';
+import 'package:finsync/core/notifications/notification_scheduler.dart';
 import 'package:finsync/domain/entities/desire.dart';
 import 'package:finsync/domain/usecases/add_desire_saving.dart';
 import 'package:finsync/domain/usecases/get_all_desires.dart';
@@ -90,7 +92,11 @@ class DesireBloc extends Bloc<DesireEvent, DesireState> {
     try {
       await addDesireSaving(desire: event.desire, amount: event.amount);
 
-      emit(DesireLoadedState(await getAllDesires()));
+      final desires = await getAllDesires();
+      emit(DesireLoadedState(desires));
+
+      await _celebrateIfCompleted(event.desire.id, desires);
+
       event.completer?.complete();
     } catch (e) {
       // Sem `DesireErrorState` aqui: a lista continua válida e trocá-la por
@@ -114,6 +120,33 @@ class DesireBloc extends Bloc<DesireEvent, DesireState> {
       event.completer?.complete();
     } catch (e) {
       event.completer?.completeError(e);
+    }
+  }
+
+  /// Avisa quando foi esta poupança a fechar o objetivo.
+  ///
+  /// Comparar depois de recarregar é o que garante que o aviso sai uma vez
+  /// só: um objetivo já completo antes deste depósito não volta a avisar.
+  Future<void> _celebrateIfCompleted(
+    int desireId,
+    List<Desire> desires,
+  ) async {
+    Desire? updated;
+    for (final desire in desires) {
+      if (desire.id == desireId) updated = desire;
+    }
+
+    if (updated == null || !updated.isComplete) return;
+
+    try {
+      final prefs = await NotificationPrefsStore.load();
+      await NotificationScheduler.notifyGoalCompleted(
+        prefs: prefs,
+        desire: updated,
+      );
+    } catch (_) {
+      // Falhar a avisar não pode fazer falhar a poupança, que essa já foi
+      // guardada com sucesso.
     }
   }
 

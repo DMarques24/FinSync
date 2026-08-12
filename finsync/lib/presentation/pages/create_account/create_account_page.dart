@@ -86,6 +86,9 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
               );
               context.go('/login');
             }
+            if (state is CreateAccountAwaitingConfirmationState) {
+              context.go('/confirm-email', extra: state.email);
+            }
             if (state is CreateAccountErrorState) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(

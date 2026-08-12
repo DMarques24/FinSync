@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:finsync/presentation/pages/create_account/create_account_page.dart';
+import 'package:finsync/presentation/pages/create_account/confirm_email_page.dart';
 import 'package:finsync/presentation/pages/desire/desire_detail_page.dart';
+import 'package:finsync/presentation/pages/login/forgot_password_page.dart';
 import 'package:finsync/presentation/pages/login/login_page.dart';
 import 'package:finsync/presentation/pages/onboarding/onboarding_page.dart';
 import 'package:finsync/presentation/pages/startup/startup_page.dart';
@@ -23,6 +25,15 @@ final router = GoRouter(
     GoRoute(
       path: '/create-account',
       builder: (context, state) => const CreateAccountPage(),
+    ),
+    GoRoute(
+      path: '/confirm-email',
+      builder: (context, state) =>
+          ConfirmEmailPage(email: state.extra as String? ?? ''),
+    ),
+    GoRoute(
+      path: '/forgot-password',
+      builder: (context, state) => const ForgotPasswordPage(),
     ),
     GoRoute(
       path: '/onboarding',
