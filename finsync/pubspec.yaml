@@ -1,5 +1,5 @@
 name: finsync
-description: "A new Flutter project."
+description: "FinSync — controla despesas, define objetivos e vê para onde vai o teu dinheiro."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
@@ -87,10 +87,12 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
+  # Cada pasta tem de vir listada: o `assets/` sozinho não apanha as
+  # subpastas, e era por isso que só as traduções entravam no bundle.
   assets:
     - assets/
     - assets/i18n/
+    - assets/images/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

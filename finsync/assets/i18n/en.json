@@ -44,14 +44,32 @@
     "feature_profile_title": "Profile",
     "feature_profile_desc": "Change your language and currency, and import your bank statement.",
 
-    "balance_badge": "Last step",
+    "currency_badge": "Currency",
+    "currency_title": "Which currency do you think in?",
+    "currency_subtitle": "Every amount in the app will show in this currency. You can change it later in your profile.",
+
+    "balance_badge": "Balance",
     "balance_title": "How much do you have right now?",
     "balance_subtitle": "This is the starting point for your balance. You can change it later in your profile, so a rough number is fine.",
     "balance_label": "Current balance ({symbol})",
     "balance_hint": "Not sure yet? Enter 0 and adjust it later.",
     "invalid_balance": "Enter a value of 0 or more.",
+
+    "income_badge": "Last step",
+    "income_title": "How much do you earn a month?",
+    "income_subtitle": "This is what lets the app show you where your money goes and warn you when a month is getting expensive.",
+    "income_label": "Monthly income ({symbol})",
+    "income_hint": "If it varies month to month, put an average — or leave it blank and the app will use the income you log.",
+    "invalid_income": "Enter a value of 0 or more.",
+
     "next": "Continue",
     "finish": "Get started"
+  },
+  "currency": {
+    "eur": "Euro",
+    "usd": "US dollar",
+    "gbp": "Pound sterling",
+    "brl": "Brazilian real"
   },
   "login": {
     "title": "Welcome back 👋",
@@ -136,12 +154,16 @@
     "events_of": "Events on {day} {month}",
     "no_events_today": "No events on this day.",
     "create_event": "Create an event",
+    "income_source": "Income",
+    "income_left": "Unspent",
     "expenses_flow": "Expense Flow",
     "expenses_flow_subtitle": "How your income spreads across expenses",
     "not_enough_data": "There aren't enough expenses yet to generate this chart.",
     "expenses_by_category": "Expenses by category",
     "no_expenses_chart": "There are no expenses to show yet.",
     "top_category": "Top spending category",
+    "share_of_expenses": "{percent} of total spending",
+    "chart_total": "TOTAL",
     "export_pdf": "Export report as PDF",
     "exporting_pdf": "Generating report...",
     "export_timeout": "The export took too long. Please try again.",
@@ -292,6 +314,7 @@
     "daily_log_body": "One minute to log what you spent today.",
     "overspend_title_notif": "This month is expensive",
     "overspend_body": "You've spent {amount}, around {percent}% above your monthly average.",
+    "overspend_income_body": "You've spent {amount} this month — {percent}% of what you earn.",
     "goal_saving_title": "Time to save",
     "goal_saving_body": "Put {amount} aside this month to reach \"{name}\" on time.",
     "goal_completed_title": "You did it!",
@@ -339,6 +362,27 @@
     "error_needs_number": "Must include at least one number.",
     "error_mismatch": "Passwords don't match.",
     "error_same_as_current": "Must be different from your current password."
+  },
+  "delete_account": {
+    "entry": "Delete my account",
+    "title": "Delete account",
+    "warning": "This deletes your account and everything in it. There's no way to get it back.",
+    "item_expenses": "Every transaction you've logged",
+    "item_goals": "Your goals and everything you've saved towards them",
+    "item_events": "Your calendar events",
+    "item_profile": "Your profile, picture and settings",
+    "type_to_confirm": "To confirm, type {word} below.",
+    "confirm_word": "DELETE",
+    "confirm": "Delete my account permanently"
+  },
+  "edit_profile": {
+    "title": "Edit profile",
+    "subtitle": "Update your name and profile picture.",
+    "save": "Save changes",
+    "saved": "Profile updated successfully.",
+    "username_required": "Your username can't be empty.",
+    "permission_title": "Permission needed",
+    "permission_message": "To change your profile picture we need access to your camera or photo library. You can enable this in your device Settings."
   },
   "profile": {
     "settings": "Settings",

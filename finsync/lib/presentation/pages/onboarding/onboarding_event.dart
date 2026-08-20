@@ -1,7 +1,13 @@
 abstract class OnboardingEvent {}
 
-class OnboardingSubmitBalanceEvent extends OnboardingEvent {
+/// Conclusão do tutorial. Ambos os valores chegam já em euros — a
+/// conversão da moeda escolhida é feita no ecrã, antes de submeter.
+class OnboardingSubmitEvent extends OnboardingEvent {
   final double balance;
+  final double monthlyIncome;
 
-  OnboardingSubmitBalanceEvent(this.balance);
+  OnboardingSubmitEvent({
+    required this.balance,
+    required this.monthlyIncome,
+  });
 }

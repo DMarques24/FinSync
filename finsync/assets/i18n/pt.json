@@ -44,14 +44,32 @@
     "feature_profile_title": "Perfil",
     "feature_profile_desc": "Muda o idioma e a moeda, e importa o extrato do teu banco.",
 
-    "balance_badge": "Último passo",
+    "currency_badge": "Moeda",
+    "currency_title": "Em que moeda pensas?",
+    "currency_subtitle": "Todos os valores da app passam a aparecer nesta moeda. Podes mudar depois no perfil.",
+
+    "balance_badge": "Saldo",
     "balance_title": "Quanto tens neste momento?",
     "balance_subtitle": "É o ponto de partida do teu saldo. Podes alterá-lo depois no perfil, por isso um valor aproximado chega.",
     "balance_label": "Saldo atual ({symbol})",
     "balance_hint": "Se ainda não sabes ao certo, escreve 0 e ajustas mais tarde.",
     "invalid_balance": "Escreve um valor igual ou superior a 0.",
+
+    "income_badge": "Último passo",
+    "income_title": "Quanto recebes por mês?",
+    "income_subtitle": "É com este valor que a app te mostra para onde vai o teu dinheiro e te avisa quando um mês está a ficar caro.",
+    "income_label": "Rendimento mensal ({symbol})",
+    "income_hint": "Se varia de mês para mês, escreve uma média — ou deixa em branco e a app usa as receitas que fores registando.",
+    "invalid_income": "Escreve um valor igual ou superior a 0.",
+
     "next": "Continuar",
     "finish": "Começar a usar"
+  },
+  "currency": {
+    "eur": "Euro",
+    "usd": "Dólar americano",
+    "gbp": "Libra esterlina",
+    "brl": "Real brasileiro"
   },
   "login": {
     "title": "Bem-vindo de volta 👋",
@@ -136,12 +154,16 @@
     "events_of": "Eventos de {day} {month}",
     "no_events_today": "Sem eventos neste dia.",
     "create_event": "Criar um evento",
+    "income_source": "Rendimento",
+    "income_left": "Por gastar",
     "expenses_flow": "Fluxo de Despesas",
     "expenses_flow_subtitle": "Como o teu salário se distribui pelas despesas",
     "not_enough_data": "Ainda não há despesas suficientes para gerar o gráfico.",
     "expenses_by_category": "Despesas por categoria",
     "no_expenses_chart": "Ainda não existem despesas para mostrar.",
     "top_category": "Categoria com maior gasto",
+    "share_of_expenses": "{percent} do total de despesas",
+    "chart_total": "TOTAL",
     "export_pdf": "Exportar relatório em PDF",
     "exporting_pdf": "A gerar relatório...",
     "export_timeout": "A exportacao demorou demasiado. Tenta novamente.",
@@ -292,6 +314,7 @@
     "daily_log_body": "Um minuto para registares o que gastaste hoje.",
     "overspend_title_notif": "Este mês está caro",
     "overspend_body": "Já gastaste {amount}, cerca de {percent}% acima da tua média mensal.",
+    "overspend_income_body": "Já gastaste {amount} este mês — {percent}% do que recebes.",
     "goal_saving_title": "Hora de poupar",
     "goal_saving_body": "Guarda {amount} este mês para chegares a \"{name}\" na data marcada.",
     "goal_completed_title": "Conseguiste!",
@@ -339,6 +362,27 @@
     "error_needs_number": "Tem de incluir pelo menos um número.",
     "error_mismatch": "As passwords não coincidem.",
     "error_same_as_current": "Tem de ser diferente da password atual."
+  },
+  "delete_account": {
+    "entry": "Apagar a minha conta",
+    "title": "Apagar conta",
+    "warning": "Isto apaga a tua conta e tudo o que lá está. Não há forma de recuperar depois.",
+    "item_expenses": "Todos os movimentos que registaste",
+    "item_goals": "Os teus objetivos e o que já poupaste para eles",
+    "item_events": "Os eventos do calendário",
+    "item_profile": "O teu perfil, foto e definições",
+    "type_to_confirm": "Para confirmar, escreve {word} em baixo.",
+    "confirm_word": "APAGAR",
+    "confirm": "Apagar a conta para sempre"
+  },
+  "edit_profile": {
+    "title": "Editar perfil",
+    "subtitle": "Atualiza o teu nome e a foto de perfil.",
+    "save": "Guardar alterações",
+    "saved": "Perfil atualizado com sucesso.",
+    "username_required": "O nome de utilizador não pode ficar vazio.",
+    "permission_title": "Permissão necessária",
+    "permission_message": "Para alterares a foto de perfil precisamos de acesso à câmara ou à galeria. Podes ativar isso nas Definições do teu dispositivo."
   },
   "profile": {
     "settings": "Definições",

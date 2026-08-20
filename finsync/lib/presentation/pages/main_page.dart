@@ -8,6 +8,7 @@ import 'package:finsync/presentation/pages/desire/desire_page.dart';
 import 'package:finsync/presentation/pages/home/components/add_expense_form.dart';
 import 'package:finsync/presentation/pages/home/home_page.dart';
 import 'package:finsync/presentation/pages/profile/profile_page.dart';
+import 'package:finsync/presentation/widgets/app_logo.dart';
 
 import 'package:liquid_glass_bar/liquid_glass_bar.dart';
 
@@ -43,19 +44,7 @@ class _MainPageState extends State<MainPage> {
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                color: AppColors.secondary.withValues(alpha: .12),
-                borderRadius: BorderRadius.circular(9),
-              ),
-              child: Icon(
-                Icons.account_balance_wallet_rounded,
-                size: 17,
-                color: AppColors.secondary,
-              ),
-            ),
+            const AppLogo(size: 30),
             const SizedBox(width: 10),
             Text(
               tr('main_nav.app_name'),

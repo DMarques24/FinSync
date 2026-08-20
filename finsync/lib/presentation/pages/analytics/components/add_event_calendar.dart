@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:finsync/core/currency/app_currency.dart';
+import 'package:finsync/core/errors/app_error_translator.dart';
 import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
@@ -119,7 +120,7 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
       if (!mounted) return;
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text(e.toString())));
+      ).showSnackBar(SnackBar(content: Text(AppErrorTranslator.translate(e))));
     } finally {
       if (mounted) {
         setState(() {

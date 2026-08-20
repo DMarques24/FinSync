@@ -2,8 +2,8 @@ import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/dimensions.dart';
 import 'package:finsync/core/theme/text_styles.dart';
-import 'package:finsync/presentation/pages/onboarding/components/onboarding_hero_icon.dart';
 import 'package:finsync/presentation/pages/onboarding/components/step_header.dart';
+import 'package:finsync/presentation/widgets/app_logo.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeStep extends StatelessWidget {
@@ -21,9 +21,10 @@ class WelcomeStep extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const OnboardingHeroIcon(
-            icon: Icons.account_balance_wallet_rounded,
-          ),
+          // O primeiro ecrã da app é onde a marca se apresenta. Nos passos
+          // seguintes volta o ícone genérico, que aí é sobre o assunto do
+          // passo e não sobre a app.
+          const AppLogo(size: 88),
 
           const SizedBox(height: AppSpacing.xxl),
 

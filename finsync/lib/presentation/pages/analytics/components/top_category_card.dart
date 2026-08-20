@@ -1,4 +1,5 @@
 import 'package:finsync/core/currency/app_currency.dart';
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/presentation/pages/analytics/components/category_visuals.dart';
@@ -14,7 +15,7 @@ class TopCategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     if (slices.isEmpty) {
       return Text(
-        "Sem despesas registadas.",
+        tr('analytics.no_expenses_recorded'),
         style: AppTextStyles.bodyMedium.copyWith(
           color: AppColors.textSecondary,
         ),
@@ -53,7 +54,9 @@ class TopCategoryCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '$percentLabel do total de despesas',
+                    tr('analytics.share_of_expenses', {
+                      'percent': percentLabel,
+                    }),
                     style: AppTextStyles.bodySmall.copyWith(
                       color: AppColors.textSecondary,
                     ),

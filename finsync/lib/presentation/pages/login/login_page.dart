@@ -8,6 +8,7 @@ import 'package:finsync/presentation/pages/home/home_bloc.dart';
 import 'package:finsync/presentation/pages/home/home_event.dart';
 import 'package:finsync/presentation/pages/profile/profile_bloc.dart';
 import 'package:finsync/presentation/pages/profile/profile_event.dart';
+import 'package:finsync/presentation/widgets/app_logo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -87,19 +88,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Container(
-                        width: 96,
-                        height: 96,
-                        decoration: BoxDecoration(
-                          color: AppColors.secondary.withValues(alpha: .1),
-                          borderRadius: BorderRadius.circular(28),
-                        ),
-                        child: Icon(
-                          Icons.account_balance_wallet_rounded,
-                          size: 46,
-                          color: AppColors.secondary,
-                        ),
-                      ),
+                      const AppLogo(size: 96),
 
                       const SizedBox(height: 28),
 

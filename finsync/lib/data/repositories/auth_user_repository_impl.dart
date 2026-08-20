@@ -36,6 +36,11 @@ class AuthUserRepositoryImpl implements AuthUserRepository {
   }
 
   @override
+  Future<void> deleteAccount() {
+    return remoteDatasource.deleteAccount();
+  }
+
+  @override
   Future<void> resendConfirmationEmail(String email) {
     return remoteDatasource.resendConfirmationEmail(email);
   }

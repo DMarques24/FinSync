@@ -5,6 +5,7 @@ import 'package:finsync/data/datasources/expense_remote_datasource.dart'
 import 'package:finsync/domain/repositories/calendar_event_repository.dart';
 import 'package:finsync/domain/repositories/desire_repository.dart';
 import 'package:finsync/domain/repositories/expense_repository.dart';
+import 'package:finsync/domain/repositories/user_repository.dart';
 
 /// Reagenda todos os avisos a partir do que está na base de dados.
 ///
@@ -15,11 +16,13 @@ class RescheduleNotifications {
   final CalendarEventRepository calendarRepository;
   final DesireRepository desireRepository;
   final ExpenseRepository expenseRepository;
+  final UserRepository userRepository;
 
   RescheduleNotifications(
     this.calendarRepository,
     this.desireRepository,
     this.expenseRepository,
+    this.userRepository,
   );
 
   Future<void> call() async {
@@ -42,11 +45,15 @@ class RescheduleNotifications {
       limit: kAnalyticsExpensesLimit,
     );
 
+    final profiles = await userRepository.getUser();
+    final monthlyIncome = profiles.isEmpty ? 0.0 : profiles.first.monthlyIncome;
+
     await NotificationScheduler.rescheduleAll(
       prefs: prefs,
       events: events,
       desires: desires,
       expenses: expenses,
+      monthlyIncome: monthlyIncome,
     );
   }
 }

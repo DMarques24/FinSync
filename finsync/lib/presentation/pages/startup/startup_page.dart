@@ -10,6 +10,7 @@ import 'package:finsync/domain/usecases/get_user.dart';
 import 'package:finsync/domain/usecases/reschedule_notifications.dart';
 import 'package:finsync/domain/usecases/sign_out_user.dart';
 import 'package:finsync/presentation/pages/profile/profile_bloc.dart';
+import 'package:finsync/presentation/widgets/app_logo.dart';
 import 'package:finsync/presentation/pages/profile/profile_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -137,19 +138,7 @@ class _LoadingIdentity extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Container(
-          width: 88,
-          height: 88,
-          decoration: BoxDecoration(
-            color: AppColors.secondary.withValues(alpha: .10),
-            borderRadius: AppRadius.all(26),
-          ),
-          child: Icon(
-            Icons.account_balance_wallet_rounded,
-            size: 42,
-            color: AppColors.secondary,
-          ),
-        ),
+        const AppLogo(size: 96),
         const SizedBox(height: AppSpacing.xxl),
         Text(
           tr('main_nav.app_name'),

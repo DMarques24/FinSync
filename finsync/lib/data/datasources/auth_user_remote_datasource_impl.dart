@@ -49,6 +49,19 @@ class AuthUserRemoteDatasourceImpl implements AuthUserRemoteDatasource {
   }
 
   @override
+  Future<void> deleteAccount() async {
+    // O apagar corre no servidor, numa funcao com privilegios elevados: o
+    // cliente nao pode apagar linhas de `auth.users`, e deixar essa
+    // capacidade do lado da app seria um buraco de seguranca. A funcao
+    // apaga tudo o que e do utilizador e so depois a propria conta.
+    await supabase.rpc('delete_own_account');
+
+    // Sem isto, a sessao ficava valida em memoria a apontar para uma conta
+    // que ja nao existe, e o ecra seguinte falhava com erros estranhos.
+    await supabase.auth.signOut();
+  }
+
+  @override
   Future<void> resendConfirmationEmail(String email) async {
     await supabase.auth.resend(type: OtpType.signup, email: email);
   }

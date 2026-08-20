@@ -38,10 +38,18 @@ class UserRemoteDatasourceImpl implements UserRemoteDatasource {
   }
 
   @override
-  Future<void> completeOnboarding(String userId, double balance) async {
+  Future<void> completeOnboarding(
+    String userId, {
+    required double balance,
+    required double monthlyIncome,
+  }) async {
     await supabase
         .from('profiles')
-        .update({'balance': balance, 'isFirstLogin': false})
+        .update({
+          'balance': balance,
+          'monthly_income': monthlyIncome,
+          'isFirstLogin': false,
+        })
         .eq('user_id', userId);
   }
 

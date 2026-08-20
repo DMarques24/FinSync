@@ -1,4 +1,5 @@
 import 'package:finsync/core/currency/app_currency.dart';
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 import 'package:finsync/presentation/pages/analytics/components/category_visuals.dart';
@@ -31,7 +32,7 @@ class CategoryPieChart extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'TOTAL',
+                      tr('analytics.chart_total'),
                       style: AppTextStyles.labelSmall.copyWith(
                         color: AppColors.textSecondary,
                       ),

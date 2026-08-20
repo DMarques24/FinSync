@@ -22,8 +22,16 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<void> completeOnboarding(String userId, double balance) async {
-    await remoteDatasource.completeOnboarding(userId, balance);
+  Future<void> completeOnboarding(
+    String userId, {
+    required double balance,
+    required double monthlyIncome,
+  }) async {
+    await remoteDatasource.completeOnboarding(
+      userId,
+      balance: balance,
+      monthlyIncome: monthlyIncome,
+    );
   }
 
   @override

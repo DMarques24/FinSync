@@ -1,3 +1,4 @@
+import 'package:finsync/core/errors/app_error_translator.dart';
 import 'package:finsync/data/datasources/expense_remote_datasource.dart'
     show kAnalyticsExpensesLimit;
 import 'package:finsync/core/i18n/app_translations.dart';
@@ -10,6 +11,7 @@ import 'package:finsync/domain/usecases/create_analytics_pdf.dart';
 import 'package:finsync/domain/usecases/delete_calendar_event.dart';
 import 'package:finsync/domain/usecases/get_all_calendar_events.dart';
 import 'package:finsync/domain/usecases/get_all_expenses.dart';
+import 'package:finsync/domain/usecases/get_user.dart';
 import 'package:finsync/domain/usecases/insert_calendar_event.dart';
 import 'package:finsync/presentation/pages/analytics/analytics_event.dart';
 import 'package:finsync/presentation/pages/analytics/analytics_state.dart';
@@ -24,6 +26,7 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
   final ApplyDueCalendarEvents applyDueCalendarEvents;
   final DeleteCalendarEvent deleteCalendarEvent;
   final CreateAnalyticsPdf createAnalyticsPdf;
+  final GetUser getUser;
 
   AnalyticsBloc(
     this.getAllExpenses,
@@ -32,6 +35,7 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
     this.applyDueCalendarEvents,
     this.deleteCalendarEvent,
     this.createAnalyticsPdf,
+    this.getUser,
   ) : super(AnalyticsInitialState()) {
     on<LoadAnalyticsEvent>(_onLoadAnalytics);
     on<AddEventCalendarEvent>(_addCalendarEvent);
@@ -52,6 +56,15 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
 
       final expenses = await getAllExpenses(limit: kAnalyticsExpensesLimit);
       final calendarEvents = await getAllCalendarEvents();
+
+      // O rendimento declarado no tutorial. Sem ele, a origem do fluxo era
+      // a palavra "Salário" escrita à mão — um nó sem valor nenhum por
+      // trás, que fazia o diagrama parecer informação quando não era.
+      //
+      // Falhar a lê-lo não pode derrubar o ecrã: os gráficos de categorias
+      // não dependem dele, e um erro no perfil deixaria as Análises todas
+      // em branco por causa de um número acessório.
+      final monthlyIncome = await _readMonthlyIncome();
 
       final nodesById = <String, SankeyNode>{};
 
@@ -74,15 +87,31 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
             (byCategory[expense.category] ?? 0) + expense.price;
       }
 
+      final spent = byCategory.values.fold<double>(0, (sum, v) => sum + v);
+      final sourceLabel = tr('analytics.income_source');
+
       byCategory.forEach((category, total) {
         links.add(
           SankeyLink(
-            source: node("Salário"),
+            source: node(sourceLabel),
             target: node(categoryLabel(category)),
             value: total,
           ),
         );
       });
+
+      // O que sobra do rendimento depois das despesas aparece como ramo
+      // próprio. É a parte que interessa a quem está a tentar poupar, e
+      // sem ela o diagrama dava a entender que o ordenado todo se gastou.
+      if (monthlyIncome > spent) {
+        links.add(
+          SankeyLink(
+            source: node(sourceLabel),
+            target: node(tr('analytics.income_left')),
+            value: monthlyIncome - spent,
+          ),
+        );
+      }
 
       var topExpenseCategory = tr('analytics.no_expenses_recorded');
       if (byCategory.isNotEmpty) {
@@ -102,7 +131,18 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
         ),
       );
     } catch (e) {
-      emit(AnalyticsErrorState(e.toString()));
+      emit(AnalyticsErrorState(AppErrorTranslator.translate(e)));
+    }
+  }
+
+  Future<double> _readMonthlyIncome() async {
+    try {
+      final profiles = await getUser();
+      return profiles.isEmpty ? 0 : profiles.first.monthlyIncome;
+    } catch (_) {
+      // Sem rendimento, o fluxo mostra só as despesas por categoria — que
+      // é exatamente o que mostrava antes desta funcionalidade existir.
+      return 0;
     }
   }
 
@@ -138,7 +178,7 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
       add(LoadAnalyticsEvent());
     } catch (e) {
       event.completer?.completeError(e);
-      emit(AnalyticsErrorState(e.toString()));
+      emit(AnalyticsErrorState(AppErrorTranslator.translate(e)));
     }
   }
 
@@ -160,7 +200,7 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
       add(LoadAnalyticsEvent());
     } catch (e) {
       event.completer?.completeError(e);
-      emit(AnalyticsErrorState(e.toString()));
+      emit(AnalyticsErrorState(AppErrorTranslator.translate(e)));
     }
   }
 
@@ -182,7 +222,7 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
       add(LoadAnalyticsEvent());
     } catch (e) {
       event.completer?.completeError(e);
-      emit(AnalyticsErrorState(e.toString()));
+      emit(AnalyticsErrorState(AppErrorTranslator.translate(e)));
     }
   }
 

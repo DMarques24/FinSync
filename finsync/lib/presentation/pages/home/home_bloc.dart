@@ -1,3 +1,4 @@
+import 'package:finsync/core/errors/app_error_translator.dart';
 import 'package:finsync/data/datasources/expense_remote_datasource.dart'
     show kExpensesPageSize;
 import 'package:finsync/domain/usecases/apply_due_calendar_events.dart';
@@ -46,7 +47,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         ),
       );
     } catch (e) {
-      emit(HomeErrorState(e.toString()));
+      emit(HomeErrorState(AppErrorTranslator.translate(e)));
     }
   }
 
@@ -80,7 +81,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         ),
       );
     } catch (e) {
-      emit(HomeErrorState(e.toString()));
+      emit(HomeErrorState(AppErrorTranslator.translate(e)));
     }
   }
 
@@ -131,7 +132,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         ),
       );
     } catch (e) {
-      emit(HomeErrorState(e.toString()));
+      emit(HomeErrorState(AppErrorTranslator.translate(e)));
     }
   }
 

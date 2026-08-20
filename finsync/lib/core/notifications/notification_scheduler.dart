@@ -27,11 +27,16 @@ class NotificationScheduler {
   /// A partir de quantas vezes acima da média mensal é que avisamos.
   static const _overspendFactor = 1.3;
 
+  /// Que fatia do rendimento já gasta é que dispara o aviso. 80% deixa
+  /// margem para reagir; a 100% já não há nada a fazer.
+  static const _incomeShareLimit = 0.8;
+
   static Future<void> rescheduleAll({
     required NotificationPrefsState prefs,
     required List<CalendarEventEntity> events,
     required List<Desire> desires,
     required List<Expense> expenses,
+    double monthlyIncome = 0,
   }) async {
     await NotificationService.cancelAllScheduled();
 
@@ -40,7 +45,9 @@ class NotificationScheduler {
     if (prefs.eventReminderEnabled) await _scheduleEvents(events);
     if (prefs.dailyLogEnabled) await _scheduleDailyLog(prefs);
     if (prefs.goalSavingEnabled) await _scheduleGoalSavings(desires);
-    if (prefs.overspendEnabled) await _checkOverspend(expenses);
+    if (prefs.overspendEnabled) {
+      await _checkOverspend(expenses, monthlyIncome);
+    }
   }
 
   // ── Eventos do calendário ──────────────────────────────────────────
@@ -137,7 +144,10 @@ class NotificationScheduler {
   /// os movimentos à frente, e agendar um aviso para daqui a uns dias com
   /// base em números de hoje seria dizer uma coisa que pode já não ser
   /// verdade quando chegasse.
-  static Future<void> _checkOverspend(List<Expense> expenses) async {
+  static Future<void> _checkOverspend(
+    List<Expense> expenses,
+    double monthlyIncome,
+  ) async {
     final now = DateTime.now();
     final byMonth = <String, double>{};
 
@@ -151,13 +161,31 @@ class NotificationScheduler {
     final currentKey = '${now.year}-${now.month}';
     final current = byMonth.remove(currentKey) ?? 0;
 
-    // Menos de dois meses de histórico não dá média nenhuma: qualquer
-    // comparação seria contra um único mês, que tanto pode ter sido caro
-    // como barato.
-    if (byMonth.length < 2 || current <= 0) return;
+    if (current <= 0) return;
 
-    final average =
-        byMonth.values.reduce((a, b) => a + b) / byMonth.length;
+    // Com rendimento declarado, o aviso funciona já no primeiro mês: a
+    // referência é o que a pessoa recebe, não um histórico que ainda não
+    // existe. Sem ele, é preciso esperar por dois meses fechados para ter
+    // média — comparar contra um único mês não diz nada.
+    if (monthlyIncome > 0) {
+      if (current < monthlyIncome * _incomeShareLimit) return;
+
+      final share = (current / monthlyIncome) * 100;
+
+      await NotificationService.showNow(
+        id: NotificationService.overspendId(),
+        title: tr('notifications.overspend_title_notif'),
+        body: tr('notifications.overspend_income_body', {
+          'percent': '${share.round()}',
+          'amount': AppCurrency.format(current),
+        }),
+      );
+      return;
+    }
+
+    if (byMonth.length < 2) return;
+
+    final average = byMonth.values.reduce((a, b) => a + b) / byMonth.length;
 
     if (current < average * _overspendFactor) return;
 

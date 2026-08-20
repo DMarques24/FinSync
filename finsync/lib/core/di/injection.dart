@@ -4,6 +4,7 @@ import 'package:finsync/data/repositories/calendar_events_repository_impl.dart';
 import 'package:finsync/domain/repositories/calendar_event_repository.dart';
 import 'package:finsync/domain/usecases/add_desire_saving.dart';
 import 'package:finsync/domain/usecases/apply_due_calendar_events.dart';
+import 'package:finsync/domain/usecases/delete_account.dart';
 import 'package:finsync/domain/usecases/get_desire_savings.dart';
 import 'package:finsync/domain/usecases/recover_password.dart';
 import 'package:finsync/domain/usecases/register_desire_review.dart';
@@ -165,6 +166,8 @@ Future<void> initDependencies() async {
 
   sl.registerLazySingleton<RecoverPassword>(() => RecoverPassword(sl()));
 
+  sl.registerLazySingleton<DeleteAccount>(() => DeleteAccount(sl()));
+
   sl.registerLazySingleton<ResendConfirmationEmail>(
     () => ResendConfirmationEmail(sl()),
   );
@@ -190,6 +193,7 @@ Future<void> initDependencies() async {
       sl<CalendarEventRepository>(),
       sl<DesireRepository>(),
       sl<ExpenseRepository>(),
+      sl<UserRepository>(),
     ),
   );
 
@@ -272,6 +276,7 @@ Future<void> initDependencies() async {
       sl<ApplyDueCalendarEvents>(),
       sl<DeleteCalendarEvent>(),
       sl<CreateAnalyticsPdf>(),
+      sl<GetUser>(),
     ),
   );
 

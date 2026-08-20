@@ -20,6 +20,7 @@ import 'package:finsync/presentation/pages/profile/components/edit_profile_form.
 import 'package:finsync/presentation/pages/profile/components/help_sheet.dart';
 import 'package:finsync/presentation/pages/profile/components/import_statement_sheet.dart';
 import 'package:finsync/presentation/pages/profile/components/language_picker_sheet.dart';
+import 'package:finsync/presentation/pages/profile/components/delete_account_sheet.dart';
 import 'package:finsync/presentation/pages/profile/components/notifications_sheet.dart';
 import 'package:finsync/presentation/pages/profile/components/settings_button.dart';
 import 'package:finsync/presentation/pages/profile/components/profile_header.dart';
@@ -324,6 +325,26 @@ class _ProfilePageState extends State<ProfilePage> {
                         side: BorderSide(color: AppColors.error),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  // Discreto, mas presente e alcançável. A Apple exige que
+                  // dê para apagar a conta de dentro da app; escondê-lo
+                  // atrás de um email de suporte é motivo de recusa.
+                  Center(
+                    child: TextButton(
+                      onPressed: () =>
+                          _openSheet(const DeleteAccountSheet()),
+                      child: Text(
+                        tr('delete_account.entry'),
+                        style: AppTextStyles.bodySmall.copyWith(
+                          color: AppColors.textSecondary,
+                          decoration: TextDecoration.underline,
+                          decorationColor: AppColors.textSecondary,
                         ),
                       ),
                     ),

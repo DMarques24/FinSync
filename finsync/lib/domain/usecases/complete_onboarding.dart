@@ -5,7 +5,15 @@ class CompleteOnboarding {
 
   CompleteOnboarding(this.repository);
 
-  Future<void> call(String userId, double balance) {
-    return repository.completeOnboarding(userId, balance);
+  Future<void> call(
+    String userId, {
+    required double balance,
+    required double monthlyIncome,
+  }) {
+    return repository.completeOnboarding(
+      userId,
+      balance: balance,
+      monthlyIncome: monthlyIncome,
+    );
   }
 }

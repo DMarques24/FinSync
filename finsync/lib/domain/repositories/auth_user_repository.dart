@@ -17,6 +17,9 @@ abstract class AuthUserRepository {
   Future<void> signIn(AuthUserEntity user);
   Future<void> signOut();
 
+  /// Apaga a conta e tudo o que lhe pertence. Irreversível.
+  Future<void> deleteAccount();
+
   Future<void> resendConfirmationEmail(String email);
 
   Future<void> sendPasswordResetCode(String email);

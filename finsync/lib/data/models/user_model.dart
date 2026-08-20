@@ -5,12 +5,14 @@ class UserModel {
   final double balance;
   final bool isFirstLogin;
   final String? avatarUrl;
+  final double monthlyIncome;
 
   UserModel({
     required this.username,
     required this.balance,
     this.isFirstLogin = true,
     this.avatarUrl,
+    this.monthlyIncome = 0,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -19,6 +21,7 @@ class UserModel {
       balance: (json['balance'] as num?)?.toDouble() ?? 0.0,
       isFirstLogin: json['isFirstLogin'] as bool? ?? false,
       avatarUrl: json['avatar_url'] as String?,
+      monthlyIncome: (json['monthly_income'] as num?)?.toDouble() ?? 0,
     );
   }
 
@@ -28,6 +31,7 @@ class UserModel {
       'balance': balance,
       'user_id': userId,
       'avatar_url': avatarUrl,
+      'monthly_income': monthlyIncome,
     };
   }
 
@@ -37,6 +41,7 @@ class UserModel {
       balance: balance,
       isFirstLogin: isFirstLogin,
       avatarUrl: avatarUrl,
+      monthlyIncome: monthlyIncome,
     );
   }
 }

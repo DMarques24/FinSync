@@ -9,11 +9,11 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
   final CompleteOnboarding completeOnboarding;
 
   OnboardingBloc(this.completeOnboarding) : super(OnboardingInitialState()) {
-    on<OnboardingSubmitBalanceEvent>(_onSubmitBalance);
+    on<OnboardingSubmitEvent>(_onSubmit);
   }
 
-  Future<void> _onSubmitBalance(
-    OnboardingSubmitBalanceEvent event,
+  Future<void> _onSubmit(
+    OnboardingSubmitEvent event,
     Emitter<OnboardingState> emit,
   ) async {
     emit(OnboardingLoadingState());
@@ -22,7 +22,11 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
       if (userId == null) {
         throw Exception('Utilizador não autenticado.');
       }
-      await completeOnboarding(userId, event.balance);
+      await completeOnboarding(
+        userId,
+        balance: event.balance,
+        monthlyIncome: event.monthlyIncome,
+      );
       emit(OnboardingLoadedState());
     } catch (e) {
       emit(OnboardingErrorState(AppErrorTranslator.translate(e)));

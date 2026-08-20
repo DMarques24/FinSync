@@ -19,6 +19,9 @@ abstract class AuthUserRemoteDatasource {
   Future<void> signIn(AuthUser user);
   Future<void> signOut();
 
+  /// Apaga a conta e tudo o que lhe pertence.
+  Future<void> deleteAccount();
+
   Future<void> resendConfirmationEmail(String email);
 
   Future<void> sendPasswordResetCode(String email);

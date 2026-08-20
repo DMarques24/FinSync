@@ -9,6 +9,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import 'package:finsync/core/errors/app_error_translator.dart';
+import 'package:finsync/core/i18n/app_translations.dart';
 import 'package:finsync/core/theme/colors.dart';
 import 'package:finsync/core/theme/text_styles.dart';
 
@@ -70,7 +72,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
                   color: AppColors.secondary,
                 ),
                 title: Text(
-                  "Escolher da galeria",
+                  tr('desire.gallery'),
                   style: AppTextStyles.bodyMedium,
                 ),
                 onTap: () => Navigator.pop(context, ImageSource.gallery),
@@ -81,7 +83,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
                   color: AppColors.secondary,
                 ),
                 title: Text(
-                  "Tirar fotografia",
+                  tr('desire.camera'),
                   style: AppTextStyles.bodyMedium,
                 ),
                 onTap: () => Navigator.pop(context, ImageSource.camera),
@@ -140,16 +142,12 @@ class _EditProfileFormState extends State<EditProfileForm> {
     return showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Permissão necessária"),
-        content: const Text(
-          "Para alterares a foto de perfil precisamos de acesso à "
-          "câmara/galeria. Podes ativar isso nas Definições do teu "
-          "dispositivo.",
-        ),
+        title: Text(tr('edit_profile.permission_title')),
+        content: Text(tr('edit_profile.permission_message')),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("Cancelar"),
+            child: Text(tr('common.cancel')),
           ),
           TextButton(
             onPressed: () {
@@ -157,7 +155,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
               openAppSettings();
             },
             child: Text(
-              "Abrir Definições",
+              tr('desire.open_settings'),
               style: TextStyle(color: AppColors.secondary),
             ),
           ),
@@ -172,7 +170,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
     final username = _usernameController.text.trim();
     if (username.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("O nome de utilizador não pode ficar vazio.")),
+        SnackBar(content: Text(tr('edit_profile.username_required'))),
       );
       return;
     }
@@ -194,20 +192,18 @@ class _EditProfileFormState extends State<EditProfileForm> {
       final messenger = ScaffoldMessenger.of(context);
       Navigator.pop(context);
       messenger.showSnackBar(
-        const SnackBar(content: Text('Perfil atualizado com sucesso.')),
+        SnackBar(content: Text(tr('edit_profile.saved'))),
       );
     } on TimeoutException {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('A operação demorou demasiado. Tenta novamente.'),
-        ),
+        SnackBar(content: Text(tr('desire.operation_timeout'))),
       );
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text(e.toString())));
+      ).showSnackBar(SnackBar(content: Text(AppErrorTranslator.translate(e))));
     } finally {
       if (mounted) {
         setState(() {
@@ -241,12 +237,12 @@ class _EditProfileFormState extends State<EditProfileForm> {
 
               const SizedBox(height: 24),
 
-              Text("Editar perfil", style: AppTextStyles.headingMedium),
+              Text(tr('edit_profile.title'), style: AppTextStyles.headingMedium),
 
               const SizedBox(height: 6),
 
               Text(
-                "Atualiza o teu nome e a foto de perfil.",
+                tr('edit_profile.subtitle'),
                 style: AppTextStyles.bodySmall.copyWith(
                   color: AppColors.textSecondary,
                 ),
@@ -299,7 +295,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
                 style: AppTextStyles.bodyMedium,
                 inputFormatters: [LengthLimitingTextInputFormatter(25)],
                 decoration: InputDecoration(
-                  labelText: "Nome de utilizador",
+                  labelText: tr('create_account.username_label'),
                   counterText: "",
                   prefixIcon: Icon(
                     Icons.person_outline_rounded,
@@ -330,7 +326,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
                         ),
                       )
                     : const Icon(Icons.save_outlined),
-                label: const Text("Guardar alterações"),
+                label: Text(tr('edit_profile.save')),
               ),
             ],
           ),
